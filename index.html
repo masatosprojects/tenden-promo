@@ -1,922 +1,694 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TENDEN（テンデン） | その瞬間の『津波てんでんこ』</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="津波避難シミュレーション論文から生まれた、能動的リスク回避を支援する次世代型避難誘導HUDアプリケーション「TENDEN（テンデン）」特設サイト。">
-    <meta property="og:title" content="TENDEN（テンデン） | その瞬間の『津波てんでんこ』">
-    <meta property="og:description" content="避難所の混雑や急坂を自動回避。論文の学術的背景から生まれた、命を救うインテリジェントHUD避難案内。">
-    <meta property="og:type" content="website">
-    
-    <!-- Tailwind CSS & FontAwesome CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Outfit:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- GSAP & ScrollTrigger CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENDEN（テンデン） | 津波避難 PWA</title>
+  <meta name="description" content="マルチエージェントシミュレーション研究から生まれた、観光客向け津波避難誘導 PWA「TENDEN」。鎌倉市沿岸部を対象に62,299人・50試行の避難シミュレーションを実施。">
+  <meta property="og:title" content="TENDEN — その瞬間の、迷わないを。">
+  <meta property="og:description" content="マルチエージェントシミュレーションが示す混雑の罠。動的3ルート・多言語・オフライン対応の減災PWAアプリ。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'space-dark': '#0a0f1d',
-                        'space-deep': '#060a14',
-                        'neon-green': '#2ecc71',
-                        'neon-blue': '#3498db',
-                        'neon-purple': '#9b59b6',
-                        'neon-red': '#e74c3c'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
-                        outfit: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-    <style>
-        /* Glassmorphism custom components */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        
-        .glass-nav {
-            background: rgba(10, 15, 29, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .neon-glow-text {
-            text-shadow: 0 0 15px rgba(52, 152, 219, 0.6), 0 0 30px rgba(155, 89, 182, 0.4);
-        }
+    :root {
+      --bg:        #ffffff;
+      --bg-muted:  #f8f9fa;
+      --text:      #1a1a2e;
+      --text-muted:#6b7280;
+      --accent:    #2563eb;
+      --danger:    #ef4444;
+      --border:    #e5e7eb;
+      --dark-bg:   #1a1a2e;
+      --font-jp:   'Noto Sans JP', sans-serif;
+      --font-en:   'Inter', sans-serif;
+    }
 
-        .danger-pulse-bg {
-            animation: danger-pulse-animation 2s infinite alternate;
-        }
+    html { scroll-behavior: smooth; }
 
-        @keyframes danger-pulse-animation {
-            0% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.2); border-color: rgba(231, 76, 60, 0.2); }
-            100% { box-shadow: 0 0 30px rgba(231, 76, 60, 0.6); border-color: rgba(231, 76, 60, 0.8); }
-        }
+    body {
+      font-family: var(--font-jp);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* Topology grid pattern */
-        .topology-grid {
-            background-image: 
-                radial-gradient(rgba(255, 255, 255, 0.03) 1.5px, transparent 1.5px), 
-                radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 40px 40px, 20px 20px;
-            background-position: 0 0, 10px 10px;
-        }
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+    }
+    .nav-brand img { width: 36px; height: 36px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      font-family: var(--font-en);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent) !important;
+      color: #fff !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 600 !important;
+    }
+    .nav-cta:hover { background: #1d4ed8 !important; color: #fff !important; }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0f1d;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-    </style>
+    /* ===== HERO ===== */
+    .hero {
+      min-height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      background: var(--bg);
+    }
+    .hero-gif {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 2.5rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-en);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .hero-sub {
+      max-width: 600px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 2.8rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      display: inline-block;
+      background: var(--text);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #2d2d4e; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--text);
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* ===== SECTION COMMON ===== */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1060px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--font-en);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.8;
+    }
+
+    /* ===== METRICS ===== */
+    .metrics-section { background: var(--bg-muted); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .metric-item {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .metric-item:last-child { border-right: none; }
+    .metric-value {
+      font-family: var(--font-en);
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+    .metric-value.danger { color: var(--danger); }
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* ===== CONCEPT ===== */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .concept-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      background: var(--bg);
+    }
+    .concept-card.emergency { border-color: #fca5a5; background: #fff5f5; }
+    .concept-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .concept-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--text);
+    }
+    .concept-card.emergency .concept-title { color: var(--danger); }
+    .concept-body {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .concept-tag {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-muted);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+    .concept-card.emergency .concept-tag { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
+
+    /* ===== FEATURES ===== */
+    .features-section { background: var(--bg-muted); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 3.5rem;
+    }
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.1rem;
+    }
+    .feature-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.55rem;
+      color: var(--text);
+    }
+    .feature-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ===== RESEARCH ===== */
+    .research-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3.5rem;
+      align-items: start;
+    }
+    .research-finding {
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+    }
+    .research-finding-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .research-finding-body {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .finding-number {
+      font-family: var(--font-en);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+    .finding-number.danger { color: var(--danger); }
+    .finding-number.accent { color: var(--accent); }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: var(--dark-bg);
+      color: #fff;
+      text-align: center;
+    }
+    .cta-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .cta-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: var(--text);
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-white:hover { background: #f0f0f0; transform: translateY(-1px); }
+    .cta-links { display: flex; gap: 1.8rem; justify-content: center; flex-wrap: wrap; }
+    .cta-links a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .cta-links a:hover { color: #fff; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .footer-brand img { width: 28px; height: 28px; object-fit: contain; }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .footer-links { display: flex; gap: 1.4rem; }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ===== SCROLL ANIMATION ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+      .metric-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .metric-item:nth-child(odd) { border-right: 1px solid var(--border); }
+      .metric-item:nth-last-child(-n+2) { border-bottom: none; }
+
+      .concept-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .research-grid { grid-template-columns: 1fr; }
+
+      .nav-links { gap: 1.2rem; }
+      .nav-links a.nav-cta { display: none; }
+    }
+    @media (max-width: 520px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .nav-links .hide-mobile { display: none; }
+      .footer { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
-<body class="bg-space-dark text-gray-200 font-sans antialiased overflow-x-hidden">
+<body>
 
-    <!-- ==========================================
-         3-STEP OPENING ANIMATION OVERLAY
-         ========================================== -->
-    <div id="opening-overlay" class="fixed inset-0 z-50 bg-black flex flex-col justify-center items-center overflow-hidden">
-        
-        <!-- Topology Lines Canvas (Mathematical topology lines animating background) -->
-        <canvas id="topology-canvas" class="absolute inset-0 opacity-40 pointer-events-none"></canvas>
-
-        <div class="relative z-10 flex flex-col items-center justify-center">
-            
-            <!-- TENDEN Icon snap placeholder -->
-            <div id="opening-icon-wrapper" class="relative mb-8 opacity-0 scale-90 transition-transform duration-1000">
-                <!-- Outer Glass Panel -->
-                <div class="w-24 h-24 rounded-3xl glass-card flex items-center justify-center border border-white/20 shadow-[0_0_50px_rgba(52,152,219,0.3)] relative overflow-hidden">
-                    <!-- Icon graphic -->
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-neon-purple via-neon-blue to-neon-green flex items-center justify-center relative">
-                        <i class="fa-solid fa-person-running text-white text-2xl relative z-10"></i>
-                        <div class="absolute inset-0.5 rounded-[10px] bg-space-dark/80 flex items-center justify-center">
-                            <i class="fa-solid fa-person-running text-transparent bg-clip-text bg-gradient-to-tr from-neon-purple via-neon-blue to-neon-green text-2xl"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- SVG path flashes (3 Route Lines Snapping/Extending) -->
-                <svg id="opening-route-lines" class="absolute inset-0 -m-16 w-56 h-56 pointer-events-none" viewBox="0 0 224 224">
-                    <!-- Route A (Green) -->
-                    <path id="path-green" d="M 0 112 Q 56 112 112 112" stroke="#2ecc71" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="200" stroke-dashoffset="200" />
-                    <!-- Route B (Blue) -->
-                    <path id="path-blue" d="M 112 224 Q 112 168 112 112" stroke="#3498db" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="200" stroke-dashoffset="200" />
-                    <!-- Route C (Purple) -->
-                    <path id="path-purple" d="M 224 112 Q 168 112 112 112" stroke="#9b59b6" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="200" stroke-dashoffset="200" />
-                </svg>
-            </div>
-            
-            <h1 id="opening-text" class="text-3xl font-outfit font-extrabold tracking-[0.2em] bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-300 to-white opacity-0 transform translate-y-8 select-none">
-                TENDEN
-            </h1>
-        </div>
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav">
+    <a class="nav-brand" href="#">
+      <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN logo">
+      TENDEN
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="hide-mobile">機能</a>
+      <a href="#research" class="hide-mobile">研究</a>
+      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" class="hide-mobile">GitHub</a>
+      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="nav-cta">アプリを開く →</a>
     </div>
+  </nav>
 
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img class="hero-gif"
+         src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif"
+         alt="TENDEN animated logo">
+    <p class="hero-eyebrow">Tsunami Emergency Navigation &amp; Detection Engine</p>
+    <h1 class="hero-title">「その瞬間の、<br>迷わないを。」</h1>
+    <p class="hero-sub">
+      鎌倉市沿岸部を対象とした津波避難マルチエージェントシミュレーション研究から生まれた、
+      観光客・外国人旅行者のための減災 PWA アプリ。
+    </p>
+    <div class="hero-actions">
+      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="btn-primary">アプリを開く →</a>
+      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" class="btn-secondary">研究論文 &amp; GitHub</a>
+    </div>
+  </section>
 
-    <!-- ==========================================
-         FIXED NAVIGATION BAR
-         ========================================== -->
-    <header class="fixed top-0 left-0 right-0 z-40 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            
-            <!-- Logo area -->
-            <a href="#hero" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl glass-card flex items-center justify-center border border-white/10 group-hover:border-neon-blue/40 shadow-lg transition-all duration-300">
-                    <i class="fa-solid fa-person-running text-transparent bg-clip-text bg-gradient-to-tr from-neon-purple via-neon-blue to-neon-green text-lg"></i>
-                </div>
-                <span class="font-outfit font-extrabold text-xl tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 group-hover:to-white transition-all">TENDEN</span>
-            </a>
+  <!-- ===== METRICS ===== -->
+  <section class="metrics-section" style="padding: 0;">
+    <div class="metrics-grid">
+      <div class="metric-item reveal">
+        <div class="metric-value">62,299</div>
+        <div class="metric-label">総シミュレーション人口<br>（50 試行平均）</div>
+      </div>
+      <div class="metric-item reveal reveal-delay-1">
+        <div class="metric-value">25</div>
+        <div class="metric-label">感度分析<br>シナリオ数</div>
+      </div>
+      <div class="metric-item reveal reveal-delay-2">
+        <div class="metric-value">50</div>
+        <div class="metric-label">ベースライン<br>試行回数</div>
+      </div>
+      <div class="metric-item reveal reveal-delay-3">
+        <div class="metric-value danger">36.8%</div>
+        <div class="metric-label">ベースライン<br>生存率（BASE）</div>
+      </div>
+    </div>
+  </section>
 
-            <!-- Anchors -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wider text-gray-400">
-                <a href="#concept" class="hover:text-white transition-colors">CONCEPT</a>
-                <a href="#science" class="hover:text-white transition-colors">SCIENCE</a>
-                <a href="#features" class="hover:text-white transition-colors">FEATURES</a>
-                <a href="#developer" class="hover:text-white transition-colors">DEVELOPER</a>
-            </nav>
+  <!-- ===== CONCEPT ===== -->
+  <section id="concept">
+    <div class="container">
+      <p class="section-label reveal">Concept</p>
+      <h2 class="section-title reveal">平時の「知る」を、<br>非常時の「生きる」に。</h2>
+      <p class="section-desc reveal">日常からシームレスに繋がる2つのモード。普段はハザード情報を学び、地震・津波発生の瞬間に自動切り替えで避難を案内する。</p>
 
-            <!-- External Connections -->
-            <div class="flex items-center gap-4">
-                <a href="https://github.com/masatosprojects/tenden-app" target="_blank" class="w-10 h-10 rounded-full glass-card hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all" title="GitHub リポジトリ">
-                    <i class="fa-brands fa-github text-lg"></i>
-                </a>
-                <a href="C:/Users/maruy/Downloads/TENDEN_Project_PRD_Complete.pdf" target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-white/10 text-xs font-bold tracking-wider text-gray-300 hover:text-white border border-white/10 transition-all">
-                    <i class="fa-regular fa-file-pdf"></i> Research Paper
-                </a>
-                <a href="https://masatosprojects.github.io/tenden-app/" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-white text-xs font-extrabold tracking-widest hover:brightness-110 shadow-lg hover:shadow-neon-blue/20 transition-all select-none">
-                    LAUNCH APP
-                </a>
-            </div>
+      <div class="concept-grid">
+        <div class="concept-card reveal">
+          <div class="concept-icon">🗺️</div>
+          <h3 class="concept-title">平時モード</h3>
+          <p class="concept-body">
+            海抜・浸水想定区域・避難所を地図上で確認できる学習モード。
+            GPSによる現在地表示と標高リアルタイム取得で、旅行中でも
+            「今どのくらいの高さにいるか」を常に把握できる。
+            スクリーンショット保存でオフライン時の備えにも。
+          </p>
+          <span class="concept-tag">ライトモード / 海抜 HUD 表示</span>
         </div>
-    </header>
+        <div class="concept-card emergency reveal reveal-delay-1">
+          <div class="concept-icon">🚨</div>
+          <h3 class="concept-title">緊急モード</h3>
+          <p class="concept-body">
+            P2P 地震情報 WebSocket が大津波警報を検知すると自動起動。
+            ダークモードに切り替わり、シミュレーション統計に基づく
+            3ルート候補（最短 / 混雑回避 / バリアフリー）を即座に提示。
+            ルート逸脱を振動・点滅で警告し、安否共有も1タップで完了。
+          </p>
+          <span class="concept-tag">緊急ダークモード / 3ルート案内</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- ===== FEATURES ===== -->
+  <section id="features" class="features-section">
+    <div class="container">
+      <p class="section-label reveal">Features</p>
+      <h2 class="section-title reveal">研究知見を実装した<br>7つの機能</h2>
 
-    <!-- ==========================================
-         SECTION 1: HERO (Main Catchphrase)
-         ========================================== -->
-    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center topology-grid pt-20 overflow-hidden">
-        
-        <!-- Glowing gradient backdrops -->
-        <div class="absolute w-[500px] h-[500px] bg-neon-blue/10 rounded-full blur-[120px] top-1/4 -left-64 pointer-events-none"></div>
-        <div class="absolute w-[500px] h-[500px] bg-neon-purple/10 rounded-full blur-[120px] bottom-1/4 -right-64 pointer-events-none"></div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">🔀</div>
+          <h3 class="feature-title">3ルート同時提示</h3>
+          <p class="feature-body">最短距離・混雑回避・バリアフリー平坦ルートの3候補を OSRM + シミュレーション混雑データで同時計算。最終判断はユーザーに委ねる設計。</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">🌊</div>
+          <h3 class="feature-title">公式浸水想定タイル</h3>
+          <p class="feature-body">国土地理院ハザードマップポータルの津波浸水想定タイルをオーバーレイ表示。Canvas ピクセル解析で現在地の区域内外を HUD にリアルタイム判定。</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">🌐</div>
+          <h3 class="feature-title">ゼロクリック多言語</h3>
+          <p class="feature-body">ブラウザ言語を自動検知し、日本語・英語・中国語（簡体）・韓国語へ即時切り替え。土地勘のない外国人観光客が主要ターゲット。</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">📡</div>
+          <h3 class="feature-title">津波警報自動検知</h3>
+          <p class="feature-body">P2P 地震情報 WebSocket（api.p2pquake.net）に常時接続し、JMA コード 551/556「大津波警報」で緊急モードを自動起動。切断時は5秒で再接続。</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">📶</div>
+          <h3 class="feature-title">オフライン PWA</h3>
+          <p class="feature-body">Service Worker でマップタイル・データ・UI を動的キャッシュ。通信インフラ被災後もアプリが動作し続けるよう設計。インストール不要でホーム画面追加が可能。</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">♿</div>
+          <h3 class="feature-title">バリアフリールート</h3>
+          <p class="feature-body">シミュレーションが示す年齢別格差（成人 41.2% vs 高齢者 30.8%）を踏まえ、坂・段差を考慮した平坦優先ルートを高齢者・乳幼児連れ向けに明示。</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">📤</div>
+          <h3 class="feature-title">ワンタップ安否共有</h3>
+          <p class="feature-body">Web Share API で現在地 Google マップ URL と安否メッセージを家族・友人に即送信。緊急時にフォームを操作する認知負荷ゼロの設計。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
-            
-            <div class="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border border-white/5 text-xs font-semibold tracking-[0.15em] text-neon-blue select-none">
-                <span class="flex h-2 w-2 relative">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-blue opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-neon-blue"></span>
-                </span>
-                ACADEMIC SIMULATION TO REAL-WORLD SOLUTION
-            </div>
+  <!-- ===== RESEARCH ===== -->
+  <section id="research">
+    <div class="container">
+      <p class="section-label reveal">Research Background</p>
+      <h2 class="section-title reveal">シミュレーションが示す<br>2つの核心発見</h2>
 
-            <!-- Main Catchphrase (Absolute center weight, simple, text-shadow neon highlight) -->
-            <div class="my-12">
-                <h2 class="text-4xl sm:text-6xl md:text-8xl font-black font-sans leading-tight tracking-wider text-white">
-                    その瞬間の<br class="sm:hidden">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-green via-neon-blue to-neon-purple neon-glow-text font-black">
-                        『津波てんでんこ』
-                    </span>
-                </h2>
-            </div>
-
-            <p class="max-w-2xl mx-auto text-base sm:text-lg text-gray-400 leading-relaxed font-light mb-12">
-                日本に伝わる強烈な避難訓「てんでんこ」を、知的なデータ技術で現代に実装。<br>
-                混雑を避け、満杯の避難所を迂回し、要配慮者に安全な道を提示する、避難支援HUDナビゲーション。
+      <div class="research-grid">
+        <div>
+          <div class="research-finding reveal">
+            <p class="research-finding-title">発見 1 — 属性間格差</p>
+            <div class="finding-number danger">53.6pp</div>
+            <p class="research-finding-body" style="margin-top:0.6rem;">
+              地域住民（85.1%）と一般来訪客（31.6%）の生存率差。
+              土地勘・初期危機感・避難ケース分布の違いが、
+              短いリードタイムで命の分岐点を生み出す。
             </p>
-
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="https://masatosprojects.github.io/tenden-app/" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-neon-green via-neon-blue to-neon-purple text-white text-sm font-extrabold tracking-widest hover:brightness-110 shadow-xl transition-all">
-                    避難シミュレータを起動する
-                </a>
-                <a href="#science" class="w-full sm:w-auto px-8 py-4 rounded-full glass-card hover:bg-white/10 text-white text-sm font-bold tracking-wider transition-all">
-                    開発背景と論文を読む
-                </a>
-            </div>
+          </div>
+          <div class="research-finding reveal reveal-delay-1">
+            <p class="research-finding-title">発見 2 — ハザードマップ逆説</p>
+            <div class="finding-number accent">−6.1pp</div>
+            <p class="research-finding-body" style="margin-top:0.6rem;">
+              ハザードマップ認知率 100% 時の生存率低下幅。
+              全員が同一の「最適経路」に収束し、混雑の罠（Congestion Trap）が発生。
+              動的ルーティングが逆説解消の鍵。
+            </p>
+          </div>
         </div>
-
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-500 animate-bounce">
-            <span class="text-xs font-semibold tracking-widest font-outfit">SCROLL TO DISCOVER</span>
-            <i class="fa-solid fa-chevron-down text-sm"></i>
+        <div class="reveal reveal-delay-1">
+          <div style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+            <div style="background: var(--bg-muted); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);">
+              <p style="font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">感度分析ランキング（生存率変動幅）</p>
+            </div>
+            <div style="padding: 0.5rem 0;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
+                <span style="font-size: 0.88rem; color: var(--text);">人口・季節構成 (B群)</span>
+                <span style="font-family: var(--font-en); font-weight: 700; color: var(--danger);">32.1pp</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
+                <span style="font-size: 0.88rem; color: var(--text);">津波到達時間 (A群)</span>
+                <span style="font-family: var(--font-en); font-weight: 700; color: var(--danger);">31.4pp</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
+                <span style="font-size: 0.88rem; color: var(--text);">ハザードマップ認知率 (D群)</span>
+                <span style="font-family: var(--font-en); font-weight: 700; color: var(--accent);">6.1pp</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
+                <span style="font-size: 0.88rem; color: var(--text);">率先避難者割合 (E群)</span>
+                <span style="font-family: var(--font-en); font-weight: 700; color: var(--text-muted);">1.5pp</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem;">
+                <span style="font-size: 0.88rem; color: var(--text);">警報タイミング (C群)</span>
+                <span style="font-family: var(--font-en); font-weight: 700; color: var(--text-muted);">1.0pp</span>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.7;">
+            物理的制約（人口規模・到達時間）が情報・行動系介入の20倍以上の影響力を持つ。
+            単独介入の限界が動的統合システムの必要性を示す。
+          </p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="container" style="padding: 6rem 2rem;">
+      <p class="section-label reveal" style="color: rgba(255,255,255,0.4);">Try TENDEN</p>
+      <h2 class="cta-title reveal">今すぐ、備える。</h2>
+      <p class="cta-sub reveal">インストール不要。ブラウザで今すぐ開いて、<br>お気に入りの海岸へ行く前にルートを確認しておこう。</p>
+      <div class="cta-actions reveal">
+        <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="btn-white">アプリを開く →</a>
+      </div>
+      <div class="cta-links reveal reveal-delay-1">
+        <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub リポジトリ</a>
+        <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">研究論文</a>
+        <a href="https://masatosprojects.github.io/tenden-promo/" target="_blank" rel="noopener">本サイト</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- ==========================================
-         SECTION 2: SCIENCE & BACKGROUND (Concept/Science)
-         ========================================== -->
-    <section id="science" class="py-32 relative bg-space-deep border-y border-white/5 topology-grid">
-        <div class="max-w-7xl mx-auto px-6">
-            
-            <div class="text-center mb-24">
-                <h3 class="font-outfit text-sm font-bold tracking-[0.25em] text-neon-blue mb-4">SCIENCE & BACKGROUND</h3>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">津波避難における構造的課題への数理的アプローチ</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-neon-blue to-neon-purple mx-auto mt-6 rounded-full"></div>
-            </div>
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN">
+      TENDEN
+    </div>
+    <p class="footer-copy">
+      © 2026 TENDEN Project — 個人研究<br>
+      地図タイル: CartoDB / 浸水想定: 国土地理院ハザードマップポータルサイト
+    </p>
+    <div class="footer-links">
+      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">アプリ</a>
+      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                
-                <!-- Left Content: Academic Narrative -->
-                <div class="space-y-8">
-                    <div class="p-6 rounded-2xl glass-card border border-white/5 space-y-4">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-lg bg-neon-blue/20 flex items-center justify-center text-neon-blue text-sm"><i class="fa-solid fa-graduation-cap"></i></span>
-                            <h4 class="font-bold text-lg text-white">学術論文が提起する「避難の機能不全」</h4>
-                        </div>
-                        <p class="text-sm text-gray-400 font-light leading-relaxed">
-                            従来の津波避難計画は、単に「高台の避難所を周知する」受動的なものでした。しかし、実際の避難時には特定のルートへの過度な混雑、特定避難所への負荷集中、阻まれる要配慮者など、避難プロセスの数理的シミュレーションを重ねた結果、様々な**「構造的課題」**が浮き彫りになりました。
-                        </p>
-                    </div>
-
-                    <div class="p-6 rounded-2xl glass-card border border-white/5 space-y-4">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-lg bg-neon-purple/20 flex items-center justify-center text-neon-purple text-sm"><i class="fa-solid fa-microchip"></i></span>
-                            <h4 class="font-bold text-lg text-white">TENDENが導く能動的な避難要件</h4>
-                        </div>
-                        <p class="text-sm text-gray-400 font-light leading-relaxed">
-                            避難を最適化するには、各自が「てんでんこ（ばらばらに）」逃げながらも、アプリという脳（HUD）を介して混雑を能動的に迂回し、避難所の混雑負荷をスマートに分散させ、要配慮者の体力（アプローチ勾配）に配慮したバリアフリーの選択ができる環境が不可欠です。この論文の要件を現実のシステムに適用したものが「TENDEN」です。
-                        </p>
-                    </div>
-
-                    <div class="pt-4 flex items-center gap-4">
-                        <a href="C:/Users/maruy/Downloads/TENDEN_Project_PRD_Complete.pdf" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 text-xs font-bold tracking-wider text-white border border-white/10 transition-all">
-                            <i class="fa-solid fa-file-contract text-neon-blue"></i> 避難シミュレーション論文全文を読む
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Right Content: Abstract Topology Visualizer -->
-                <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-neon-blue/10 to-neon-purple/10 rounded-full blur-[80px] opacity-70"></div>
-                    <div class="glass-card rounded-3xl p-8 border border-white/10 relative overflow-hidden aspect-[4/3] flex flex-col justify-between">
-                        
-                        <!-- Topology abstract vector graph -->
-                        <div class="absolute inset-0 opacity-20">
-                            <svg class="w-full h-full" viewBox="0 0 400 300">
-                                <!-- Nodes -->
-                                <circle cx="50" cy="80" r="4" fill="#fff" />
-                                <circle cx="180" cy="50" r="4" fill="#fff" />
-                                <circle cx="280" cy="90" r="4" fill="#fff" />
-                                <circle cx="120" cy="180" r="4" fill="#fff" />
-                                <circle cx="230" cy="220" r="4" fill="#fff" />
-                                <circle cx="350" cy="180" r="4" fill="#fff" />
-                                
-                                <!-- Links -->
-                                <line x1="50" y1="80" x2="180" y2="50" stroke="#fff" stroke-width="0.5" />
-                                <line x1="180" y1="50" x2="280" y2="90" stroke="#fff" stroke-width="0.5" />
-                                <line x1="50" y1="80" x2="120" y2="180" stroke="#fff" stroke-width="0.5" />
-                                <line x1="120" y1="180" x2="230" y2="220" stroke="#fff" stroke-width="0.5" />
-                                <line x1="280" y1="90" x2="350" y2="180" stroke="#fff" stroke-width="0.5" />
-                                <line x1="230" y1="220" x2="350" y2="180" stroke="#fff" stroke-width="0.5" />
-                                <line x1="120" y1="180" x2="180" y2="50" stroke="#fff" stroke-width="0.5" />
-                                <line x1="230" y1="220" x2="280" y2="90" stroke="#fff" stroke-width="0.5" />
-                            </svg>
-                        </div>
-
-                        <!-- Info Card Overlay Inside Glass -->
-                        <div class="relative z-10 space-y-4">
-                            <span class="text-xs font-bold tracking-[0.2em] text-neon-green font-outfit">MATHEMATICAL MODEL</span>
-                            <h4 class="text-xl font-bold text-white">避難トポロジーの脆弱性可視化</h4>
-                            <p class="text-xs text-gray-400 font-light leading-relaxed">
-                                鎌倉市の複雑な道路ネットワークと津波ハザードライン（海抜2m〜15m）を重畳し、エージェント負荷解析を実施。アプローチ階段のボトルネックや高負荷避難所を数理的に分析しています。
-                            </p>
-                        </div>
-
-                        <div class="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-white/5">
-                            <div>
-                                <span class="block text-2xl font-black font-outfit text-white">48<span class="text-xs font-normal text-gray-400">箇所</span></span>
-                                <span class="text-[10px] text-gray-500 font-bold tracking-wider">モデル地区避難所</span>
-                            </div>
-                            <div>
-                                <span class="block text-2xl font-black font-outfit text-neon-blue">3<span class="text-xs font-normal text-gray-400">ルート</span></span>
-                                <span class="text-[10px] text-gray-500 font-bold tracking-wider">同時評価エンジン</span>
-                            </div>
-                            <div>
-                                <span class="block text-2xl font-black font-outfit text-neon-purple">1.0<span class="text-xs font-normal text-gray-400">m/s</span></span>
-                                <span class="text-[10px] text-gray-500 font-bold tracking-wider">要配慮者移動基準</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ==========================================
-         SECTION 3: DUAL ACTION (Concept Split)
-         ========================================== -->
-    <section id="concept" class="py-32 relative topology-grid overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
-            
-            <div class="text-center mb-24">
-                <h3 class="font-outfit text-sm font-bold tracking-[0.25em] text-neon-purple mb-4">DUAL ACTION</h3>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">日常の「減災備え」 ＆ 極限の「避難補助」</h2>
-                <p class="mt-4 text-gray-400 font-light max-w-xl mx-auto text-sm sm:text-base">防災は、日常と非日常で分断されてはならない。TENDENは平時と有事を1つのシステムで繋ぎます。</p>
-                <div class="w-16 h-1 bg-gradient-to-r from-neon-purple to-neon-blue mx-auto mt-6 rounded-full"></div>
-            </div>
-
-            <!-- Interactive Split Screen Panels -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- Panel 1: Preventive (Normal Mode) -->
-                <div class="group relative rounded-3xl glass-card p-10 border border-white/5 hover:border-neon-blue/30 overflow-hidden transition-all duration-500 hover:-translate-y-2 aspect-[4/3] flex flex-col justify-between">
-                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-neon-blue/5 rounded-full blur-3xl group-hover:bg-neon-blue/10 transition-all"></div>
-                    
-                    <div class="space-y-6">
-                        <div class="w-14 h-14 rounded-2xl bg-neon-blue/10 border border-neon-blue/20 flex items-center justify-center text-neon-blue text-2xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white tracking-wide">日常（平時）の「減災」シミュレータ</h3>
-                        <p class="text-sm text-gray-400 font-light leading-relaxed">
-                            普段の生活の中で、さまざまな想定シナリオを選択し避難訓練を実施。自分が打ったピン（自宅や外出先）からどのように3大ルートが生成されるか、避難所の混雑予測や海抜標高の状況を観察し、あらかじめ「体感的に安全な道」を理解しておく予防的アプローチ。
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-2 text-xs font-bold tracking-widest text-neon-blue">
-                        <span>LEARN PREPARATION</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Panel 2: Active (Emergency Mode) -->
-                <div class="group relative rounded-3xl glass-card p-10 border border-white/5 hover:border-neon-purple/30 overflow-hidden transition-all duration-500 hover:-translate-y-2 aspect-[4/3] flex flex-col justify-between">
-                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-neon-purple/5 rounded-full blur-3xl group-hover:bg-neon-purple/10 transition-all"></div>
-                    
-                    <div class="space-y-6">
-                        <div class="w-14 h-14 rounded-2xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple text-2xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white tracking-wide">極限（災害時）の「避難」補助HUD</h3>
-                        <p class="text-sm text-gray-400 font-light leading-relaxed">
-                            発災直後、パニックや通信環境が限られる中での能動的な行動支援。自分の位置から「今どのルートが最も混雑を避けるか」「アプローチ勾配的にバリアフリーな道はどこか」をスマートに提示。いつでもルート切り替え可能なボトムシートで、ユーザーの意思決定を瞬時に補助します。
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-2 text-xs font-bold tracking-widest text-neon-purple">
-                        <span>LAUNCH EMERGENCY CONTROL</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ==========================================
-         SECTION 4: CORE TECHNOLOGY (Features & Interactive Simulator)
-         ========================================== -->
-    <section id="features" class="py-32 relative bg-space-deep border-y border-white/5 topology-grid">
-        <div class="max-w-7xl mx-auto px-6">
-            
-            <div class="text-center mb-24">
-                <h3 class="font-outfit text-sm font-bold tracking-[0.25em] text-neon-green mb-4">CORE TECHNOLOGY</h3>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">命を救うための圧倒的インテリジェンス</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-neon-green to-neon-blue mx-auto mt-6 rounded-full"></div>
-            </div>
-
-            <!-- Interative Simulator Area (General engagement hook) -->
-            <div class="mb-24">
-                <div class="glass-card rounded-3xl p-8 border border-white/10 relative overflow-hidden">
-                    <div class="absolute -right-40 -top-40 w-96 h-96 bg-neon-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
-                        
-                        <!-- simulator console -->
-                        <div class="lg:col-span-2 space-y-6">
-                            <span class="text-xs font-bold tracking-[0.15em] text-neon-green font-outfit bg-neon-green/10 border border-neon-green/20 px-3 py-1 rounded-full">INTERACTIVE DEMO</span>
-                            <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">現在地ハザード判定シミュレータ</h3>
-                            <p class="text-sm text-gray-400 font-light leading-relaxed">
-                                下記のキャンバス上の地図エミュレート空間内で、マウスを動かして（または指でタップ・スライドして）「現在地ピン」を移動させてみてください。
-                                境界線（津波浸水想定区域）をまたいだ瞬間に、GPSスナップとCanvas透過度解析ロジックがエミュレートされ、ステータス表示が「区域内」と「区域外」でリアルタイムに切り替わります。
-                            </p>
-                            
-                            <!-- Status Display Banner inside Simulator -->
-                            <div class="pt-4">
-                                <div id="interactive-status-box" class="tsunami-status-box tsunami-status-safe w-full flex items-center justify-center py-4 border rounded-2xl font-bold tracking-widest text-base shadow-xl transition-all duration-300">
-                                    <span id="interactive-status-text">✅ 津波浸水想定区域 外</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- simulator canvas -->
-                        <div class="lg:col-span-3 aspect-[4/3] bg-space-dark/80 rounded-2xl border border-white/10 relative overflow-hidden flex items-center justify-center cursor-crosshair">
-                            <!-- Visual Canvas grid background -->
-                            <canvas id="simulator-canvas" class="absolute inset-0 w-full h-full"></canvas>
-                            <!-- Mouse coordinate label inside canvas -->
-                            <div class="absolute bottom-4 left-4 font-outfit text-[10px] text-gray-500 font-bold bg-space-deep/90 border border-white/5 px-2 py-1 rounded">
-                                LAT/LNG MOUSE SNAP EMULATOR
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Card 1: 3 Routes -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-neon-blue/10 border border-neon-blue/20 flex items-center justify-center text-neon-blue text-xl"><i class="fa-solid fa-route"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">3大ルート同時提示（能動的避難）</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            混雑を避ける「最短ルート (緑)」、避難所の混み具合で振り分ける「負荷分散ルート (青)」、急坂を避け、歩行速度1.0m/sとして到着時間を計算する「バリアフリールート (紫)」の3候補を同時に自動生成・提示します。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-neon-blue">INTRINSIC EVALUATION</span>
-                </div>
-
-                <!-- Card 2: Road Snap -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-neon-green text-xl"><i class="fa-solid fa-magnet"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">世界最高水準の道路追従スナップ</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            海岸線や建物の隙間など、道路から離れた地点にピンが打たれても、OSRM APIやSmart Manhattan Connectorが即時に最寄りの道路に引力スナップ。空中を突っ切らない現実的なルートを提示します。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-neon-green">MANHATTAN SNAP SYSTEM</span>
-                </div>
-
-                <!-- Card 3: GPS & Canvas -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple text-xl"><i class="fa-solid fa-location-crosshairs"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">全国対応 ＆ 高精度浸水ピクセル判定</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            国土地理院逆ジオコーディングにより都道府県コードを自動特定し、ハザードレイヤーを動的切り替え。非表示 of CanvasでPNGのアルファ値を分析し、浸水想定区域内外を100%正確にGPS検出します。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-neon-purple">CANVAS PIXEL SENSING</span>
-                </div>
-
-                <!-- Card 4: Mobile HUD -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">極上のモバイルUI/UX & テスト発令</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            ボトムシートHUD表示中の不要な背面要素の自動フェードアウトなど、要素の重なりを解消したスマートフォン最適化。学会デモ用の隠し「テスト発令」機能も美しくインテグレート。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-gray-400">SMARTPHONE OPTIMIZATION</span>
-                </div>
-
-                <!-- Card 5: Offline PWA -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-xl"><i class="fa-solid fa-wifi"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">完全オフライン動作保証 (PWA)</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            災害時の通信寸断を想定。サービスワーカー（sw.js）の強力なキャッシュ戦略により、オフライン環境下でも地図表示と3大避難経路のスナップ計算、およびシミュレーション動作を完全に担保。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-amber-500">OFFLINE FIRST ARCHITECTURE</span>
-                </div>
-
-                <!-- Card 6: System Reset -->
-                <div class="glass-card rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between aspect-square">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-xl bg-neon-red/10 border border-neon-red/20 flex items-center justify-center text-neon-red text-xl"><i class="fa-solid fa-arrows-rotate"></i></div>
-                        <h4 class="text-lg font-bold text-white tracking-wide">ワンクリック・キャッシュクリア</h4>
-                        <p class="text-xs text-gray-400 font-light leading-relaxed">
-                            一般利用者やデベロッパーが、サービスワーカーの古いキャッシュに縛られることなく最新コード（v18など）を確実に読み込めるよう、赤い「システムリセット」クリアボタンをHUDに実装。
-                        </p>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-wider text-neon-red">CACHE COMPACTION CONTROL</span>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ==========================================
-         SECTION 5: DEVELOPER & ECO-SYSTEM (Developer)
-         ========================================== -->
-    <section id="developer" class="py-32 relative topology-grid overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
-            
-            <div class="text-center mb-24">
-                <h3 class="font-outfit text-sm font-bold tracking-[0.25em] text-neon-blue mb-4">DEVELOPER & ECO-SYSTEM</h3>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">研究室から、被災地の未来へ</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-neon-blue to-neon-purple mx-auto mt-6 rounded-full"></div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-stretch">
-                
-                <!-- Launch App Panel (Gigantic gradient button card) -->
-                <div class="lg:col-span-2 glass-card rounded-3xl p-10 border border-white/10 relative overflow-hidden flex flex-col justify-between">
-                    <div class="absolute -right-32 -bottom-32 w-80 h-80 bg-gradient-to-tr from-neon-purple to-neon-blue opacity-25 blur-3xl pointer-events-none"></div>
-                    
-                    <div class="space-y-6">
-                        <span class="text-xs font-bold tracking-[0.2em] text-neon-blue font-outfit">LAUNCH INTERFACE</span>
-                        <h3 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-wide">TENDEN アプリケーションを起動する</h3>
-                        <p class="text-sm text-gray-400 font-light leading-relaxed max-w-lg">
-                            平時の減災学習シナリオのシミュレーション、および発災時の極限避難支援HUDを実際にスマートフォンまたはPCブラウザから起動・操作できます。
-                        </p>
-                    </div>
-
-                    <div class="pt-8">
-                        <a href="https://masatosprojects.github.io/tenden-app/" class="inline-flex items-center gap-3 px-8 py-5 rounded-2xl bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green text-white font-extrabold tracking-widest hover:brightness-110 shadow-2xl hover:shadow-neon-blue/30 transition-all select-none w-full sm:w-auto justify-center">
-                            <span>LAUNCH APPLICATION</span>
-                            <i class="fa-solid fa-rocket animate-pulse"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Connect Links Panel -->
-                <div class="glass-card rounded-3xl p-10 border border-white/10 flex flex-col justify-between">
-                    <div class="space-y-6">
-                        <span class="text-xs font-bold tracking-[0.2em] text-neon-purple font-outfit">ECO-SYSTEM CONNs</span>
-                        <h3 class="text-xl font-bold text-white tracking-wide">網の目のように繋がるエコシステム</h3>
-                        
-                        <div class="space-y-3">
-                            <a href="https://github.com/masatosprojects/tenden-app" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all">
-                                <span class="flex items-center gap-3 text-sm text-gray-300 font-semibold"><i class="fa-brands fa-github text-base text-gray-400"></i> GitHub Codebase</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-500"></i>
-                            </a>
-                            <a href="C:/Users/maruy/Downloads/TENDEN_Project_PRD_Complete.pdf" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all">
-                                <span class="flex items-center gap-3 text-sm text-gray-300 font-semibold"><i class="fa-regular fa-file-pdf text-base text-neon-blue"></i> Research Paper (論文)</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-500"></i>
-                            </a>
-                            <!-- Portofolio Link (🚪 My Portal) -->
-                            <a href="https://masatosprojects.github.io/" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all">
-                                <span class="flex items-center gap-3 text-sm text-gray-300 font-semibold"><i class="fa-solid fa-door-open text-base text-neon-purple"></i> My Portal (ポートフォリオ)</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-500"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="text-[10px] text-gray-500 font-bold tracking-wider pt-6 border-t border-white/5">
-                        TENDEN PROJECT COMPLETED DEVELOPMENT | 2026
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ==========================================
-         FOOTER
-         ========================================== -->
-    <footer class="bg-space-deep border-t border-white/5 py-12 relative z-10 text-center text-xs text-gray-500 font-medium tracking-widest">
-        <div class="max-w-7xl mx-auto px-6 space-y-4">
-            <div>
-                &copy; 2026 TENDEN Project. Developed with academic verification.
-            </div>
-            <div class="text-[10px] text-gray-600 font-normal">
-                本システムに用いられる避難リスク情報は、国土地理院「ハザードマップポータルサイト」のオープンデータを活用し、数理モデルを適用したシミュレーション指標です。
-            </div>
-        </div>
-    </footer>
-
-
-    <!-- ==========================================
-         JAVASCRIPT / ANIMATIONS (GSAP & Simulator)
-         ========================================== -->
-    <script>
-        // Ensure GSAP ScrollTrigger is registered
-        gsap.registerPlugin(ScrollTrigger);
-
-        // -------------------------------------------------------------
-        // Background Topology Canvas Animation (Opening screen background)
-        // -------------------------------------------------------------
-        const canvas = document.getElementById('topology-canvas');
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        // Simulating topology nodes & road lines
-        const nodes = [];
-        const maxNodes = 50;
-        for (let i = 0; i < maxNodes; i++) {
-            nodes.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                radius: Math.random() * 2 + 1
-            });
+  <!-- ===== SCROLL REVEAL ===== -->
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
         }
+      });
+    }, { threshold: 0.12 });
 
-        function animateTopology() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#0a0f1d';
-            ctx.fillRect(0, 0, width, height);
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
-            // Draw links
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < maxNodes; i++) {
-                for (let j = i + 1; j < maxNodes; j++) {
-                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-                    if (dist < 180) {
-                        ctx.beginPath();
-                        ctx.moveTo(nodes[i].x, nodes[i].y);
-                        ctx.lineTo(nodes[j].x, nodes[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // Draw nodes
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-            for (let node of nodes) {
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                node.x += node.vx;
-                node.y += node.vy;
-
-                if (node.x < 0 || node.x > width) node.vx *= -1;
-                if (node.y < 0 || node.y > height) node.vy *= -1;
-            }
-
-            requestAnimationFrame(animateTopology);
-        }
-        animateTopology();
-
-
-        // -------------------------------------------------------------
-        // 3-STEP OPENING ANIMATION (GSAP Timeline)
-        // -------------------------------------------------------------
-        const tl = gsap.timeline({
-            onComplete: () => {
-                // Remove overlay after completion
-                const overlay = document.getElementById('opening-overlay');
-                gsap.to(overlay, {
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        overlay.style.display = 'none';
-                        // Trigger hero entrance animations
-                        gsap.from("#hero h2", { opacity: 0, y: 50, duration: 1.2, ease: "power4.out" });
-                        gsap.from("#hero p", { opacity: 0, y: 30, duration: 1.2, delay: 0.2, ease: "power3.out" });
-                        gsap.from("#hero div.flex", { opacity: 0, y: 20, duration: 1.2, delay: 0.4, ease: "power3.out" });
-                        gsap.from("header", { opacity: 0, y: -20, duration: 1, delay: 0.6, ease: "power2.out" });
-                    }
-                });
-            }
-        });
-
-        // Step 1: Topology Line Fade-in & Overlay Background Load
-        tl.to("#opening-icon-wrapper", { opacity: 1, scale: 1, duration: 1, ease: "power3.out", delay: 0.5 });
-        tl.to("#opening-text", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
-
-        // Step 2 & 3: Routes Snapping and extending (Flashed neon routes)
-        tl.to(["#path-green", "#path-blue", "#path-purple"], {
-            strokeDashoffset: 0,
-            duration: 1.5,
-            ease: "power1.inOut"
-        });
-
-        // Extra dynamic scaling glow on snap moment
-        tl.to("#opening-icon-wrapper", {
-            boxShadow: '0 0 80px rgba(52,152,219,0.7)',
-            scale: 1.05,
-            duration: 0.4,
-            ease: "bounce.out"
-        }, "-=0.3");
-
-
-        // -------------------------------------------------------------
-        // INTERACTIVE MAP SIMULATOR GIMMICK (Section 4 Canvas)
-        // -------------------------------------------------------------
-        const simCanvas = document.getElementById('simulator-canvas');
-        const simCtx = simCanvas.getContext('2d');
-        let simW = simCanvas.width = simCanvas.offsetWidth;
-        let simH = simCanvas.height = simCanvas.offsetHeight;
-
-        // Tsunami Wave / Poly Inundation Zone 에뮬レーション
-        // Wave-like polygon at bottom-right
-        const tsunamiPoly = [
-            { x: simW * 0.3, y: simH },
-            { x: simW * 0.4, y: simH * 0.7 },
-            { x: simW * 0.6, y: simH * 0.6 },
-            { x: simW * 0.8, y: simH * 0.5 },
-            { x: simW, y: simH * 0.45 },
-            { x: simW, y: simH },
-        ];
-
-        // Raycasting algorithm to check if a point is inside the polygon
-        function isPointInPoly(pt, poly) {
-            let inside = false;
-            for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-                const xi = poly[i].x, yi = poly[i].y;
-                const xj = poly[j].x, yj = poly[j].y;
-                
-                const intersect = ((yi > pt.y) !== (yj > pt.y))
-                    && (pt.x < (xj - xi) * (pt.y - yi) / (yj - yi) + xi);
-                if (intersect) inside = !inside;
-            }
-            return inside;
-        }
-
-        // Coordinates of user pins
-        let mousePos = { x: simW * 0.2, y: simH * 0.4 }; // Start point safe
-        let isInside = false;
-
-        function updateSimulator() {
-            simCtx.clearRect(0, 0, simW, simH);
-
-            // Draw abstract city map layout grid lines
-            simCtx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-            simCtx.lineWidth = 1;
-            for (let i = 0; i < simW; i += 20) {
-                simCtx.beginPath();
-                simCtx.moveTo(i, 0);
-                simCtx.lineTo(i, simH);
-                simCtx.stroke();
-            }
-            for (let j = 0; j < simH; j += 20) {
-                simCtx.beginPath();
-                simCtx.moveTo(0, j);
-                simCtx.lineTo(simW, j);
-                simCtx.stroke();
-            }
-
-            // Draw Tsunami inundation zone gradient polygon
-            const grad = simCtx.createLinearGradient(simW * 0.5, simH * 0.5, simW, simH);
-            grad.addColorStop(0, 'rgba(231, 76, 60, 0.15)');
-            grad.addColorStop(1, 'rgba(231, 76, 60, 0.45)');
-            
-            simCtx.fillStyle = grad;
-            simCtx.strokeStyle = 'rgba(231, 76, 60, 0.4)';
-            simCtx.lineWidth = 2;
-            simCtx.beginPath();
-            simCtx.moveTo(tsunamiPoly[0].x, tsunamiPoly[0].y);
-            for (let k = 1; k < tsunamiPoly.length; k++) {
-                simCtx.lineTo(tsunamiPoly[k].x, tsunamiPoly[k].y);
-            }
-            simCtx.closePath();
-            simCtx.fill();
-            simCtx.stroke();
-
-            // Labels for tsunami risk zone
-            simCtx.fillStyle = 'rgba(231, 76, 60, 0.6)';
-            simCtx.font = 'bold 11px Inter, sans-serif';
-            simCtx.fillText('津波浸水想定区域 (危険帯)', simW * 0.62, simH * 0.85);
-
-            // Check if pin is inside poly
-            isInside = isPointInPoly(mousePos, tsunamiPoly);
-
-            // Update UI banners
-            const statusBox = document.getElementById('interactive-status-box');
-            const statusText = document.getElementById('interactive-status-text');
-            if (isInside) {
-                statusBox.className = 'tsunami-status-box danger-pulse-bg w-full flex items-center justify-center py-4 border rounded-2xl font-bold tracking-widest text-base shadow-xl bg-gradient-to-r from-red-600/40 to-orange-500/50 border-red-500/70 text-white';
-                statusText.textContent = '⚠️ 浸水想定区域 内 (即時避難)';
-            } else {
-                statusBox.className = 'tsunami-status-box w-full flex items-center justify-center py-4 border rounded-2xl font-bold tracking-widest text-base shadow-xl bg-gradient-to-r from-emerald-600/40 to-teal-500/50 border-emerald-500/40 text-white';
-                statusText.textContent = '✅ 津波浸水想定区域 外';
-            }
-
-            // Draw GPS Pin
-            simCtx.fillStyle = isInside ? '#e74c3c' : '#2ecc71';
-            simCtx.shadowColor = isInside ? '#e74c3c' : '#2ecc71';
-            simCtx.shadowBlur = 15;
-            simCtx.beginPath();
-            simCtx.arc(mousePos.x, mousePos.y, 8, 0, Math.PI * 2);
-            simCtx.fill();
-            
-            // Draw pin anchor ring
-            simCtx.strokeStyle = '#ffffff';
-            simCtx.lineWidth = 2;
-            simCtx.beginPath();
-            simCtx.arc(mousePos.x, mousePos.y, 12, 0, Math.PI * 2);
-            simCtx.stroke();
-
-            // Reset shadows
-            simCtx.shadowBlur = 0;
-
-            // Draw simulated vector paths (Paths towards safe highground)
-            if (mousePos) {
-                simCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                simCtx.lineWidth = 1.5;
-                simCtx.setLineDash([5, 5]);
-                simCtx.beginPath();
-                simCtx.moveTo(mousePos.x, mousePos.y);
-                simCtx.lineTo(simW * 0.15, simH * 0.2); // Emulated Highground safe point
-                simCtx.stroke();
-                simCtx.setLineDash([]);
-                
-                // Emulated Highground safe point icon
-                simCtx.fillStyle = '#3498db';
-                simCtx.beginPath();
-                simCtx.arc(simW * 0.15, simH * 0.2, 10, 0, Math.PI * 2);
-                simCtx.fill();
-                simCtx.fillStyle = '#ffffff';
-                simCtx.font = 'bold 9px Inter, sans-serif';
-                simCtx.fillText('避難所', simW * 0.12, simH * 0.14);
-            }
-
-            requestAnimationFrame(updateSimulator);
-        }
-
-        // Mouse/Touch trackers
-        function handleSimMove(e) {
-            const rect = simCanvas.getBoundingClientRect();
-            let clientX, clientY;
-            
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            
-            mousePos.x = clientX - rect.left;
-            mousePos.y = clientY - rect.top;
-        }
-
-        simCanvas.addEventListener('mousemove', handleSimMove);
-        simCanvas.addEventListener('touchmove', handleSimMove, { passive: true });
-        simCanvas.addEventListener('touchstart', handleSimMove, { passive: true });
-
-        // Fit simCanvas on load & resize
-        window.addEventListener('resize', () => {
-            simW = simCanvas.width = simCanvas.offsetWidth;
-            simH = simCanvas.height = simCanvas.offsetHeight;
-        });
-
-        // Initialize Simulator Loop
-        updateSimulator();
-
-
-        // -------------------------------------------------------------
-        // GSAP ScrollTrigger Animations for beautiful section load
-        // -------------------------------------------------------------
-        gsap.utils.toArray('section:not(#hero)').forEach(sec => {
-            gsap.from(sec.querySelectorAll('.glass-card'), {
-                scrollTrigger: {
-                    trigger: sec,
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                },
-                opacity: 0,
-                y: 50,
-                scale: 0.98,
-                duration: 1,
-                stagger: 0.15,
-                ease: "power2.out"
-            });
-
-            gsap.from(sec.querySelector('h2'), {
-                scrollTrigger: {
-                    trigger: sec,
-                    start: "top 85%",
-                },
-                opacity: 0,
-                y: 30,
-                duration: 1,
-                ease: "power2.out"
-            });
-        });
-    </script>
 </body>
 </html>
