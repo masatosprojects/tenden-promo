@@ -3,692 +3,744 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TENDEN（テンデン） | 津波避難 PWA</title>
-  <meta name="description" content="マルチエージェントシミュレーション研究から生まれた、観光客向け津波避難誘導 PWA「TENDEN」。鎌倉市沿岸部を対象に62,299人・50試行の避難シミュレーションを実施。">
+  <title>TENDEN — 津波避難 PWA</title>
+  <meta name="description" content="62,299人・50試行の津波避難シミュレーション研究から生まれた、観光客のための減災 PWA。3ルート同時提示・多言語・オフライン対応。">
   <meta property="og:title" content="TENDEN — その瞬間の、迷わないを。">
-  <meta property="og:description" content="マルチエージェントシミュレーションが示す混雑の罠。動的3ルート・多言語・オフライン対応の減災PWAアプリ。">
-  <meta property="og:type" content="website">
+  <meta property="og:description" content="鎌倉市沿岸部 62,299人規模のマルチエージェントシミュレーションが示す「混雑の罠」。動的 3 ルート案内で観光客の避難を支援する PWA。">
   <meta property="og:image" content="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Reset ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
-    :root {
-      --bg:        #ffffff;
-      --bg-muted:  #f8f9fa;
-      --text:      #1a1a2e;
-      --text-muted:#6b7280;
-      --accent:    #2563eb;
-      --danger:    #ef4444;
-      --border:    #e5e7eb;
-      --dark-bg:   #1a1a2e;
-      --font-jp:   'Noto Sans JP', sans-serif;
-      --font-en:   'Inter', sans-serif;
-    }
+/* ── Design tokens ──────────────────────────── */
+:root{
+  --bg:           #000000;
+  --bg1:          #0a0a0f;
+  --bg2:          #111118;
+  --surface:      #16161f;
+  --border:       rgba(255,255,255,0.08);
+  --border-hi:    rgba(255,255,255,0.16);
+  --text:         #ffffff;
+  --text-2:       rgba(255,255,255,0.65);
+  --text-3:       rgba(255,255,255,0.38);
+  --accent:       #4f7fff;
+  --accent-glow:  rgba(79,127,255,0.25);
+  --red:          #f04343;
+  --red-dim:      rgba(240,67,67,0.18);
+  --green:        #34d399;
+  --mono:         'JetBrains Mono',monospace;
+  --font:         'Inter','Noto Sans JP',sans-serif;
+  --font-jp:      'Noto Sans JP','Inter',sans-serif;
+  --radius:       10px;
+  --transition:   0.18s ease;
+}
 
-    html { scroll-behavior: smooth; }
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
 
-    body {
-      font-family: var(--font-jp);
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-    }
+/* ── Utility ────────────────────────────────── */
+.container{max-width:1080px;margin:0 auto;padding:0 2rem}
+.label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text-3);
+  border:1px solid var(--border);border-radius:100px;
+  padding:4px 12px;margin-bottom:1.5rem;
+}
+.label-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.label-dot.red{background:var(--red)}
 
-    /* ===== NAV ===== */
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: 0.05em;
-    }
-    .nav-brand img { width: 36px; height: 36px; object-fit: contain; }
-    .nav-links { display: flex; align-items: center; gap: 2rem; }
-    .nav-links a {
-      font-family: var(--font-en);
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-cta {
-      background: var(--accent) !important;
-      color: #fff !important;
-      padding: 0.45rem 1.1rem;
-      border-radius: 6px;
-      font-weight: 600 !important;
-    }
-    .nav-cta:hover { background: #1d4ed8 !important; color: #fff !important; }
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-    /* ===== HERO ===== */
-    .hero {
-      min-height: calc(100vh - 60px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 5rem 2rem 4rem;
-      background: var(--bg);
-    }
-    .hero-gif {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      margin-bottom: 2.5rem;
-    }
-    .hero-eyebrow {
-      font-family: var(--font-en);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.2rem;
-    }
-    .hero-title {
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 1.5rem;
-    }
-    .hero-sub {
-      max-width: 600px;
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-bottom: 2.8rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-    .btn-primary {
-      display: inline-block;
-      background: var(--text);
-      color: #fff;
-      padding: 0.85rem 2rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-primary:hover { background: #2d2d4e; transform: translateY(-1px); }
-    .btn-secondary {
-      display: inline-block;
-      background: transparent;
-      color: var(--text);
-      padding: 0.85rem 2rem;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: border-color 0.2s, color 0.2s, transform 0.15s;
-    }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+/* ── Navigation ─────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.nav-brand img{width:30px;height:30px;object-fit:contain;border-radius:6px}
+.nav-brand-name{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:0.08em}
+.nav-links{display:flex;align-items:center;gap:0}
+.nav-links a{
+  font-size:13px;font-weight:500;color:var(--text-2);
+  text-decoration:none;padding:0 14px;height:56px;
+  display:inline-flex;align-items:center;
+  border-right:1px solid var(--border);
+  transition:color var(--transition),background var(--transition);
+}
+.nav-links a:first-child{border-left:1px solid var(--border)}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.nav-cta{
+  margin-left:16px;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;color:var(--text);
+  background:var(--accent);text-decoration:none;
+  padding:0 18px;height:34px;border-radius:8px;
+  transition:background var(--transition),transform var(--transition);
+  white-space:nowrap;
+}
+.nav-cta:hover{background:#6290ff;transform:translateY(-1px)}
 
-    /* ===== SECTION COMMON ===== */
-    section { padding: 6rem 2rem; }
-    .container { max-width: 1060px; margin: 0 auto; }
-    .section-label {
-      font-family: var(--font-en);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-    }
-    .section-title {
-      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
-      font-weight: 900;
-      line-height: 1.3;
-      letter-spacing: -0.015em;
-      color: var(--text);
-      margin-bottom: 1.2rem;
-    }
-    .section-desc {
-      font-size: 1rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      line-height: 1.8;
-    }
+/* ── Hero ───────────────────────────────────── */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:calc(56px + 5rem) 2rem 6rem;
+  position:relative;overflow:hidden;
+}
+/* dot grid */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,0.06) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 100%);
+  pointer-events:none;
+}
+/* blue bloom */
+.hero::after{
+  content:'';position:absolute;
+  width:800px;height:400px;
+  top:-100px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(79,127,255,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:1}
+.hero-gif{
+  width:96px;height:96px;object-fit:contain;
+  border-radius:16px;
+  border:1px solid var(--border-hi);
+  background:var(--bg1);
+  margin-bottom:2rem;
+  box-shadow:0 0 0 6px rgba(255,255,255,0.04);
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:1.4rem;
+}
+.hero-title{
+  font-family:var(--font-jp);
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:900;line-height:1.1;letter-spacing:-0.03em;
+  background:linear-gradient(160deg,#fff 40%,rgba(255,255,255,0.45));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.6rem;
+}
+.hero-sub{
+  max-width:540px;margin:0 auto 2.8rem;
+  font-size:1rem;color:var(--text-2);line-height:1.85;
+}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--text);color:#000;
+  font-size:14px;font-weight:700;text-decoration:none;
+  padding:0 22px;height:44px;border-radius:9px;
+  transition:background var(--transition),transform var(--transition);
+}
+.btn-primary:hover{background:#ddd;transform:translateY(-1px)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.06);color:var(--text-2);
+  font-size:14px;font-weight:500;text-decoration:none;
+  padding:0 22px;height:44px;border-radius:9px;
+  border:1px solid var(--border-hi);
+  transition:background var(--transition),color var(--transition),transform var(--transition);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.1);color:var(--text);transform:translateY(-1px)}
 
-    /* ===== METRICS ===== */
-    .metrics-section { background: var(--bg-muted); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-    }
-    .metric-item {
-      padding: 3rem 2rem;
-      text-align: center;
-      border-right: 1px solid var(--border);
-    }
-    .metric-item:last-child { border-right: none; }
-    .metric-value {
-      font-family: var(--font-en);
-      font-size: clamp(2.5rem, 5vw, 3.8rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.6rem;
-    }
-    .metric-value.danger { color: var(--danger); }
-    .metric-label {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      line-height: 1.5;
-    }
+/* ── Stats bar ──────────────────────────────── */
+.stats-bar{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--bg1);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{
+  padding:2.5rem 1.5rem;
+  border-right:1px solid var(--border);
+  text-align:center;
+}
+.stat-item:last-child{border-right:none}
+.stat-num{
+  font-family:var(--mono);font-size:clamp(2rem,4vw,3rem);
+  font-weight:700;letter-spacing:-0.04em;color:var(--text);
+  line-height:1;margin-bottom:8px;
+}
+.stat-num.red{color:var(--red)}
+.stat-label{font-size:12px;color:var(--text-3);line-height:1.5}
 
-    /* ===== CONCEPT ===== */
-    .concept-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 3.5rem;
-    }
-    .concept-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem;
-      background: var(--bg);
-    }
-    .concept-card.emergency { border-color: #fca5a5; background: #fff5f5; }
-    .concept-icon {
-      font-size: 1.8rem;
-      margin-bottom: 1.2rem;
-    }
-    .concept-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-      color: var(--text);
-    }
-    .concept-card.emergency .concept-title { color: var(--danger); }
-    .concept-body {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.8;
-    }
-    .concept-tag {
-      display: inline-block;
-      margin-top: 1.2rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--bg-muted);
-      color: var(--text-muted);
-      padding: 0.3rem 0.75rem;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-    }
-    .concept-card.emergency .concept-tag { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
+/* ── Section base ───────────────────────────── */
+.section{padding:7rem 0}
+.section-alt{background:var(--bg1)}
+.section-head{max-width:640px;margin-bottom:4rem}
+.section-title{
+  font-family:var(--font-jp);
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:900;line-height:1.25;
+  letter-spacing:-0.02em;margin-bottom:1rem;
+}
+.section-desc{font-size:15px;color:var(--text-2);line-height:1.85}
 
-    /* ===== FEATURES ===== */
-    .features-section { background: var(--bg-muted); }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      margin-top: 3.5rem;
-    }
-    .feature-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--bg-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      margin-bottom: 1.1rem;
-    }
-    .feature-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 0.55rem;
-      color: var(--text);
-    }
-    .feature-body {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
+/* ── Problem ────────────────────────────────── */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.problem-text p{font-size:15px;color:var(--text-2);line-height:1.85;margin-bottom:1.2rem}
+.problem-text p:last-child{margin-bottom:0}
+.problem-stat-card{
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;background:var(--bg1);
+}
+.psc-header{
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text-3);
+}
+.psc-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+}
+.psc-row:last-child{border-bottom:none}
+.psc-agent{font-size:14px;color:var(--text-2)}
+.psc-bar-wrap{flex:1;margin:0 1rem;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
+.psc-bar{height:100%;border-radius:3px;transition:width 1s ease}
+.psc-val{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);min-width:40px;text-align:right}
+.psc-val.red{color:var(--red)}
+.psc-val.green{color:var(--green)}
 
-    /* ===== RESEARCH ===== */
-    .research-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      margin-top: 3.5rem;
-      align-items: start;
-    }
-    .research-finding {
-      background: var(--bg-muted);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 1.25rem;
-    }
-    .research-finding-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-    .research-finding-body {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.75;
-    }
-    .finding-number {
-      font-family: var(--font-en);
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.03em;
-    }
-    .finding-number.danger { color: var(--danger); }
-    .finding-number.accent { color: var(--accent); }
+/* ── Features ───────────────────────────────── */
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--border);
+}
+.feat-card{
+  padding:2rem;
+  background:var(--bg);
+  transition:background var(--transition);
+}
+.feat-card:hover{background:var(--bg1)}
+.feat-icon{
+  font-size:1.4rem;margin-bottom:1.1rem;
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border-radius:9px;
+}
+.feat-title{font-size:15px;font-weight:700;margin-bottom:0.5rem;color:var(--text)}
+.feat-body{font-size:13px;color:var(--text-2);line-height:1.75}
 
-    /* ===== CTA ===== */
-    .cta-section {
-      background: var(--dark-bg);
-      color: #fff;
-      text-align: center;
-    }
-    .cta-title {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 900;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .cta-sub {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 2.5rem;
-      line-height: 1.7;
-    }
-    .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
-    .btn-white {
-      display: inline-block;
-      background: #fff;
-      color: var(--text);
-      padding: 0.85rem 2rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-white:hover { background: #f0f0f0; transform: translateY(-1px); }
-    .cta-links { display: flex; gap: 1.8rem; justify-content: center; flex-wrap: wrap; }
-    .cta-links a {
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .cta-links a:hover { color: #fff; }
+/* ── Research highlight ─────────────────────── */
+.paradox-wrap{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.paradox-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 1.8rem;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.paradox-title{font-family:var(--mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-2)}
+.paradox-badge{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  background:var(--red-dim);color:var(--red);
+  padding:3px 10px;border-radius:4px;
+  border:1px solid rgba(240,67,67,0.3);
+}
+.paradox-body{padding:2rem 1.8rem;background:var(--bg1)}
+.paradox-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.px-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.5rem;
+}
+.px-scenario{font-family:var(--mono);font-size:11px;color:var(--text-3);margin-bottom:0.5rem;letter-spacing:0.08em}
+.px-value{font-family:var(--mono);font-size:2.4rem;font-weight:700;letter-spacing:-0.04em;line-height:1}
+.px-value.red{color:var(--red)}
+.px-value.green{color:var(--green)}
+.px-desc{font-size:13px;color:var(--text-2);margin-top:0.7rem;line-height:1.65}
+.px-conclusion{
+  margin-top:1.5rem;
+  padding:1.2rem 1.5rem;
+  background:rgba(79,127,255,0.07);
+  border:1px solid rgba(79,127,255,0.2);
+  border-radius:8px;
+  font-size:14px;color:var(--text-2);line-height:1.75;
+}
+.px-conclusion strong{color:var(--text)}
 
-    /* ===== FOOTER ===== */
-    .footer {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      padding: 2.5rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-    .footer-brand img { width: 28px; height: 28px; object-fit: contain; }
-    .footer-copy {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .footer-links { display: flex; gap: 1.4rem; }
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--accent); }
+/* Sensitivity table */
+.sens-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+.sens-table th{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text-3);text-align:left;padding:0.7rem 1rem;
+  border-bottom:1px solid var(--border);background:var(--surface);
+}
+.sens-table td{
+  font-size:13px;color:var(--text-2);
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);
+}
+.sens-table tr:last-child td{border-bottom:none}
+.sens-table td:last-child{font-family:var(--mono);font-weight:600}
+.td-red{color:var(--red)!important}
+.td-blue{color:var(--accent)!important}
+.td-dim{color:var(--text-3)!important}
+.bar-cell{display:flex;align-items:center;gap:10px}
+.mini-bar{height:4px;border-radius:2px;background:var(--accent);min-width:2px}
+.mini-bar.red{background:var(--red)}
+.mini-bar.dim{background:rgba(255,255,255,0.15)}
 
-    /* ===== SCROLL ANIMATION ===== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
+/* ── Stack section ──────────────────────────── */
+.stack-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:2.5rem}
+.stack-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  color:var(--text-2);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;padding:7px 13px;
+  transition:border-color var(--transition),color var(--transition);
+}
+.stack-badge:hover{border-color:var(--border-hi);color:var(--text)}
+.stack-dot{width:7px;height:7px;border-radius:50%;background:var(--text-3)}
+.stack-dot.blue{background:var(--accent)}
+.stack-dot.red{background:var(--red)}
+.stack-dot.green{background:var(--green)}
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .metrics-grid { grid-template-columns: 1fr 1fr; }
-      .metric-item { border-right: none; border-bottom: 1px solid var(--border); }
-      .metric-item:nth-child(odd) { border-right: 1px solid var(--border); }
-      .metric-item:nth-last-child(-n+2) { border-bottom: none; }
+/* ── CTA ────────────────────────────────────── */
+.cta-section{
+  padding:8rem 2rem;text-align:center;
+  background:var(--bg1);
+  border-top:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;
+  width:600px;height:300px;
+  bottom:-100px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(79,127,255,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-title{
+  font-family:var(--font-jp);
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:900;line-height:1.15;letter-spacing:-0.02em;
+  background:linear-gradient(160deg,#fff 40%,rgba(255,255,255,0.4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1rem;
+}
+.cta-sub{font-size:15px;color:var(--text-2);margin-bottom:2.5rem;line-height:1.8}
+.cta-actions{
+  display:flex;gap:12px;justify-content:center;
+  flex-wrap:wrap;margin-bottom:2.5rem;position:relative;
+}
+.cta-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.cta-links a{
+  font-size:13px;color:var(--text-3);text-decoration:none;
+  transition:color var(--transition);
+}
+.cta-links a:hover{color:var(--text-2)}
 
-      .concept-grid { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .research-grid { grid-template-columns: 1fr; }
+/* ── Footer ─────────────────────────────────── */
+.footer{
+  border-top:1px solid var(--border);
+  padding:2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1.5rem;flex-wrap:wrap;
+}
+.footer-brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text)}
+.footer-brand img{width:24px;height:24px;object-fit:contain;border-radius:5px;opacity:.85}
+.footer-name{font-family:var(--mono);font-size:13px;font-weight:500}
+.footer-copy{font-size:12px;color:var(--text-3);line-height:1.6}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:12px;color:var(--text-3);text-decoration:none;transition:color var(--transition)}
+.footer-links a:hover{color:var(--text-2)}
 
-      .nav-links { gap: 1.2rem; }
-      .nav-links a.nav-cta { display: none; }
-    }
-    @media (max-width: 520px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .nav-links .hide-mobile { display: none; }
-      .footer { flex-direction: column; text-align: center; }
-    }
+/* ── Scroll reveal ──────────────────────────── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+.delay-1{transition-delay:.1s}
+.delay-2{transition-delay:.2s}
+.delay-3{transition-delay:.3s}
+
+/* ── Responsive ─────────────────────────────── */
+@media(max-width:840px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat-item:nth-child(odd){border-right:1px solid var(--border)}
+  .stat-item:nth-child(even){border-right:none}
+  .stat-item:nth-child(n+3){border-top:1px solid var(--border)}
+  .problem-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .paradox-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:560px){
+  .feat-grid{grid-template-columns:1fr}
+  .footer{flex-direction:column;text-align:center}
+}
   </style>
 </head>
 <body>
 
-  <!-- ===== NAVIGATION ===== -->
-  <nav class="nav">
-    <a class="nav-brand" href="#">
-      <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN logo">
-      TENDEN
-    </a>
-    <div class="nav-links">
-      <a href="#features" class="hide-mobile">機能</a>
-      <a href="#research" class="hide-mobile">研究</a>
-      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" class="hide-mobile">GitHub</a>
-      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="nav-cta">アプリを開く →</a>
-    </div>
-  </nav>
+<!-- ═══ NAV ═══════════════════════════════════ -->
+<nav class="nav">
+  <a class="nav-brand" href="#">
+    <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN">
+    <span class="nav-brand-name">TENDEN</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">機能</a>
+    <a href="#research">研究</a>
+    <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <a class="nav-cta" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">
+    アプリを開く →
+  </a>
+</nav>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
+<!-- ═══ HERO ════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-content">
     <img class="hero-gif"
          src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif"
-         alt="TENDEN animated logo">
+         alt="TENDEN">
     <p class="hero-eyebrow">Tsunami Emergency Navigation &amp; Detection Engine</p>
-    <h1 class="hero-title">「その瞬間の、<br>迷わないを。」</h1>
+    <h1 class="hero-title">
+      その瞬間の、<br>「迷わない」を。
+    </h1>
     <p class="hero-sub">
-      鎌倉市沿岸部を対象とした津波避難マルチエージェントシミュレーション研究から生まれた、
-      観光客・外国人旅行者のための減災 PWA アプリ。
+      鎌倉市沿岸部を舞台にした 62,299 人規模の津波避難シミュレーション研究から生まれた、
+      観光客・外国人旅行者のためのリアルタイム避難誘導 PWA。
     </p>
     <div class="hero-actions">
-      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="btn-primary">アプリを開く →</a>
-      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" class="btn-secondary">研究論文 &amp; GitHub</a>
+      <a class="btn-primary" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">
+        アプリを開く <span aria-hidden="true">→</span>
+      </a>
+      <a class="btn-ghost" href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">
+        GitHub &amp; 研究論文
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== METRICS ===== -->
-  <section class="metrics-section" style="padding: 0;">
-    <div class="metrics-grid">
-      <div class="metric-item reveal">
-        <div class="metric-value">62,299</div>
-        <div class="metric-label">総シミュレーション人口<br>（50 試行平均）</div>
-      </div>
-      <div class="metric-item reveal reveal-delay-1">
-        <div class="metric-value">25</div>
-        <div class="metric-label">感度分析<br>シナリオ数</div>
-      </div>
-      <div class="metric-item reveal reveal-delay-2">
-        <div class="metric-value">50</div>
-        <div class="metric-label">ベースライン<br>試行回数</div>
-      </div>
-      <div class="metric-item reveal reveal-delay-3">
-        <div class="metric-value danger">36.8%</div>
-        <div class="metric-label">ベースライン<br>生存率（BASE）</div>
-      </div>
+<!-- ═══ STATS BAR ════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num">62,299</div>
+      <div class="stat-label">総シミュレーション人口<br>（50 試行平均）</div>
     </div>
-  </section>
-
-  <!-- ===== CONCEPT ===== -->
-  <section id="concept">
-    <div class="container">
-      <p class="section-label reveal">Concept</p>
-      <h2 class="section-title reveal">平時の「知る」を、<br>非常時の「生きる」に。</h2>
-      <p class="section-desc reveal">日常からシームレスに繋がる2つのモード。普段はハザード情報を学び、地震・津波発生の瞬間に自動切り替えで避難を案内する。</p>
-
-      <div class="concept-grid">
-        <div class="concept-card reveal">
-          <div class="concept-icon">🗺️</div>
-          <h3 class="concept-title">平時モード</h3>
-          <p class="concept-body">
-            海抜・浸水想定区域・避難所を地図上で確認できる学習モード。
-            GPSによる現在地表示と標高リアルタイム取得で、旅行中でも
-            「今どのくらいの高さにいるか」を常に把握できる。
-            スクリーンショット保存でオフライン時の備えにも。
-          </p>
-          <span class="concept-tag">ライトモード / 海抜 HUD 表示</span>
-        </div>
-        <div class="concept-card emergency reveal reveal-delay-1">
-          <div class="concept-icon">🚨</div>
-          <h3 class="concept-title">緊急モード</h3>
-          <p class="concept-body">
-            P2P 地震情報 WebSocket が大津波警報を検知すると自動起動。
-            ダークモードに切り替わり、シミュレーション統計に基づく
-            3ルート候補（最短 / 混雑回避 / バリアフリー）を即座に提示。
-            ルート逸脱を振動・点滅で警告し、安否共有も1タップで完了。
-          </p>
-          <span class="concept-tag">緊急ダークモード / 3ルート案内</span>
-        </div>
-      </div>
+    <div class="stat-item reveal delay-1">
+      <div class="stat-num">25</div>
+      <div class="stat-label">感度分析<br>シナリオ数</div>
     </div>
-  </section>
-
-  <!-- ===== FEATURES ===== -->
-  <section id="features" class="features-section">
-    <div class="container">
-      <p class="section-label reveal">Features</p>
-      <h2 class="section-title reveal">研究知見を実装した<br>7つの機能</h2>
-
-      <div class="features-grid">
-        <div class="feature-card reveal">
-          <div class="feature-icon">🔀</div>
-          <h3 class="feature-title">3ルート同時提示</h3>
-          <p class="feature-body">最短距離・混雑回避・バリアフリー平坦ルートの3候補を OSRM + シミュレーション混雑データで同時計算。最終判断はユーザーに委ねる設計。</p>
-        </div>
-        <div class="feature-card reveal reveal-delay-1">
-          <div class="feature-icon">🌊</div>
-          <h3 class="feature-title">公式浸水想定タイル</h3>
-          <p class="feature-body">国土地理院ハザードマップポータルの津波浸水想定タイルをオーバーレイ表示。Canvas ピクセル解析で現在地の区域内外を HUD にリアルタイム判定。</p>
-        </div>
-        <div class="feature-card reveal reveal-delay-2">
-          <div class="feature-icon">🌐</div>
-          <h3 class="feature-title">ゼロクリック多言語</h3>
-          <p class="feature-body">ブラウザ言語を自動検知し、日本語・英語・中国語（簡体）・韓国語へ即時切り替え。土地勘のない外国人観光客が主要ターゲット。</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">📡</div>
-          <h3 class="feature-title">津波警報自動検知</h3>
-          <p class="feature-body">P2P 地震情報 WebSocket（api.p2pquake.net）に常時接続し、JMA コード 551/556「大津波警報」で緊急モードを自動起動。切断時は5秒で再接続。</p>
-        </div>
-        <div class="feature-card reveal reveal-delay-1">
-          <div class="feature-icon">📶</div>
-          <h3 class="feature-title">オフライン PWA</h3>
-          <p class="feature-body">Service Worker でマップタイル・データ・UI を動的キャッシュ。通信インフラ被災後もアプリが動作し続けるよう設計。インストール不要でホーム画面追加が可能。</p>
-        </div>
-        <div class="feature-card reveal reveal-delay-2">
-          <div class="feature-icon">♿</div>
-          <h3 class="feature-title">バリアフリールート</h3>
-          <p class="feature-body">シミュレーションが示す年齢別格差（成人 41.2% vs 高齢者 30.8%）を踏まえ、坂・段差を考慮した平坦優先ルートを高齢者・乳幼児連れ向けに明示。</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">📤</div>
-          <h3 class="feature-title">ワンタップ安否共有</h3>
-          <p class="feature-body">Web Share API で現在地 Google マップ URL と安否メッセージを家族・友人に即送信。緊急時にフォームを操作する認知負荷ゼロの設計。</p>
-        </div>
-      </div>
+    <div class="stat-item reveal delay-2">
+      <div class="stat-num">50</div>
+      <div class="stat-label">ベースライン<br>試行回数</div>
     </div>
-  </section>
+    <div class="stat-item reveal delay-3">
+      <div class="stat-num red">36.8%</div>
+      <div class="stat-label">ベースライン生存率<br>（BASE, 津波到達 14 分）</div>
+    </div>
+  </div>
+</div>
 
-  <!-- ===== RESEARCH ===== -->
-  <section id="research">
-    <div class="container">
-      <p class="section-label reveal">Research Background</p>
-      <h2 class="section-title reveal">シミュレーションが示す<br>2つの核心発見</h2>
-
-      <div class="research-grid">
-        <div>
-          <div class="research-finding reveal">
-            <p class="research-finding-title">発見 1 — 属性間格差</p>
-            <div class="finding-number danger">53.6pp</div>
-            <p class="research-finding-body" style="margin-top:0.6rem;">
-              地域住民（85.1%）と一般来訪客（31.6%）の生存率差。
-              土地勘・初期危機感・避難ケース分布の違いが、
-              短いリードタイムで命の分岐点を生み出す。
-            </p>
+<!-- ═══ PROBLEM ══════════════════════════════════ -->
+<section class="section" id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-text">
+        <div class="label reveal"><span class="label-dot red"></span> Problem</div>
+        <h2 class="section-title reveal">なぜ観光客は<br>逃げられないのか</h2>
+        <p class="reveal">
+          土地勘のない観光客と地元住民の生存率には
+          <strong>53.6 ポイント</strong>もの格差がある。
+          シミュレーションにおいて地域住民の生存率が 85.1% に達する一方、
+          一般来訪客はわずか 31.6% にとどまった。
+        </p>
+        <p class="reveal">
+          その主因は三つ——ナビゲーションの失敗（地図なし時、60% の確率で誤経路選択）、
+          避難開始の遅れ（来訪客の 70% が発災後 5 分以上待機）、
+          そして海岸出口の交通渋滞だ。
+        </p>
+        <p class="reveal">
+          さらに逆説的な発見がある。ハザードマップの普及率を 100% にすると、
+          全員が同一の「最適ルート」に殺到して混雑が激化し、
+          むしろ全体の生存率が<strong>6.1 ポイント低下</strong>する——
+          <em>混雑の罠（Congestion Trap）</em>と呼ばれる現象だ。
+        </p>
+      </div>
+      <div class="reveal delay-1">
+        <div class="problem-stat-card">
+          <div class="psc-header">エージェント別 生存率 ／ BASE n=50</div>
+          <div class="psc-row">
+            <span class="psc-agent">地域住民</span>
+            <div class="psc-bar-wrap"><div class="psc-bar" style="width:85.1%;background:var(--green)"></div></div>
+            <span class="psc-val green">85.1%</span>
           </div>
-          <div class="research-finding reveal reveal-delay-1">
-            <p class="research-finding-title">発見 2 — ハザードマップ逆説</p>
-            <div class="finding-number accent">−6.1pp</div>
-            <p class="research-finding-body" style="margin-top:0.6rem;">
-              ハザードマップ認知率 100% 時の生存率低下幅。
-              全員が同一の「最適経路」に収束し、混雑の罠（Congestion Trap）が発生。
-              動的ルーティングが逆説解消の鍵。
-            </p>
+          <div class="psc-row">
+            <span class="psc-agent">現地就業者</span>
+            <div class="psc-bar-wrap"><div class="psc-bar" style="width:49.5%;background:var(--accent)"></div></div>
+            <span class="psc-val">49.5%</span>
+          </div>
+          <div class="psc-row">
+            <span class="psc-agent">プロ誘導員</span>
+            <div class="psc-bar-wrap"><div class="psc-bar" style="width:40.7%;background:var(--accent)"></div></div>
+            <span class="psc-val">40.7%</span>
+          </div>
+          <div class="psc-row">
+            <span class="psc-agent">一般来訪客</span>
+            <div class="psc-bar-wrap"><div class="psc-bar" style="width:31.6%;background:var(--red)"></div></div>
+            <span class="psc-val red">31.6%</span>
           </div>
         </div>
-        <div class="reveal reveal-delay-1">
-          <div style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
-            <div style="background: var(--bg-muted); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);">
-              <p style="font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">感度分析ランキング（生存率変動幅）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═════════════════════════════════ -->
+<section class="section section-alt" id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="label reveal"><span class="label-dot"></span> Features</div>
+      <h2 class="section-title reveal">研究知見を実装した<br>7 つの機能</h2>
+      <p class="section-desc reveal">シミュレーションが明らかにした「混雑の罠」を回避するために、TENDEN は静的なマップではなく動的な3ルート案内を提供する。</p>
+    </div>
+    <div class="feat-grid reveal">
+      <div class="feat-card">
+        <div class="feat-icon">🔀</div>
+        <h3 class="feat-title">3 ルート同時提示</h3>
+        <p class="feat-body">最短距離・混雑回避・バリアフリー平坦の 3 候補を OSRM + シミュレーション混雑データで同時計算。ルート選択の主体はユーザー自身に委ねる。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📡</div>
+        <h3 class="feat-title">津波警報 自動検知</h3>
+        <p class="feat-body">P2P 地震情報 WebSocket（api.p2pquake.net）に常時接続。JMA コード 551/556 で即座に緊急モードへ移行し、切断時は 5 秒で再接続。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌊</div>
+        <h3 class="feat-title">公式浸水想定タイル</h3>
+        <p class="feat-body">国土地理院ハザードマップポータルの津波浸水想定タイルをオーバーレイ。Canvas ピクセル解析で現在地の区域内外を HUD にリアルタイム表示。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <h3 class="feat-title">ゼロクリック多言語</h3>
+        <p class="feat-body">ブラウザ言語を自動検知し、日本語・英語・中国語（簡体）・韓国語へ即時切り替え。一般来訪客の 53.6pp 死亡格差に応えるための最優先機能。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📶</div>
+        <h3 class="feat-title">オフライン PWA</h3>
+        <p class="feat-body">Service Worker でマップタイル・JSON データ・UI アセットを動的キャッシュ。通信インフラ被災後も動作継続。インストール不要でホーム画面追加が可能。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">♿</div>
+        <h3 class="feat-title">バリアフリールート</h3>
+        <p class="feat-body">年齢別格差（成人 41.2% vs 高齢者 30.8%）の根拠に基づき、坂・段差を考慮した平坦優先ルートを高齢者・乳幼児連れに明示する。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📤</div>
+        <h3 class="feat-title">ワンタップ安否共有</h3>
+        <p class="feat-body">Web Share API で現在地 Google マップ URL と安否メッセージを家族・友人へ即送信。緊急時に複雑な操作を必要としない設計思想。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RESEARCH ══════════════════════════════════ -->
+<section class="section" id="research">
+  <div class="container">
+    <div class="section-head">
+      <div class="label reveal"><span class="label-dot"></span> Research</div>
+      <h2 class="section-title reveal">ハザードマップ逆説</h2>
+      <p class="section-desc reveal">
+        25 シナリオ・50 試行の感度分析が示した、最も反直感的な発見。
+        情報の均一化が、かえって集合的な死亡率を高める。
+      </p>
+    </div>
+
+    <div class="paradox-wrap reveal">
+      <div class="paradox-header">
+        <span class="paradox-title">D 群 — ハザードマップ認知率変動シナリオ</span>
+        <span class="paradox-badge">Congestion Trap</span>
+      </div>
+      <div class="paradox-body">
+        <div class="paradox-grid">
+          <div class="px-card">
+            <p class="px-scenario">D1 — 認知率 100%（全員最適ルートを把握）</p>
+            <div class="px-value red">35.8%</div>
+            <p class="px-desc">全員が同一の指定避難路へ収束。出口ノードに混雑が集中し、
+              Klüpfel 混雑指数が限界密度の 33 倍に達して歩行速度が 90% 低下。
+              一般来訪客の生存率は <strong>29.4%</strong> まで急落。</p>
+          </div>
+          <div class="px-card">
+            <p class="px-scenario">D5 — 認知率 0%（全員ランダム分散）</p>
+            <div class="px-value green">41.9%</div>
+            <p class="px-desc">60% 誤認で来訪客が複数経路に偶発的に分散。混雑集中が緩和され、
+              逆説的に全体生存率が <strong>6.1pp 上昇</strong>。
+              一般来訪客の生存率は 36.8% と認知率 100% 時より改善。</p>
+          </div>
+        </div>
+        <div class="px-conclusion">
+          <strong>示唆：</strong>静的なハザードマップの普及率を高めるだけでは不十分。
+          個々人が合理的に「最適経路」を選択した結果として、集合的に非効率な混雑状態が発生する
+          Braess パラドックスが鎌倉の道路ネットワーク上で定量的に観測された。
+          リアルタイムの混雑状況を反映した<strong>動的経路誘導</strong>こそが逆説の解消策である。
+        </div>
+      </div>
+    </div>
+
+    <table class="sens-table reveal" style="margin-top:2.5rem">
+      <thead>
+        <tr>
+          <th>グループ</th>
+          <th>変動要因</th>
+          <th>生存率 変動幅</th>
+          <th>影響度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px">B 群</span></td>
+          <td>人口・季節構成</td>
+          <td>
+            <div class="bar-cell">
+              <div class="mini-bar red" style="width:calc(32.1 / 32.1 * 120px)"></div>
+              <span class="td-red">32.1pp</span>
             </div>
-            <div style="padding: 0.5rem 0;">
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
-                <span style="font-size: 0.88rem; color: var(--text);">人口・季節構成 (B群)</span>
-                <span style="font-family: var(--font-en); font-weight: 700; color: var(--danger);">32.1pp</span>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
-                <span style="font-size: 0.88rem; color: var(--text);">津波到達時間 (A群)</span>
-                <span style="font-family: var(--font-en); font-weight: 700; color: var(--danger);">31.4pp</span>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
-                <span style="font-size: 0.88rem; color: var(--text);">ハザードマップ認知率 (D群)</span>
-                <span style="font-family: var(--font-en); font-weight: 700; color: var(--accent);">6.1pp</span>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);">
-                <span style="font-size: 0.88rem; color: var(--text);">率先避難者割合 (E群)</span>
-                <span style="font-family: var(--font-en); font-weight: 700; color: var(--text-muted);">1.5pp</span>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem;">
-                <span style="font-size: 0.88rem; color: var(--text);">警報タイミング (C群)</span>
-                <span style="font-family: var(--font-en); font-weight: 700; color: var(--text-muted);">1.0pp</span>
-              </div>
+          </td>
+          <td style="font-family:var(--mono);font-size:12px" class="td-red">最大</td>
+        </tr>
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px">A 群</span></td>
+          <td>津波到達時間</td>
+          <td>
+            <div class="bar-cell">
+              <div class="mini-bar red" style="width:calc(31.4 / 32.1 * 120px)"></div>
+              <span class="td-red">31.4pp</span>
             </div>
-          </div>
-          <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.7;">
-            物理的制約（人口規模・到達時間）が情報・行動系介入の20倍以上の影響力を持つ。
-            単独介入の限界が動的統合システムの必要性を示す。
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+          </td>
+          <td style="font-family:var(--mono);font-size:12px" class="td-red">最大</td>
+        </tr>
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px">D 群</span></td>
+          <td>ハザードマップ認知率</td>
+          <td>
+            <div class="bar-cell">
+              <div class="mini-bar" style="width:calc(6.1 / 32.1 * 120px)"></div>
+              <span class="td-blue">6.1pp</span>
+            </div>
+          </td>
+          <td style="font-family:var(--mono);font-size:12px" class="td-blue">逆説的</td>
+        </tr>
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px">E 群</span></td>
+          <td>率先避難者割合</td>
+          <td>
+            <div class="bar-cell">
+              <div class="mini-bar dim" style="width:calc(1.5 / 32.1 * 120px)"></div>
+              <span class="td-dim">1.5pp</span>
+            </div>
+          </td>
+          <td style="font-family:var(--mono);font-size:12px" class="td-dim">限定的</td>
+        </tr>
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px">C 群</span></td>
+          <td>警報タイミング</td>
+          <td>
+            <div class="bar-cell">
+              <div class="mini-bar dim" style="width:calc(1.0 / 32.1 * 120px)"></div>
+              <span class="td-dim">1.0pp</span>
+            </div>
+          </td>
+          <td style="font-family:var(--mono);font-size:12px" class="td-dim">限定的</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-  <!-- ===== CTA ===== -->
-  <section class="cta-section">
-    <div class="container" style="padding: 6rem 2rem;">
-      <p class="section-label reveal" style="color: rgba(255,255,255,0.4);">Try TENDEN</p>
-      <h2 class="cta-title reveal">今すぐ、備える。</h2>
-      <p class="cta-sub reveal">インストール不要。ブラウザで今すぐ開いて、<br>お気に入りの海岸へ行く前にルートを確認しておこう。</p>
-      <div class="cta-actions reveal">
-        <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="btn-white">アプリを開く →</a>
-      </div>
-      <div class="cta-links reveal reveal-delay-1">
-        <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub リポジトリ</a>
-        <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">研究論文</a>
-        <a href="https://masatosprojects.github.io/tenden-promo/" target="_blank" rel="noopener">本サイト</a>
-      </div>
+<!-- ═══ STACK ═════════════════════════════════════ -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="label reveal"><span class="label-dot"></span> Stack</div>
+    <h2 class="section-title reveal" style="max-width:480px">すべて<br>無料・オープンソース</h2>
+    <p class="section-desc reveal">API キー不要。商用利用の許可も取得済み。インターネット接続後は Service Worker がタイルをキャッシュするためオフラインでも動作する。</p>
+    <div class="stack-grid reveal">
+      <span class="stack-badge"><span class="stack-dot blue"></span>Leaflet.js</span>
+      <span class="stack-badge"><span class="stack-dot"></span>CartoDB タイル</span>
+      <span class="stack-badge"><span class="stack-dot blue"></span>国土地理院 標高 API</span>
+      <span class="stack-badge"><span class="stack-dot red"></span>P2P 地震情報 WebSocket</span>
+      <span class="stack-badge"><span class="stack-dot"></span>OSRM ルーティング</span>
+      <span class="stack-badge"><span class="stack-dot green"></span>国土地理院 浸水想定タイル</span>
+      <span class="stack-badge"><span class="stack-dot"></span>html2canvas</span>
+      <span class="stack-badge"><span class="stack-dot"></span>Web Share API</span>
+      <span class="stack-badge"><span class="stack-dot blue"></span>Vibration API</span>
+      <span class="stack-badge"><span class="stack-dot"></span>Service Worker / PWA</span>
+      <span class="stack-badge"><span class="stack-dot"></span>Google Fonts — Inter</span>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="footer-brand">
-      <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN">
-      TENDEN
-    </div>
-    <p class="footer-copy">
-      © 2026 TENDEN Project — 個人研究<br>
-      地図タイル: CartoDB / 浸水想定: 国土地理院ハザードマップポータルサイト
-    </p>
-    <div class="footer-links">
-      <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">アプリ</a>
-      <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub</a>
-    </div>
-  </footer>
+<!-- ═══ CTA ═══════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="label reveal" style="justify-content:center"><span class="label-dot"></span> Try TENDEN</div>
+  <h2 class="cta-title reveal">今すぐ、備える。</h2>
+  <p class="cta-sub reveal">
+    インストール不要。次に海に行く前に、<br>ルートを一度確かめておこう。
+  </p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">
+      アプリを開く →
+    </a>
+    <a class="btn-ghost" href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">
+      GitHub を見る
+    </a>
+  </div>
+  <div class="cta-links reveal delay-1">
+    <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">研究論文</a>
+    <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">ソースコード</a>
+    <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">デモ</a>
+  </div>
+</section>
 
-  <!-- ===== SCROLL REVEAL ===== -->
-  <script>
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
+<!-- ═══ FOOTER ════════════════════════════════════ -->
+<footer class="footer">
+  <a class="footer-brand" href="#">
+    <img src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif" alt="TENDEN">
+    <span class="footer-name">TENDEN</span>
+  </a>
+  <p class="footer-copy">
+    © 2026 TENDEN Project（個人研究）<br>
+    地図: CartoDB &nbsp;|&nbsp; 浸水想定: 国土地理院ハザードマップポータルサイト
+  </p>
+  <div class="footer-links">
+    <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">App</a>
+    <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener">Paper</a>
+  </div>
+</footer>
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
 
 </body>
 </html>
