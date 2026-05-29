@@ -819,6 +819,88 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
 @media (max-width: 768px) {
   .footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
 }
+
+/* ─────────────────────────────────────────────────
+   ADDITIONAL STYLES FOR NEW PREMIUM FUNCTIONS
+   ───────────────────────────────────────────────── */
+/* 30-Language Chips styling */
+.lang-section {
+  padding: 80px 0; background: #070708; border-bottom: 1px solid var(--glass-border);
+}
+.lang-chips-grid {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 32px;
+}
+.lang-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1.5px solid var(--glass-border);
+  border-radius: 100px; font-size: 13px; font-weight: 500; color: var(--text-light);
+  background: var(--bg-card); transition: all 0.3s var(--ease);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.lang-chip:hover {
+  border-color: var(--primary-neon);
+  box-shadow: 0 0 12px rgba(0, 187, 255, 0.3);
+  transform: translateY(-2px);
+  color: var(--white);
+}
+.lang-chip .lang-code {
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; color: var(--primary-neon); opacity: 0.8;
+}
+
+/* Dynamic Island & Smart Compass styling descriptions */
+.api-integration-card {
+  grid-column: 1 / -1; margin-top: 40px; padding: 40px; border-radius: 20px;
+}
+.api-integration-title {
+  font-family: var(--font-jp); font-size: 20px; font-weight: 800;
+  color: var(--text-light); margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+}
+.api-integration-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--glass-border);
+}
+.api-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+}
+.api-card {
+  padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.01);
+  border: 1px solid var(--glass-border); transition: all 0.3s var(--ease);
+}
+.api-card:hover {
+  border-color: rgba(255,255,255,0.15); transform: translateY(-2px);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.01);
+}
+.api-card-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.api-name {
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: var(--primary-neon);
+}
+.api-icon { font-size: 18px; }
+.api-desc {
+  font-family: var(--font-jp); font-size: 12px; color: var(--text-muted); line-height: 1.6;
+}
+
+/* Cache helper panel styling */
+.cache-banner {
+  margin-top: 40px; padding: 24px 32px; border-radius: 16px;
+  background: rgba(255, 159, 10, 0.05); border: 1.5px solid rgba(255, 159, 10, 0.2);
+  text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;
+}
+.cache-banner-title {
+  font-family: var(--font-jp); font-size: 14px; font-weight: 700; color: var(--warning);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.cache-banner-desc {
+  font-family: var(--font-jp); font-size: 12px; color: var(--text-muted); line-height: 1.7;
+}
+.version-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 6px; background: rgba(0, 122, 255, 0.15);
+  border: 1px solid rgba(0, 122, 255, 0.3); color: var(--primary-neon);
+  font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
+  margin-top: 12px;
+}
   </style>
 </head>
 <body>
@@ -1090,8 +1172,8 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
 <section class="features" id="features">
   <div class="wrap">
     <p class="section-label reveal">Smart PWA Features</p>
-    <span class="section-title-en reveal rd1">9 research-backed & smart functions</span>
-    <h2 class="section-title reveal rd2">避難を革新する<br>9つのスマート機能</h2>
+    <span class="section-title-en reveal rd1">12 research-backed & smart functions</span>
+    <h2 class="section-title reveal rd2">避難を革新する<br>12のスマート機能</h2>
 
     <div class="feat-grid">
       <div class="feat-item reveal">
@@ -1104,13 +1186,13 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
         <p class="feat-number">02</p>
         <div class="feat-icon-text">🔊</div>
         <h3 class="feat-name">30言語音声ナビゲーション</h3>
-        <p class="feat-body">Web Speech APIにより、移動中に歩きスマホをせずとも安全に音声でルート誘導。日・英・中・韓・仏・西など30の国と言語に自動追従して発声します。</p>
+        <p class="feat-body">Web Speech APIにより、移動中に歩きスマホをせずとも安全に音声でルート誘導。世界の30大言語（日・英・中・韓・仏・西・独・葡など）に完全自動追従して発声します。</p>
       </div>
       <div class="feat-item reveal rd2">
         <p class="feat-number">03</p>
         <div class="feat-icon-text">🧭</div>
-        <h3 class="feat-name">スマートコンパス連動</h3>
-        <p class="feat-body">ジャイロ＆磁気センサーと完全同期し、向いている方角をレーダー照射コーンと鋭い指向性矢印で明示。見知らぬ土地でも進む方向を見失いません。</p>
+        <h3 class="feat-name">スマートコンパス＆向きドット</h3>
+        <p class="feat-body">ジャイロ＆磁気センサーと同期。向いている方角を示すコーンのほか、現在地の青ピン上にApple風のリアルタイム向き追従ドットを描画。進むべき方向を見失いません。</p>
       </div>
       <div class="feat-item reveal rd3">
         <p class="feat-number">04</p>
@@ -1134,7 +1216,7 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
         <p class="feat-number">07</p>
         <div class="feat-icon-text">🔔</div>
         <h3 class="feat-name">逸脱＆進入のネイティブ通知</h3>
-        <p class="feat-body">浸水想定域に進入した際や、避難ルートから100m以上外れた際にOSネイティブのバナー通知と振動で即時警告。画面を凝視せずポケットに入れた状態でも命を守ります。</p>
+        <p class="feat-body">浸水想定域に進入した際や避難ルートから100m以上外れた際、OSネイティブのバナー通知と振動で即時警告。バッテリー負荷を下げる12秒の安全制御リミッターを搭載。</p>
       </div>
       <div class="feat-item reveal rd7">
         <p class="feat-number">08</p>
@@ -1145,8 +1227,26 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
       <div class="feat-item reveal rd8">
         <p class="feat-number">09</p>
         <div class="feat-icon-text">📳</div>
-        <h3 class="feat-name">ハプティクス＆低電量警告</h3>
-        <p class="feat-body">全てのタップ操作に触覚フィードバック（15ms振動）を適用。バッテリー残量20%以下で節電アラートが起動し、極限の被災地で最も大切なスマホの電池切れを防止します。</p>
+        <h3 class="feat-name">ハプティクス触覚フィードバック</h3>
+        <p class="feat-body">すべてのボタンタップ操作に直感的なハプティクス（15ms振動）を適用。被災パニック時でも確実な操作感とフィードバックを指先から得られます。</p>
+      </div>
+      <div class="feat-item reveal">
+        <p class="feat-number">10</p>
+        <div class="feat-icon-text">🛟</div>
+        <h3 class="feat-name">津波避難3原則ガイド</h3>
+        <p class="feat-body">「即時避難・垂直避難・戻り禁止」の心得をアプリ内でいつでも即時確認できる専用パネル。被災時に情報待ちによる避難の遅れを劇的に防止します。</p>
+      </div>
+      <div class="feat-item reveal rd1">
+        <p class="feat-number">11</p>
+        <div class="feat-icon-text">📡</div>
+        <h3 class="feat-name">P2P地震情報自動トリガー</h3>
+        <p class="feat-body">常時起動のWebSocketにより地震情報・津波警報を自動監視。大地震発生時に一切の操作不要で自動的に緊急発災HUD画面へ遷移し、迷わず逃げ出せます。</p>
+      </div>
+      <div class="feat-item reveal rd2">
+        <p class="feat-number">12</p>
+        <div class="feat-icon-text">🔐</div>
+        <h3 class="feat-name">完全ローカルプライバシー保護</h3>
+        <p class="feat-body">位置情報は端末内のみで高度に暗号化処理され、いかなる外部サーバーにも送信・収集されません。個人情報が特定される心配はなく、安全にご利用いただけます。</p>
       </div>
     </div>
   </div>
@@ -1187,6 +1287,51 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
           GPS座標ピクセルのカラー値RGBAをローカル解析し警告バッジを自動描画
         </div>
       </div>
+
+      <!-- 🛠️ 5 Major Smartphone APIs Integration Card -->
+      <div class="api-integration-card glass-panel reveal rd4">
+        <h3 class="api-integration-title">
+          <span>📲 スマートフォン固有の5大極限API連携アーキテクチャ</span>
+        </h3>
+        <div class="api-grid">
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="api-name">Screen Wake Lock API</span>
+              <span class="api-icon">🔒</span>
+            </div>
+            <p class="api-desc">避難移動中の自動画面スリープを強制防止。GPSのバックグラウンド制限（スロットリング）による測位遅延や、画面消灯によるルート確認の中断をゼロにし、常時HUD表示を維持します。</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="api-name">Vibration API (Haptic Touch)</span>
+              <span class="api-icon">📳</span>
+            </div>
+            <p class="api-desc">すべての操作時の触覚フィードバック（15msの精細振動）に加え、ルートから100m以上「逸脱」した際、および津波危険エリアへ「進入」した際の警告振動パターンを物理的に指先に伝えます。</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="api-name">Notifications API</span>
+              <span class="api-icon">🔔</span>
+            </div>
+            <p class="api-desc">ブラウザを閉じている、あるいはスマホをポケットに入れているバックグラウンド状態でも、危険検知時にOSネイティブの緊急バナーアラートを強制発報。電池消耗を防ぐ12秒リミッターを装備。</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="api-name">Device Orientation API</span>
+              <span class="api-icon">🧭</span>
+            </div>
+            <p class="api-desc">内蔵の3軸ジャイロおよび磁気センサーと1秒間に数十回同期. ユーザーの向いている方角を「視野コーン」として照射し、現在地の青ピン上にApple風の「指向性向きドット」を正確に重ね合わせます。</p>
+          </div>
+          <div class="api-card">
+            <div class="api-card-header">
+              <span class="api-name">Battery Status API</span>
+              <span class="api-icon">🔋</span>
+            </div>
+            <p class="api-desc">避難中の最も致命的な「スマホの充電切れ」を防ぐため、バッテリー残量20%以下を検知すると自動的に緊急節電アラートを発動. GPSの間引き測定や輝度警告を行い、駆動時間を延ばします。</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1242,6 +1387,51 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
   </div>
 </section>
 
+<!-- ═══ GLOBAL MULTI-LANGUAGE SECTION ════════════ -->
+<section class="lang-section" id="languages">
+  <div class="wrap">
+    <p class="section-label reveal">Global Multi-Language Engine</p>
+    <span class="section-title-en reveal rd1">30 World Languages Supported</span>
+    <h2 class="section-title reveal rd2">言葉の壁を越えて、<br>すべての避難者を救う30言語</h2>
+    <p class="section-desc reveal rd3">
+      TENDENは、訪日観光客や多国籍な来訪者が災害時に立ち往生することを防ぐため、高品質な音声合成による多言語ナビゲーション（Web Speech API）を搭載。端末の設定や選択に基づき、以下の30の世界言語に完全追従した避難指示・音声ガイダンスを提供します。
+    </p>
+
+    <div class="lang-chips-grid reveal rd4">
+      <span class="lang-chip"><span class="lang-code">ja</span>日本語 (Japanese)</span>
+      <span class="lang-chip"><span class="lang-code">en</span>English</span>
+      <span class="lang-chip"><span class="lang-code">zh</span>中文 (简体 Chinese)</span>
+      <span class="lang-chip"><span class="lang-code">zh-tw</span>中文 (繁體 Chinese)</span>
+      <span class="lang-chip"><span class="lang-code">ko</span>한국어 (Korean)</span>
+      <span class="lang-chip"><span class="lang-code">fr</span>Français (French)</span>
+      <span class="lang-chip"><span class="lang-code">es</span>Español (Spanish)</span>
+      <span class="lang-chip"><span class="lang-code">de</span>Deutsch (German)</span>
+      <span class="lang-chip"><span class="lang-code">it</span>Italiano (Italian)</span>
+      <span class="lang-chip"><span class="lang-code">pt</span>Português (Portuguese)</span>
+      <span class="lang-chip"><span class="lang-code">ru</span>Русский (Russian)</span>
+      <span class="lang-chip"><span class="lang-code">vi</span>Tiếng Việt (Vietnamese)</span>
+      <span class="lang-chip"><span class="lang-code">th</span>ภาษาไทย (Thai)</span>
+      <span class="lang-chip"><span class="lang-code">id</span>Bahasa Indonesia (Indonesian)</span>
+      <span class="lang-chip"><span class="lang-code">tl</span>Tagalog (Filipino)</span>
+      <span class="lang-chip"><span class="lang-code">ms</span>Bahasa Melayu (Malay)</span>
+      <span class="lang-chip"><span class="lang-code">hi</span>हिन्दी (Hindi)</span>
+      <span class="lang-chip"><span class="lang-code">bn</span>বাংলা (Bengali)</span>
+      <span class="lang-chip"><span class="lang-code">ar</span>العربية (Arabic)</span>
+      <span class="lang-chip"><span class="lang-code">fa</span>فارسی (Persian)</span>
+      <span class="lang-chip"><span class="lang-code">tr</span>Türkçe (Turkish)</span>
+      <span class="lang-chip"><span class="lang-code">nl</span>Nederlands (Dutch)</span>
+      <span class="lang-chip"><span class="lang-code">sv</span>Svenska (Swedish)</span>
+      <span class="lang-chip"><span class="lang-code">no</span>Norsk (Norwegian)</span>
+      <span class="lang-chip"><span class="lang-code">fi</span>Suomi (Finnish)</span>
+      <span class="lang-chip"><span class="lang-code">da</span>Dansk (Danish)</span>
+      <span class="lang-chip"><span class="lang-code">pl</span>Polski (Polish)</span>
+      <span class="lang-chip"><span class="lang-code">uk</span>Українська (Ukrainian)</span>
+      <span class="lang-chip"><span class="lang-code">el</span>Ελληνικά (Greek)</span>
+      <span class="lang-chip"><span class="lang-code">he</span>עברית (Hebrew)</span>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ TECHNOLOGY TAGS ═══════════════════════════ -->
 <section class="stack">
   <div class="wrap">
@@ -1290,6 +1480,20 @@ section { border-bottom: 1px solid var(--glass-border); position: relative; }
         GitHubを見る
       </a>
     </div>
+
+    <!-- ⚠️ Cache Bypass & PWA Version Warning Banner -->
+    <div class="cache-banner reveal rd4">
+      <div class="cache-banner-title">
+        <span>⚠️ 最新の更新内容が表示されない場合</span>
+      </div>
+      <p class="cache-banner-desc">
+        TENDENは極限のオフライン動作を実現するため、強力な PWA (Service Worker) キャッシュ機構を採用しています。もし最新のアップデート内容や追加機能（3原則ガイドなど）が反映されない場合は、アプリ本体の設定パネル内から<strong>「【警告】システムキャッシュを完全初期化」</strong>を実行していただくか、ブラウザ設定からキャッシュのクリア（PCでは <code>Ctrl + F5</code> スーパーリロード）を行ってください。
+      </p>
+      <div class="version-badge">
+        <span>Current System Target: sw-v43</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
