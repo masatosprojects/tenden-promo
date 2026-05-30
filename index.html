@@ -946,14 +946,14 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
 }
 .demo-scenario-info {
-  background: rgba(250, 250, 250, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 28px;
+  padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 4px 20px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
   transition: all 0.3s var(--ease);
 }
 .demo-scen-step {
@@ -977,11 +977,22 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   box-shadow: 0 2px 8px rgba(0, 113, 227, 0.05);
 }
 .scen-text {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
   color: var(--text-dark);
   transition: all 0.3s var(--ease);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-align: left;
+}
+.route-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 /* Timeline progress bar style */
 .demo-timeline-container {
@@ -1141,7 +1152,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="wrap">
     <p class="section-label reveal">Live Scenario Demo</p>
     <h2 class="section-title reveal rd1">鎌倉モデルで見る<br>リアルタイム避難支援</h2>
-    <p class="section-body reveal rd2" style="max-width:640px; margin: 16px 0 40px; text-align: left;">
+    <p class="section-desc reveal rd2" style="margin-bottom: 40px;">
       由比ヶ浜を中心とした鎌倉市の実データを使用。地震発生から避難ルート提示、人の流れの分散まで、TENDENの動作をインタラクティブに体験できます。
     </p>
 
@@ -1191,33 +1202,33 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
         <div class="demo-route-stats" id="promo-route-stats" style="display:none;">
           <div class="route-stat-item" style="border-left: 4px solid #34c759;">
-            <div class="route-stat-label">🟢 最短避難ルート (Route A)</div>
+            <div class="route-stat-label"><span class="route-indicator" style="background-color: #34c759;"></span>最短避難ルート (Route A)</div>
             <div class="route-stat-val">1,007m / 約14分</div>
           </div>
           <div class="route-stat-item" style="border-left: 4px solid #007aff;">
-            <div class="route-stat-label">🔵 道路混雑回避ルート (Route B - デフォルト)</div>
+            <div class="route-stat-label"><span class="route-indicator" style="background-color: #007aff;"></span>道路混雑回避ルート (Route B - デフォルト)</div>
             <div class="route-stat-val">1,013m / 約15分</div>
           </div>
           <div class="route-stat-item" style="border-left: 4px solid #5e5ce6;">
-            <div class="route-stat-label">🟣 ♿ バリアフリー・平坦ルート (Route C)</div>
+            <div class="route-stat-label"><span class="route-indicator" style="background-color: #5e5ce6;"></span>バリアフリー・平坦ルート (Route C)</div>
             <div class="route-stat-val">1,417m / 約20分</div>
           </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
           <button class="btn btn-primary" id="promo-demo-btn" onclick="startPromoDemo()">
-            ▶ 体験開始 — 津波避難シナリオ
+            体験開始 — 津波避難シナリオ
           </button>
           <button class="btn btn-outline" id="promo-reset-btn" onclick="resetPromoDemo()" style="display:none;">
-            ↺ リセット
+            デモをリセット
           </button>
           <a class="btn btn-outline" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" style="text-align:center;">
-            📍 アプリで実際に使ってみる →
+            アプリで実際に使ってみる →
           </a>
         </div>
 
         <div class="promo-lang-note">
-          <strong>30言語対応</strong> — 外国人観光客もそのまま使えます。<br>
+          「30言語対応」 — 外国人観光客もそのまま使えます。<br>
           English / 中文 / 한국어 / Español / Français…
         </div>
       </div>
@@ -1317,7 +1328,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
           TENDENは、最短ルートに加えて、「シミュレーションに基づく混雑想定を回避する迂回ルート」、および「道路の勾配特性を考慮したバリアフリールート」を動的に同時提示します。
         </p>
         <p>
-          日本全国の多種多様な沿岸エリアに対応させるため、本アプリは<strong>「広域ハザード自動算定アルゴリズム」</strong>を新設計。GPSの位置情報を基に、周囲約10km四方の地形・標高および自治体避難所データを動的照合し、通信制約下でもその場で避難候補エリア（第一目標）を算出します。
+          日本全国の多種多様な沿岸エリアに対応させるため、本アプリは「広域ハザード自動算定アルゴリズム」を新設計。GPSの位置情報を基に、周囲約10km四方の地形・標高および自治体避難所データを動的照合し、通信制約下でもその場で避難候補エリア（第一目標）を算出します。
         </p>
         <p>
           PWA仕様のためスマートフォンのブラウザさえあれば即時起動。スリープ防止（Wake Lock）や、ジャイロ連動による方向指標など、標準Webテクノロジーのみで自律的な避難動作の継続をサポートします。
@@ -1328,7 +1339,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <p class="solution-callout-en">Design Paradigm</p>
         <p class="solution-callout-body">
           避難経路は、<br>
-          避難者が<em>状況に応じて判断する</em>。<br><br>
+          避難者が「状況に応じて判断する」。<br><br>
           避難者に一律の指示を強制せず、<br>
           安全な選択肢を提示する支援方針。
         </p>
@@ -1597,7 +1608,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
       <div class="rf-insight">
         <p class="rf-insight-label">システム設計の思想</p>
         <p class="rf-insight-text">
-          TENDENが<em>3つの異なる推奨ルートを提示する理由</em>はここにあります。<br>
+          TENDENが「3つの異なる推奨ルートを提示する理由」はここにあります。<br>
           一律の指示を強制せず、「避難経路の選択権」を避難者自身に委ねて分散を促すことが、結果として全体の生存性を最大化します。
         </p>
       </div>
@@ -1714,7 +1725,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <span>⚠️ 最新の更新内容が表示されない場合</span>
       </div>
       <p class="cache-banner-desc">
-        TENDENは災害時におけるオフラインでの信頼性を担保するため、強固な PWA キャッシュ機構を採用しています。もし最新のアップデート内容や3原則ガイド等の機能追加がブラウザに表示されない場合は、アプリ設定パネルの<strong>「【警告】システムキャッシュを完全初期化」</strong>を実行していただくか、ブラウザのキャッシュクリア（PCでは <code>Ctrl + F5</code> 等のスーパーリロード）をお試しください。
+        TENDENは災害時におけるオフラインでの信頼性を担保するため、強固な PWA キャッシュ機構を採用しています。もし最新のアップデート内容や3原則ガイド等の機能追加がブラウザに表示されない場合は、アプリ設定パネルの「【警告】システムキャッシュを完全初期化」を実行していただくか、ブラウザのキャッシュクリア（PCでは <code>Ctrl + F5</code> 等のスーパーリロード）をお試しください。
       </p>
       <div class="version-badge">
         <span>Current System Target: sw-v43</span>
@@ -2033,8 +2044,8 @@ function startPromoDemo() {
 
   let pulseRadius = 100;
   pulseInterval = setInterval(() => {
-    if (pulseRadius < 2100) {
-      pulseRadius += 8;
+    if (pulseRadius < 1800) {
+      pulseRadius += 3;
       if (promoEpicenterPulse) {
         promoEpicenterPulse.setRadius(pulseRadius);
       }
