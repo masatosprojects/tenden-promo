@@ -834,15 +834,18 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.01);
   height: 480px;
   background: #f5f5f7;
+  display: flex;
+  flex-direction: column;
 }
 .promo-map-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  height: auto;
   z-index: 1;
 }
 .demo-map-badge {
   position: absolute;
-  top: 20px;
+  top: 60px;
   left: 20px;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.9);
@@ -861,43 +864,44 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 .promo-sim-banner {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+  position: static;
   background: rgba(255, 59, 48, 0.94);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
   color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 99px;
-  font-size: 11px;
+  padding: 10px 16px;
+  font-size: 11.5px;
   font-weight: 700;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(255,59,48,0.25);
-  border: 1px solid rgba(255,255,255,0.2);
-  white-space: nowrap;
-  pointer-events: none;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.4;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  line-height: 1.25;
+  gap: 8px;
+  flex-wrap: wrap;
+  pointer-events: none;
 }
 .promo-sim-banner .banner-en {
-  display: block;
-  font-size: 8.5px;
+  display: inline-block;
+  font-size: 9px;
   font-weight: 400;
-  opacity: 0.85;
-  margin-top: 1px;
+  opacity: 0.9;
+  margin-top: 0;
+  margin-left: 8px;
+  border-left: 1px solid rgba(255,255,255,0.3);
+  padding-left: 8px;
   letter-spacing: 0.02em;
 }
-@media (max-width: 560px) {
+@media (max-width: 768px) {
   .promo-sim-banner {
-    padding: 6px 12px;
-    font-size: 9px;
-    top: auto;
-    bottom: 20px;
-    right: 20px;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+  }
+  .promo-sim-banner .banner-en {
+    display: block;
+    border-left: none;
+    padding-left: 0;
+    margin-left: 0;
   }
 }
 .badge-dot-pulse {
@@ -1047,7 +1051,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
     </h1>
 
     <p class="hero-body">
-      観光客・外国語話者・その土地に不慣れな訪問者を対象に設計された津波避難支援アプリ。鎌倉沿岸の人流シミュレーション研究から得られた知見を基に、個人の自律的な避難判断を3つの経路提示でサポートします。
+      鎌倉沿岸部の大規模な人流避難シミュレーション研究に基づき設計された、自律型の津波避難支援アプリケーション。地理感覚のない観光客や外国語話者が災害時に直面する避難の遅れを解消するため、状況に応じた3つの代替経路を提示し、迅速かつ的確な主体避難をサポートします。
     </p>
 
     <div class="hero-actions">
@@ -1068,19 +1072,19 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="hero-bottom-bar">
     <div class="hero-stat">
       <div class="hero-stat-num">62,299人</div>
-      <div class="hero-stat-label">シミュレーション人口モデル<br>（242試行における平均値）</div>
+      <div class="hero-stat-label">シミュレーション人口モデル<br>(242試行の平均設定値)</div>
     </div>
     <div class="hero-stat">
       <div class="hero-stat-num highlight">全国沿岸対応</div>
-      <div class="hero-stat-label">外国人観光客・国内旅行者<br>誰でもすぐ使える設計</div>
+      <div class="hero-stat-label">外国人観光客や国内旅行者など<br>ブラウザから即座に起動可能</div>
     </div>
     <div class="hero-stat">
       <div class="hero-stat-num">3ルート提示</div>
-      <div class="hero-stat-label">混雑・勾配・最短を同時表示<br>自分で選べる避難支援</div>
+      <div class="hero-stat-label">混雑回避・バリアフリー・最短を<br>状況に応じて選択可能</div>
     </div>
     <div class="hero-stat">
       <div class="hero-stat-num">30言語対応</div>
-      <div class="hero-stat-label">多言語音声ガイダンス<br>（Web Speech API搭載）</div>
+      <div class="hero-stat-label">多言語音声ガイダンス<br>(Web Speech APIを活用)</div>
     </div>
   </div>
 </section>
@@ -1112,7 +1116,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
       <div class="demo-control-wrap">
         <div class="demo-scenario-info">
           <div class="demo-scen-step" id="promo-step-indicator">
-            <span class="scen-num">①</span>
+            <span class="scen-num" id="promo-step-number">①</span>
             <span class="scen-text" id="promo-step-text">「体験開始」ボタンを押してください</span>
           </div>
         </div>
@@ -1173,10 +1177,10 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         </p>
         <div class="tendenco-body">
           <p>
-            「てんでんこ」とは、それぞれが他者の判断に過度に同調せず、自ら責任を持って避難行動を起こすことが、結果として全体の生存性を高めるという先人の経験則に基づく防災方針です。
+            「てんでんこ」とは、避難者が他者の行動に同調しすぎず、それぞれが自ら迅速に安全な場所を目指すことで、地域全体の避難成功率を高めるという防災の知見です。
           </p>
           <p>
-            TENDENはこの方針をシステム設計として実装。全員を一律の「単一の推奨ルート」に導くのではなく、避難者自身の特性や周辺の想定に基づいた「3つの代替経路」を提示することで、各自の主体的な判断による避難をサポートします。
+            TENDENはこの思想をシステム設計に落とし込んでいます。避難者全員をひとつの特定ルートに一律に誘導するのではなく、個人の状況や歩行特性に応じた「3つの代替経路」を提示することで、各自の主体的な意思決定と自律的な避難行動を支援します。
           </p>
         </div>
       </div>
@@ -1189,19 +1193,19 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="wrap">
     <p class="section-label reveal">Research Insight</p>
     <span class="section-title-en reveal rd1">Tourists evacuation analysis</span>
-    <h2 class="section-title reveal rd2">避難経路への<br>一時的な集中現象</h2>
+    <h2 class="section-title reveal rd2">避難経路への一時的な集中現象</h2>
 
     <div class="problem-layout">
       <div class="problem-text-col reveal rd2">
         <div class="problem-gap-badge">
           <div class="problem-gap-num count-up" data-target="53.5" data-suffix="%">0</div>
-          <div class="problem-gap-label">シミュレーション上で観測された、地域住民と<br>一般来訪者（観光客）の生存比率の乖離幅（pt）</div>
+          <div class="problem-gap-label">シミュレーションで観測された、地域住民と一般来訪者（観光客）の避難完了率の差</div>
         </div>
         <p>
-          地理感覚がなく、避難経路の情報を持たない来訪者は、避難時に判断が遅れやすく、また周囲の混雑に巻き込まれやすい傾向が人流分析より確認されています。
+          地理感覚がなく、避難場所や経路に関する情報を持たない観光客などの一般来訪者は、災害発生時に避難行動を開始するまでに時間を要する傾向があります。また、主要な道路や周知されたルートに依存しやすいため、避難時の混雑に巻き込まれやすいことがシミュレーション分析から実証されています。
         </p>
         <p>
-          また、全員が同一の「最短とされる避難経路」に殺到した場合、道路上のボトルネックで大きな滞留が発生。特定の経路への過度な集中は、かえって地域全体の避難効率を阻害することがシミュレーションデータからも検証されています。
+          さらに、全員が同一の最短ルートに集中した場合、避難所周辺の道路や主要な交差点などのボトルネックで大規模な滞留が発生します。特定の経路への過度な集中は、かえって避難完了までの時間を長引かせ、地域全体の避難効率を低下させることが明らかになっています。
         </p>
       </div>
 
@@ -1270,9 +1274,9 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="wrap">
     <p class="section-label reveal">Route Architecture</p>
     <span class="section-title-en reveal rd1">Three analytical routes</span>
-    <h2 class="section-title reveal rd2">歩行者特性や周辺状況を反映した<br>3つのサポート経路</h2>
+    <h2 class="section-title reveal rd2">歩行者特性や周辺状況を反映した3つのサポート経路</h2>
     <p class="section-desc reveal rd3">
-      TENDENは、道路形状に完全にフィッティングした明瞭なルートラインで表示され、視界が悪い状況や夜間における見やすさを重視しています。
+      TENDENは、道路形状に完全にフィットした明瞭なルートラインで表示され、視界が悪い状況や夜間における見やすさを重視しています。
     </p>
 
     <div class="routes-demo-grid">
@@ -1304,24 +1308,24 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <div class="route-detail-card" style="border-left: 3px solid var(--success) !important;">
           <span class="route-card-icon">🟢</span>
           <div>
-            <h4 class="route-card-title">最短距離で直行する最短避難ルート</h4>
-            <p class="route-card-desc">混雑想定や道路の急坂を考慮せず、現在地から最も近い安全な緊急高台境界点（第一目標）までを直線的かつ最短距離で結び、迅速な避難をサポートします。</p>
+            <h4 class="route-card-title">最短避難ルート (最短距離)</h4>
+            <p class="route-card-desc">混雑や道路の勾配を考慮せず、現在地から最も近い避難目標地点（第一目標）までを最短距離で結び、迅速な初期避難行動をサポートします。</p>
           </div>
         </div>
 
         <div class="route-detail-card" style="border-left: 3px solid var(--primary) !important;">
           <span class="route-card-icon">🔵</span>
           <div>
-            <h4 class="route-card-title">ボトルネック混雑を予測・迂回する道路混雑回避ルート</h4>
-            <p class="route-card-desc">マルチエージェント避難シミュレーションに基づいて可視化された将来の混雑想定（ボトルネック）を自動検知し、滞留が発生する交差点を迂回してスムーズに安全圏へと導きます。</p>
+            <h4 class="route-card-title">道路混雑回避ルート (混雑想定を考慮)</h4>
+            <p class="route-card-desc">大規模人流避難シミュレーションに基づいて特定された混雑発生予測地点（ボトルネック）を検知。滞留が起きやすい交差点を事前に迂回し、よりスムーズに安全圏へと導きます。</p>
           </div>
         </div>
 
         <div class="route-detail-card" style="border-left: 3px solid var(--purple) !important;">
           <span class="route-card-icon">🟣</span>
           <div>
-            <h4 class="route-card-title">最大勾配を抑えた♿ バリアフリー・平坦ルート</h4>
-            <p class="route-card-desc">国土地理院の標高データ（数値地図）を基に、高齢者、妊婦、車いすの方、児童の避難のボトルネックとなる急坂・上り坂を自動で検出して回避。安全で平坦な経路を優先選択します。</p>
+            <h4 class="route-card-title">♿ バリアフリー・平坦ルート (坂道配慮)</h4>
+            <p class="route-card-desc">国土地理院の標高データを基に、高齢者、妊婦、車いすの方、児童の避難の妨げとなる急な上り坂を自動で検出して回避。安全で平坦な経路を優先案内します。</p>
           </div>
         </div>
       </div>
@@ -1341,73 +1345,73 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <p class="feat-number">01</p>
         <div class="feat-icon-text">🔀</div>
         <h3 class="feat-name">3ルート同時提示</h3>
-        <p class="feat-body">最短・混雑回避・バリアフリーの3ルートを同時表示。避難者自らが最適な意思決定を行うための選択肢を提供します。</p>
+        <p class="feat-body">最短・混雑回避・バリアフリーの3つのルートを同時に表示。避難者が状況や自身の特性に合わせて自律的に意思決定を行えるようサポートします。</p>
       </div>
       <div class="feat-item reveal rd1">
         <p class="feat-number">02</p>
         <div class="feat-icon-text">🔊</div>
-        <h3 class="feat-name">30言語音声ガイダンス</h3>
-        <p class="feat-body">Web Speech APIを活用した音声ガイダンス機能を搭載。世界30カ国の言語に追従し、歩きスマホを抑止して安全な移動を支援します。</p>
+        <h3 class="feat-name">多言語音声ガイダンス</h3>
+        <p class="feat-body">Web Speech APIを活用し、歩行中の画面凝視を抑制するための音声ガイダンスを搭載。端末言語に連動した音声読み上げで安全な避難を支援します。</p>
       </div>
       <div class="feat-item reveal rd2">
         <p class="feat-number">03</p>
         <div class="feat-icon-text">🧭</div>
         <h3 class="feat-name">スマートコンパス連動</h3>
-        <p class="feat-body">内蔵センサーと同期し、方角コーンを表示。現在地ピン上にApple風のリアルタイム向き追従ドットを描画し、進路確認を支援します。</p>
+        <p class="feat-body">スマートフォンの内蔵センサーと同期し、マップ上に進行方向を進行コーンとして投影。現在地ピンと連動してリアルタイムに向きを追従します。</p>
       </div>
       <div class="feat-item reveal rd3">
         <p class="feat-number">04</p>
         <div class="feat-icon-text">🗺️</div>
-        <h3 class="feat-name">日本全国ハザードスキャン</h3>
-        <p class="feat-body">GPSの位置情報から、電波状態を問わず周辺10km四方のハザード領域をスキャン。安全高台境界点をローカル処理で自動算定します。</p>
+        <h3 class="feat-name">ハザードローカル判定</h3>
+        <p class="feat-body">GPS座標を基に、周辺のハザードマップ（津波浸水想定）領域をスキャン。通信環境に依存せず、安全な高台の境界線を自動判定します。</p>
       </div>
       <div class="feat-item reveal rd4">
         <p class="feat-number">05</p>
         <div class="feat-icon-text">📶</div>
-        <h3 class="feat-name">オフライン環境での動作支援</h3>
-        <p class="feat-body">地図情報や避難所データベースをローカル環境へプリキャッシュ処理。通信インフラが制限された被災時でも基本機能が維持されます。</p>
+        <h3 class="feat-name">オフライン動作設計</h3>
+        <p class="feat-body">地図の基本タイルや避難所データベースをローカルにキャッシュ。災害によってモバイル回線が寸断された環境でも基本機能が維持されます。</p>
       </div>
       <div class="feat-item reveal rd5">
         <p class="feat-number">06</p>
         <div class="feat-icon-text">🏫</div>
-        <h3 class="feat-name">避難所容量の予測データ表示</h3>
-        <p class="feat-body">避難所の規模に応じた滞留レベルを算出。受け入れ容量が限られた施設への避難者の偏りを防ぎ、適度な分散をサポートします。</p>
+        <h3 class="feat-name">避難所容量の考慮</h3>
+        <p class="feat-body">各避難所の収容量と流入予測に基づき、特定の避難所への過度な集中を回避。避難完了率の向上に向けた適正な分散避難を支援します。</p>
       </div>
       <div class="feat-item reveal rd6">
         <p class="feat-number">07</p>
         <div class="feat-icon-text">🔔</div>
-        <h3 class="feat-name">ルート逸脱等の自動通知</h3>
-        <p class="feat-body">浸水想定域への進入や規定経路から100m以上離れた場合、OS標準の通知バナーと連動して即座にフィードバック。12秒の間引き制御機能搭載。</p>
+        <h3 class="feat-name">ルート逸脱アラート</h3>
+        <p class="feat-body">ハザードエリアへの進入や案内ルートからの大幅な逸脱（100m以上）を検知した際、OS標準の通知やアラート音で即座にフィードバックします。</p>
       </div>
       <div class="feat-item reveal rd7">
         <p class="feat-number">08</p>
         <div class="feat-icon-text">📱</div>
-        <h3 class="feat-name">スリープ防止機能 (Wake Lock)</h3>
-        <p class="feat-body">移動中の不要な画面消灯をブラウザレベルで防止。スリープによるGPS計測停止を回避し、常時視野に避難表示を維持します。</p>
+        <h3 class="feat-name">スリープ防止 (Wake Lock)</h3>
+        <p class="feat-body">ブラウザのスリープ防止APIを有効化し、移動中の画面消灯をブロック。スマートフォンの画面をONに保ち、GPSの測位と画面表示を継続します。</p>
       </div>
       <div class="feat-item reveal rd8">
         <p class="feat-number">09</p>
         <div class="feat-icon-text">🏷️</div>
         <h3 class="feat-name">直感的なサイドラベル表示</h3>
-        <p class="feat-body">マップ右側のアクションボタンに多言語テキストラベルを常時表示。30言語の自動ローカライズ機能と完全連動し、極限状態でのアイコンによる機能の曖昧さを完全に排除し、誤操作を防ぎます。</p>
+        <p class="feat-body">マップ右側のアクションボタンに多言語テキストラベルを常時表示。30言語の自動ローカライズ機能と完全連動し、ボタン機能の誤認や誤操作を防ぎます。</p>
       </div>
       <div class="feat-item reveal">
         <p class="feat-number">10</p>
         <div class="feat-icon-text">🛟</div>
         <h3 class="feat-name">津波避難3原則ガイド</h3>
-        <p class="feat-body">「即時避難」「垂直避難」「戻り禁止」の津波防災3原則を解説する教育的パネルを搭載。事前の行動確認および学習に貢献します。</p>
+        <p class="feat-body">「即時避難」「垂直避難」「戻り禁止」といった津波防災の基本原則をイラストとテキストで解説。事前の学習や被災時の行動確認に役立ちます。</p>
       </div>
       <div class="feat-item reveal rd1">
         <p class="feat-number">11</p>
         <div class="feat-icon-text">📡</div>
-        <h3 class="feat-name">P2P地震津波情報の自動連携</h3>
-        <p class="feat-body">常時起動のWebSocketにより地震ハザードと津波警報をリアルタイム監視。大地震発生時に一切の操作不要で自動的に緊急発災HUD画面へ遷移し、迷わず逃げ出せます。</p>
+        <h3 class="feat-name">地震警報のリアルタイム監視</h3>
+        <p class="feat-body">常時接続のWebSocketにより気象情報や緊急警告をリアルタイム監視。大地震発生時に一切の操作不要で自動的に緊急避難画面へ切り替わります。</p>
       </div>
       <div class="feat-item reveal rd2">
         <p class="feat-number">12</p>
         <div class="feat-icon-text">🔐</div>
         <h3 class="feat-name">ローカルプライバシー処理</h3>
-        <p class="feat-body">使用するGPS位置データは端末内部で高度に暗号化処理され、いかなる外部サーバーへの送信・蓄積も行われないためプライバシーが担保されます。</p>
+        <p class="feat-body">位置情報などのプライベートデータは端末内のみで処理し、外部サーバーへの送信や保存は一切行わないため、高いプライバシーが担保されます。</p>
       </div>
     </div>
   </div>
@@ -1418,21 +1422,21 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="wrap">
     <p class="section-label reveal">Technology Core</p>
     <span class="section-title-en reveal rd1">Web Technologies For Disasters</span>
-    <h2 class="section-title reveal rd2">被災時における安定した<br>自律アルゴリズムの適用</h2>
+    <h2 class="section-title reveal rd2">被災時における安定した自律アルゴリズムの適用</h2>
     
     <div class="arch-grid">
       <div class="arch-details reveal rd2">
-        <h3>🛡️ Canvas APIによる津波浸水想定区域のローカル判定処理</h3>
+        <h3>🛡️ Canvas APIによる津波浸水想定区域のローカル判定</h3>
         <p>
-          TENDENは、国土地理院が配信する広域津波ハザードマップタイルをメモリ上の非表示Canvas領域に展開。現在地（GPS座標）に対応する1ピクセルのRGBAデータをミリ秒単位で判定します。
+          国土地理院が配信する広域津波ハザードマップの画像をメモリ上のCanvas領域に読み込み、現在地のGPS座標に対応するピクセルのカラーデータ（RGBA値）を判定。外部サーバーとの往復通信を行わず、浸水想定域への進入を端末ローカルで即座に検知する設計です。
         </p>
         <p>
-          この処理により、<strong>外部サーバーとの往復通信を行わず、「ハザードマップ指定域への侵入」を1ピクセル精度で自律的かつ即座に判定</strong>。インターネットが途絶した環境でも機能します。
+          この処理により、ネットワークインフラが完全に寸断されたオフライン環境下であっても、避難者が今危険な区域にいるかどうかを遅滞なく判断することが可能です。
         </p>
         
-        <h3>🛰️ 電波障害を想定した全国対応のオフライン重心 Centroid 判定</h3>
+        <h3>🛰️ 電波障害を想定したオフライン重心判定</h3>
         <p>
-          オフライン環境においても日本全国47都道府県の境界・地形データをローカル処理で参照するため、主要沿岸県の重心（Centroid）座標からの距離最小化アルゴリズムを導入。電波が一切ない状況下でも、最寄りのハザードマップを自動的に選択します。
+          通信が途絶した環境でも都道府県レベルのハザードマップデータを正しく参照するため、最寄りの沿岸重心座標からの距離を算出して地図を動的に切り替えるアルゴリズムを導入。オフライン時でも信頼性の高い避難所検索とルート選択をサポートします。
         </p>
       </div>
 
@@ -1460,35 +1464,35 @@ section { border-bottom: 1px solid var(--border); position: relative; }
               <span class="api-name">Screen Wake Lock API</span>
               <span class="api-icon">🔒</span>
             </div>
-            <p class="api-desc">移動中の不要なスリープを防止。GPSのバックグラウンド測位制限（スロットリング）によるデータ途絶や画面消灯を排除し、情報提示を円滑に維持します。</p>
+            <p class="api-desc">画面の自動消灯を防止し、バックグラウンド移行によるGPS測位の途絶を防ぎ、継続的なナビゲーションを維持します。</p>
           </div>
           <div class="api-card">
             <div class="api-card-header">
               <span class="api-name">Vibration API</span>
               <span class="api-icon">📳</span>
             </div>
-            <p class="api-desc">画面を凝視できない状況や手元が揺れる環境を想定し、15msの精細な確認用ハプティクス振動のほか、ルート逸脱・危険域侵入時の警告通知を指先に伝えます。</p>
+            <p class="api-desc">歩行中の揺れや画面を直視できない状況を想定し、ルート逸脱や危険エリア進入時に固有の振動パターンで警告を伝えます。</p>
           </div>
           <div class="api-card">
             <div class="api-card-header">
               <span class="api-name">Notifications API</span>
               <span class="api-icon">🔔</span>
             </div>
-            <p class="api-desc">アプリ起動状態でないバックグラウンド時でも、GPSに連動して危険判定時にOS標準のバナー通知を発行。電池消耗を抑えるための12秒制御リミッターを装備。</p>
+            <p class="api-desc">アプリ非アクティブ時でも、危険判定時にOS標準のプッシュ通知を発行。過度な電池消費を防ぐ表示制御機能を備えます。</p>
           </div>
           <div class="api-card">
             <div class="api-card-header">
               <span class="api-name">Device Orientation API</span>
               <span class="api-icon">🧭</span>
             </div>
-            <p class="api-desc">内蔵の3軸ジャイロ・磁気センサーとミリ秒レベルで同期。避難者の向きを進行コーンとしてマップ上に投影し、現在地ピンにApple風の向き追従ドットを正確に反映します。</p>
+            <p class="api-desc">スマートフォンの内蔵センサーとリアルタイムで同期し、避難者の向きをマップ上のコーン状の視覚効果として投影します。</p>
           </div>
           <div class="api-card">
             <div class="api-card-header">
               <span class="api-name">Battery Status API</span>
               <span class="api-icon">🔋</span>
             </div>
-            <p class="api-desc">避難移動時のスマートフォンの電源切れを防止するため、バッテリー残量20%以下を検出すると節電アラートを起動。画面輝度やGPSの測位頻度を調整します。</p>
+            <p class="api-desc">バッテリー残量の低下を検知した際、GPSの測定頻度を調整するなどのアラートを表示し、避難完了までの電源維持をサポートします。</p>
           </div>
         </div>
       </div>
@@ -1509,24 +1513,24 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
     <div class="research-finding reveal rd2">
       <div class="rf-card">
-        <p class="rf-tag">一律に特定の同一経路を共有した場合</p>
-        <div class="rf-num down">生存率↓</div>
+        <p class="rf-tag">一律に特定の経路を選択した場合</p>
+        <div class="rf-num down">滞留の発生</div>
         <p class="rf-body">
-          全員が単一の「安全と思われる最短ルート」へ集中すると、ボトルネックとなる避難所周辺の道路や交差点で大規模な滞留が発生。**生存率がかえって低下する可能性**がデータ解析から明らかになっています。
+          全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。**地域全体の避難完了率が低下する**ことがシミュレーション分析から明らかになっています。
         </p>
       </div>
       <div class="rf-card">
         <p class="rf-tag">各自が自律して経路を分散選択した場合</p>
-        <div class="rf-num up">生存率↑</div>
+        <div class="rf-num up">スムーズな避難</div>
         <p class="rf-body">
-          避難者の意思決定や判断材料が自律的に分散している場合、特定箇所への過度な人流集中が能動的に緩和され、**エリア全体の安全性が高まる**という避難ダイナミクスが検証されています。
+          避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。**エリア全体の避難効率と安全性が向上する**という避難ダイナミクスが実証されています。
         </p>
       </div>
       <div class="rf-insight">
-        <p class="rf-insight-label">システム設計方針</p>
+        <p class="rf-insight-label">システム設計の思想</p>
         <p class="rf-insight-text">
           TENDENが<em>3つの異なる推奨ルートを提示する理由</em>はここにあります。<br>
-          「避難経路の選択権」を避難者自身に還元し、各個の自律判断をサポートすることが、結果として全体の生存性の最大化に寄与します。
+          一律の指示を強制せず、「避難経路の選択権」を避難者自身に委ねて分散を促すことが、結果として全体の生存性を最大化します。
         </p>
       </div>
     </div>
@@ -1849,13 +1853,15 @@ function startPromoDemo() {
   initPromoMap();
   resetPromoDemoState();
 
-  const stepIndicator = document.getElementById('promo-step-indicator');
+  const stepNumber = document.getElementById('promo-step-number');
   const stepText = document.getElementById('promo-step-text');
   const mapContainer = document.getElementById('promo-map');
 
   // STEP 1: Earthquake detected (0s - 3s)
-  stepIndicator.innerHTML = '<span class="scen-num" style="background:rgba(255,59,48,0.1); color:var(--danger);">①</span>';
-  stepText.innerHTML = '<strong>⚠️ 震災検知: 津波警報発令</strong><br>由比ヶ浜周辺に大津波警報が発表されました。直ちに行動を開始してください。';
+  stepNumber.textContent = '①';
+  stepNumber.style.background = 'rgba(255,59,48,0.1)';
+  stepNumber.style.color = 'var(--danger)';
+  stepText.innerHTML = '<strong>⚠️ 震災検知: 津波警報発令</strong><br>由比ヶ浜周辺に大津波警報が発表されました。直ちに避難行動を開始してください。';
   
   // Shaking effect
   mapContainer.classList.add('map-shaking');
@@ -1893,8 +1899,10 @@ function startPromoDemo() {
   // STEP 2: Route Calculation (3s - 5.5s)
   promoAnimTimer1 = setTimeout(() => {
     mapContainer.classList.remove('map-shaking');
-    stepIndicator.innerHTML = '<span class="scen-num" style="background:rgba(0,113,227,0.1); color:var(--primary);">②</span>';
-    stepText.innerHTML = '<strong>🗺 3つの自律的な推奨避難ルートを提示</strong><br>「最短」「混雑回避」「坂道配慮」の異なる3つの意思決定の選択肢を提供します。';
+    stepNumber.textContent = '②';
+    stepNumber.style.background = 'rgba(0,113,227,0.1)';
+    stepNumber.style.color = 'var(--primary)';
+    stepText.innerHTML = '<strong>🗺 3つの自律的な推奨避難ルートを提示</strong><br>「最短」「道路混雑回避」「♿ バリアフリー・平坦」の3つの選択肢を提供し、避難者の適切な意思決定を支援します。';
     document.getElementById('promo-route-stats').style.display = 'flex';
 
     // Draw Route A (Green - Shortest)
@@ -1932,8 +1940,10 @@ function startPromoDemo() {
 
   // STEP 3: People Flow Animation (5.5s - 14s)
   promoAnimTimer2 = setTimeout(() => {
-    stepIndicator.innerHTML = '<span class="scen-num" style="background:rgba(52,199,89,0.1); color:var(--success);">③</span>';
-    stepText.innerHTML = '<strong>👥 避難シミュレーション開始（経路の自律的な分散）</strong><br>全員が一箇所へ集中せず、個人の特性に応じて避難経路が分散され、滞留（ボトルネック）が解消されます。';
+    stepNumber.textContent = '③';
+    stepNumber.style.background = 'rgba(52,199,89,0.1)';
+    stepNumber.style.color = 'var(--success)';
+    stepText.innerHTML = '<strong>👥 避難シミュレーション開始（経路の分散）</strong><br>避難者が特定の最短ルートだけに集中するのを防ぎ、各自の判断でルートを分散選択することで、道路の滞留が抑制されます。';
 
     const dotsCount = 15;
     const colors = { A: '#34c759', B: '#0071e3', C: '#af52de' };
@@ -1990,8 +2000,12 @@ function startPromoDemo() {
         promoAnimDotsTimer = requestAnimationFrame(animateFlowDots);
       } else {
         // STEP 4: Complete
-        stepIndicator.innerHTML = '<span class="scen-num" style="background:rgba(52,199,89,0.1); color:var(--success);">④</span>';
-        stepText.innerHTML = '<strong>🎉 全員の避難完了！安全圏へ到達</strong><br>自律的な経路分散により、誰も道路上の大混雑に巻き込まれることなく、全員が安全に避難を完了しました。';
+        const stepNum = document.getElementById('promo-step-number');
+        const stepTxt = document.getElementById('promo-step-text');
+        stepNum.textContent = '④';
+        stepNum.style.background = 'rgba(52,199,89,0.1)';
+        stepNum.style.color = 'var(--success)';
+        stepTxt.innerHTML = '<strong>🎉 全員の避難完了</strong><br>自律的な経路分散により、大きな混雑や滞留に巻き込まれることなく、全員が安全に避難目標地点へ到達しました。';
       }
     }
 
@@ -2032,8 +2046,12 @@ function resetPromoDemo() {
   document.getElementById('promo-route-stats').style.display = 'none';
 
   // Restore text
-  document.getElementById('promo-step-indicator').innerHTML = '<span class="scen-num">①</span>';
-  document.getElementById('promo-step-text').innerHTML = '「体験開始」ボタンを押してください';
+  const stepNumberRest = document.getElementById('promo-step-number');
+  const stepTextRest = document.getElementById('promo-step-text');
+  stepNumberRest.textContent = '①';
+  stepNumberRest.style.background = '';
+  stepNumberRest.style.color = '';
+  stepTextRest.innerHTML = '「体験開始」ボタンを押してください';
 
   const mapContainer = document.getElementById('promo-map');
   mapContainer.classList.remove('map-shaking');
