@@ -1073,6 +1073,21 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   padding-top: 20px;
   margin-top: 24px;
 }
+
+@media (max-width: 768px) {
+  .demo-map-wrap {
+    height: 320px !important;
+  }
+  .demo-control-wrap {
+    padding: 16px !important;
+  }
+  .demo-timeline-labels {
+    font-size: 9px !important;
+  }
+  .card:hover {
+    transform: none !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -1880,6 +1895,17 @@ if (grid) {
 /* ─────────────────────────────────────────────────
    SIMULATED LEAFLET INTERACTIVE SCENARIO DEMO
    ───────────────────────────────────────────────── */
+// Mobile device check
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+  || window.innerWidth <= 768 
+  || window.matchMedia('(pointer: coarse)').matches;
+
+if (isMobileDevice) {
+  document.body.classList.add('is-mobile');
+} else {
+  document.body.classList.add('is-desktop');
+}
+
 const promoRoutes = {
   A: [[35.310955, 139.54693], [35.311044, 139.546997], [35.31201, 139.547648], [35.312587, 139.54801], [35.312985, 139.548237], [35.3144, 139.549123], [35.314568, 139.549226], [35.314629, 139.549268], [35.314676, 139.549296], [35.314784, 139.549361], [35.315174, 139.549606], [35.315652, 139.549919], [35.315673, 139.549918], [35.315746, 139.550066], [35.315832, 139.550114], [35.316643, 139.550577], [35.3169, 139.550735], [35.317029, 139.55082], [35.317113, 139.550871], [35.317449, 139.551087], [35.317569, 139.551165], [35.317608, 139.551068], [35.318162, 139.551093], [35.318525, 139.551219], [35.318684, 139.551162], [35.318945, 139.55089], [35.318982, 139.550892]],
   B: [[35.310955, 139.54693], [35.3112, 139.5460], [35.3122, 139.5465], [35.3128, 139.5469], [35.3135, 139.5473], [35.3144, 139.5478], [35.3152, 139.5483], [35.3160, 139.5488], [35.3168, 139.5492], [35.3176, 139.5496], [35.3182, 139.5500], [35.318982, 139.550892]],
@@ -1907,7 +1933,7 @@ function initPromoMap() {
     doubleClickZoom: false,
     boxZoom: false,
     keyboard: false,
-    dragging: true
+    dragging: !isMobileDevice
   }).setView([35.314, 139.548], 15);
 
   // CartoDB Positron - Premium Apple-like Light Map
