@@ -939,41 +939,88 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--white);
+  background: #ffffff;
   border-radius: 24px;
   border: 1px solid var(--border);
   padding: 32px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
 }
 .demo-scenario-info {
-  background: var(--bg-section);
-  border-radius: 16px;
-  padding: 24px;
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px;
   margin-bottom: 24px;
-  border: 1px solid var(--border-light);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 4px 20px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s var(--ease);
 }
 .demo-scen-step {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 16px;
 }
 .scen-num {
   font-weight: 700;
   color: var(--primary);
   background: rgba(0, 113, 227, 0.08);
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   flex-shrink: 0;
+  transition: all 0.3s var(--ease);
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.05);
 }
 .scen-text {
   font-size: 14.5px;
   font-weight: 500;
+  line-height: 1.6;
   color: var(--text-dark);
+  transition: all 0.3s var(--ease);
+}
+/* Timeline progress bar style */
+.demo-timeline-container {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+.demo-timeline-track {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 99px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+.timeline-segment {
+  flex: 1;
+  height: 100%;
+  background: transparent;
+  position: relative;
+}
+.timeline-progress {
+  width: 0%;
+  height: 100%;
+  transition: width 0.04s linear;
+  border-radius: 99px;
+}
+.demo-timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+.demo-timeline-labels span {
+  transition: color 0.3s var(--ease);
+}
   line-height: 1.6;
 }
 .demo-route-stats {
@@ -1094,7 +1141,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   <div class="wrap">
     <p class="section-label reveal">Live Scenario Demo</p>
     <h2 class="section-title reveal rd1">鎌倉モデルで見る<br>リアルタイム避難支援</h2>
-    <p class="section-body reveal rd2" style="max-width:640px; margin: 0 auto 40px;">
+    <p class="section-body reveal rd2" style="max-width:640px; margin: 16px 0 40px; text-align: left;">
       由比ヶ浜を中心とした鎌倉市の実データを使用。地震発生から避難ルート提示、人の流れの分散まで、TENDENの動作をインタラクティブに体験できます。
     </p>
 
@@ -1118,6 +1165,27 @@ section { border-bottom: 1px solid var(--border); position: relative; }
           <div class="demo-scen-step" id="promo-step-indicator">
             <span class="scen-num" id="promo-step-number">①</span>
             <span class="scen-text" id="promo-step-text">「体験開始」ボタンを押してください</span>
+          </div>
+          
+          <!-- Chronological Timeline Progress Bar -->
+          <div class="demo-timeline-container">
+            <div class="demo-timeline-track">
+              <div class="timeline-segment" id="timeline-segment-1">
+                <div class="timeline-progress" id="timeline-progress-1" style="background: var(--danger);"></div>
+              </div>
+              <div class="timeline-segment" id="timeline-segment-2" style="border-left: 2px solid #ffffff;">
+                <div class="timeline-progress" id="timeline-progress-2" style="background: var(--primary);"></div>
+              </div>
+              <div class="timeline-segment" id="timeline-segment-3" style="border-left: 2px solid #ffffff;">
+                <div class="timeline-progress" id="timeline-progress-3" style="background: var(--success);"></div>
+              </div>
+            </div>
+            <div class="demo-timeline-labels">
+              <span id="timeline-label-1">「1」避難指示</span>
+              <span id="timeline-label-2">「2」推奨ルート</span>
+              <span id="timeline-label-3">「3」避難流動</span>
+              <span id="timeline-label-4">「4」完了</span>
+            </div>
           </div>
         </div>
 
@@ -1246,7 +1314,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
     <div class="solution-inner">
       <div class="solution-text reveal rd2">
         <p>
-          TENDENは、最短ルートに加えて、<strong>シミュレーションに基づく混雑想定を回避する迂回ルート</strong>、および**道路の勾配特性を考慮したバリアフリールート**を動的に同時提示します。
+          TENDENは、最短ルートに加えて、「シミュレーションに基づく混雑想定を回避する迂回ルート」、および「道路の勾配特性を考慮したバリアフリールート」を動的に同時提示します。
         </p>
         <p>
           日本全国の多種多様な沿岸エリアに対応させるため、本アプリは<strong>「広域ハザード自動算定アルゴリズム」</strong>を新設計。GPSの位置情報を基に、周囲約10km四方の地形・標高および自治体避難所データを動的照合し、通信制約下でもその場で避難候補エリア（第一目標）を算出します。
@@ -1516,14 +1584,14 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <p class="rf-tag">一律に特定の経路を選択した場合</p>
         <div class="rf-num down">滞留の発生</div>
         <p class="rf-body">
-          全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。**地域全体の避難完了率が低下する**ことがシミュレーション分析から明らかになっています。
+          全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。「地域全体の避難完了率が低下する」ことがシミュレーション分析から明らかになっています。
         </p>
       </div>
       <div class="rf-card">
         <p class="rf-tag">各自が自律して経路を分散選択した場合</p>
         <div class="rf-num up">スムーズな避難</div>
         <p class="rf-body">
-          避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。**エリア全体の避難効率と安全性が向上する**という避難ダイナミクスが実証されています。
+          避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。「エリア全体の避難効率と安全性が向上する」という避難ダイナミクスが実証されています。
         </p>
       </div>
       <div class="rf-insight">
@@ -1537,7 +1605,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
     <div class="research-paper-cta reveal">
       <p>
-        <strong>詳細な共同検証データについて</strong><br>
+        「詳細な共同検証データについて」<br>
         62,299人・25シナリオ・計242試行の完全なシミュレーションに基づく分析データは、研究論文において公開しています。
       </p>
       <a class="btn-paper" href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="research-paper-btn">
@@ -1841,6 +1909,30 @@ function initPromoMap() {
   L.control.scale({ position: 'bottomleft', imperial: false }).addTo(promoMap);
 }
 
+let promoProgressInterval = null;
+
+function resetPromoTimeline() {
+  if (promoProgressInterval) {
+    clearInterval(promoProgressInterval);
+    promoProgressInterval = null;
+  }
+  const bar1 = document.getElementById('timeline-progress-1');
+  const bar2 = document.getElementById('timeline-progress-2');
+  const bar3 = document.getElementById('timeline-progress-3');
+  if (bar1) bar1.style.width = '0%';
+  if (bar2) bar2.style.width = '0%';
+  if (bar3) bar3.style.width = '0%';
+  
+  const lbl1 = document.getElementById('timeline-label-1');
+  const lbl2 = document.getElementById('timeline-label-2');
+  const lbl3 = document.getElementById('timeline-label-3');
+  const lbl4 = document.getElementById('timeline-label-4');
+  if (lbl1) lbl1.style.color = 'var(--text-muted)';
+  if (lbl2) lbl2.style.color = 'var(--text-muted)';
+  if (lbl3) lbl3.style.color = 'var(--text-muted)';
+  if (lbl4) lbl4.style.color = 'var(--text-muted)';
+}
+
 function startPromoDemo() {
   if (promoDemoRunning) return;
   promoDemoRunning = true;
@@ -1857,11 +1949,63 @@ function startPromoDemo() {
   const stepText = document.getElementById('promo-step-text');
   const mapContainer = document.getElementById('promo-map');
 
+  // Start chronological timeline progress bar animation
+  resetPromoTimeline();
+  let promoStartTime = Date.now();
+  promoProgressInterval = setInterval(() => {
+    let elapsed = Date.now() - promoStartTime;
+    if (!promoDemoRunning) {
+      clearInterval(promoProgressInterval);
+      return;
+    }
+    
+    // Segment 1 (0 to 3s)
+    if (elapsed < 3000) {
+      let pct = (elapsed / 3000) * 100;
+      const bar = document.getElementById('timeline-progress-1');
+      if (bar) bar.style.width = pct + '%';
+      const lbl = document.getElementById('timeline-label-1');
+      if (lbl) lbl.style.color = 'var(--danger)';
+    } else {
+      const bar = document.getElementById('timeline-progress-1');
+      if (bar) bar.style.width = '100%';
+      const lbl = document.getElementById('timeline-label-1');
+      if (lbl) lbl.style.color = 'var(--text-muted)';
+    }
+    
+    // Segment 2 (3s to 6s)
+    if (elapsed >= 3000 && elapsed < 6000) {
+      let pct = ((elapsed - 3000) / 3000) * 100;
+      const bar = document.getElementById('timeline-progress-2');
+      if (bar) bar.style.width = pct + '%';
+      const lbl = document.getElementById('timeline-label-2');
+      if (lbl) lbl.style.color = 'var(--primary)';
+    } else if (elapsed >= 6000) {
+      const bar = document.getElementById('timeline-progress-2');
+      if (bar) bar.style.width = '100%';
+      const lbl = document.getElementById('timeline-label-2');
+      if (lbl) lbl.style.color = 'var(--text-muted)';
+    }
+    
+    // Segment 3 (6s to 12s)
+    if (elapsed >= 6000) {
+      let pct = Math.min(100, ((elapsed - 6000) / 6000) * 100);
+      const bar = document.getElementById('timeline-progress-3');
+      if (bar) bar.style.width = pct + '%';
+      const lbl = document.getElementById('timeline-label-3');
+      if (lbl) lbl.style.color = 'var(--success)';
+      if (pct >= 100) {
+        const lbl4 = document.getElementById('timeline-label-4');
+        if (lbl4) lbl4.style.color = 'var(--success)';
+      }
+    }
+  }, 30);
+
   // STEP 1: Earthquake detected (0s - 3s)
   stepNumber.textContent = '①';
   stepNumber.style.background = 'rgba(255,59,48,0.1)';
   stepNumber.style.color = 'var(--danger)';
-  stepText.innerHTML = '<strong>⚠️ 震災検知: 津波警報発令</strong><br>由比ヶ浜周辺に大津波警報が発表されました。直ちに避難行動を開始してください。';
+  stepText.innerHTML = '「震災検知と避難指示」由比ヶ浜周辺に大津波警報が発表されました。津波の押し寄せに備え、速やかに避難を開始してください。';
   
   // Shaking effect
   mapContainer.classList.add('map-shaking');
@@ -1889,20 +2033,21 @@ function startPromoDemo() {
 
   let pulseRadius = 100;
   pulseInterval = setInterval(() => {
-    pulseRadius += 30;
-    if (pulseRadius > 2350) pulseRadius = 100;
-    if (promoEpicenterPulse) {
-      promoEpicenterPulse.setRadius(pulseRadius);
+    if (pulseRadius < 2100) {
+      pulseRadius += 8;
+      if (promoEpicenterPulse) {
+        promoEpicenterPulse.setRadius(pulseRadius);
+      }
     }
   }, 40);
 
-  // STEP 2: Route Calculation (3s - 5.5s)
+  // STEP 2: Route Calculation (3s - 6s)
   promoAnimTimer1 = setTimeout(() => {
     mapContainer.classList.remove('map-shaking');
     stepNumber.textContent = '②';
     stepNumber.style.background = 'rgba(0,113,227,0.1)';
     stepNumber.style.color = 'var(--primary)';
-    stepText.innerHTML = '<strong>🗺 3つの自律的な推奨避難ルートを提示</strong><br>「最短」「道路混雑回避」「♿ バリアフリー・平坦」の3つの選択肢を提供し、避難者の適切な意思決定を支援します。';
+    stepText.innerHTML = '「3つの推奨避難ルートの提示」最短避難ルート・道路混雑回避ルート・バリアフリー対応ルートの3つの選択肢を同時に自動生成して提示します。';
     document.getElementById('promo-route-stats').style.display = 'flex';
 
     // Draw Route A (Green - Shortest)
@@ -1938,12 +2083,12 @@ function startPromoDemo() {
 
   }, 3000);
 
-  // STEP 3: People Flow Animation (5.5s - 14s)
+  // STEP 3: People Flow Animation (6s - 12s)
   promoAnimTimer2 = setTimeout(() => {
     stepNumber.textContent = '③';
     stepNumber.style.background = 'rgba(52,199,89,0.1)';
     stepNumber.style.color = 'var(--success)';
-    stepText.innerHTML = '<strong>👥 避難シミュレーション開始（経路の分散）</strong><br>避難者が特定の最短ルートだけに集中するのを防ぎ、各自の判断でルートを分散選択することで、道路の滞留が抑制されます。';
+    stepText.innerHTML = '「避難開始と経路の自律的分散」特定の最短ルートへの集中を防ぎ、状況に合わせてルートを自律的に分散選択させることで道路の滞留を防ぎます。';
 
     const dotsCount = 15;
     const colors = { A: '#34c759', B: '#0071e3', C: '#af52de' };
@@ -2005,7 +2150,7 @@ function startPromoDemo() {
         stepNum.textContent = '④';
         stepNum.style.background = 'rgba(52,199,89,0.1)';
         stepNum.style.color = 'var(--success)';
-        stepTxt.innerHTML = '<strong>🎉 全員の避難完了</strong><br>自律的な経路分散により、大きな混雑や滞留に巻き込まれることなく、全員が安全に避難目標地点へ到達しました。';
+        stepTxt.innerHTML = '「全員の避難完了」自律的な経路の分散により、大きな道路混雑や交差点での滞留に巻き込まれることなく、全員が安全に目標の避難所へ到達しました。';
       }
     }
 
@@ -2019,6 +2164,7 @@ function resetPromoDemoState() {
   if (promoAnimTimer2) clearTimeout(promoAnimTimer2);
   if (promoAnimDotsTimer) cancelAnimationFrame(promoAnimDotsTimer);
   if (pulseInterval) clearInterval(pulseInterval);
+  resetPromoTimeline();
 
   if (promoEpicenterMarker) { promoMap.removeLayer(promoEpicenterMarker); promoEpicenterMarker = null; }
   if (promoEpicenterPulse) { promoMap.removeLayer(promoEpicenterPulse); promoEpicenterPulse = null; }
