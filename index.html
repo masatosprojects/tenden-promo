@@ -860,6 +860,46 @@ section { border-bottom: 1px solid var(--border); position: relative; }
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
+.promo-sim-banner {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255, 59, 48, 0.94);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255,59,48,0.25);
+  border: 1px solid rgba(255,255,255,0.2);
+  white-space: nowrap;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.25;
+}
+.promo-sim-banner .banner-en {
+  display: block;
+  font-size: 8.5px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 1px;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 560px) {
+  .promo-sim-banner {
+    padding: 6px 12px;
+    font-size: 9px;
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+  }
+}
 .badge-dot-pulse {
   width: 8px;
   height: 8px;
@@ -1058,6 +1098,10 @@ section { border-bottom: 1px solid var(--border); position: relative; }
       <!-- Left: Map -->
       <div class="demo-map-wrap">
         <div id="promo-map" class="promo-map-container"></div>
+        <div class="promo-sim-banner">
+          ⚠️ これは訓練用の避難シミュレーション画面です。実際の災害ではありません。
+          <span class="banner-en">This is a training simulation. NOT a real disaster.</span>
+        </div>
         <div class="demo-map-badge">
           <span class="badge-dot-pulse"></span>
           鎌倉市 由比ヶ浜 — シミュレーションデータ
@@ -1075,15 +1119,15 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
         <div class="demo-route-stats" id="promo-route-stats" style="display:none;">
           <div class="route-stat-item" style="border-left: 4px solid #34c759;">
-            <div class="route-stat-label">🟢 Route A — 最短</div>
+            <div class="route-stat-label">🟢 最短避難ルート (Route A)</div>
             <div class="route-stat-val">1,007m / 約14分</div>
           </div>
           <div class="route-stat-item" style="border-left: 4px solid #007aff;">
-            <div class="route-stat-label">🔵 Route B — 混雑回避</div>
+            <div class="route-stat-label">🔵 道路混雑回避ルート (Route B - デフォルト)</div>
             <div class="route-stat-val">1,013m / 約15分</div>
           </div>
           <div class="route-stat-item" style="border-left: 4px solid #5e5ce6;">
-            <div class="route-stat-label">🟣 Route C — 高台優先</div>
+            <div class="route-stat-label">🟣 ♿ バリアフリー・平坦ルート (Route C)</div>
             <div class="route-stat-val">1,417m / 約20分</div>
           </div>
         </div>
@@ -1234,21 +1278,21 @@ section { border-bottom: 1px solid var(--border); position: relative; }
     <div class="routes-demo-grid">
       <div class="routes-visual reveal rd2">
         <div class="route-track green">
-          <span class="route-track-label">🟢 最短・混雑回避ルート</span>
+          <span class="route-track-label">🟢 最短避難ルート</span>
           <div class="route-line-sim">
             <div class="route-line-pulse"></div>
             <div class="route-line-flow"></div>
           </div>
         </div>
         <div class="route-track blue">
-          <span class="route-track-label">🔵 避難所負荷分散ルート</span>
+          <span class="route-track-label">🔵 道路混雑回避ルート（デフォルト）</span>
           <div class="route-line-sim">
             <div class="route-line-pulse"></div>
             <div class="route-line-flow"></div>
           </div>
         </div>
         <div class="route-track purple">
-          <span class="route-track-label">🟣 地形勾配配慮ルート</span>
+          <span class="route-track-label">🟣 ♿ バリアフリー・平坦ルート</span>
           <div class="route-line-sim">
             <div class="route-line-pulse"></div>
             <div class="route-line-flow"></div>
@@ -1260,24 +1304,24 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <div class="route-detail-card" style="border-left: 3px solid var(--success) !important;">
           <span class="route-card-icon">🟢</span>
           <div>
-            <h4 class="route-card-title">混雑想定エリアを迂回する最短ルート</h4>
-            <p class="route-card-desc">シミュレーションで可視化されたボトルネック混雑予測レイヤーを参照し、道路上の滞留が予想される主要道路を自律的に迂回した推奨経路を提案します。</p>
+            <h4 class="route-card-title">最短距離で直行する最短避難ルート</h4>
+            <p class="route-card-desc">混雑想定や道路の急坂を考慮せず、現在地から最も近い安全な緊急高台境界点（第一目標）までを直線的かつ最短距離で結び、迅速な避難をサポートします。</p>
           </div>
         </div>
 
         <div class="route-detail-card" style="border-left: 3px solid var(--primary) !important;">
           <span class="route-card-icon">🔵</span>
           <div>
-            <h4 class="route-card-title">避難所の収容過多を抑える分散ルート</h4>
-            <p class="route-card-desc">目的となる避難所の予測利用率（low/medium/high）を動的に判断し、許容量を超えそうな主要施設を避け、比較的余裕のある代替の安全な避難所へ案内します。</p>
+            <h4 class="route-card-title">ボトルネック混雑を予測・迂回する道路混雑回避ルート</h4>
+            <p class="route-card-desc">マルチエージェント避難シミュレーションに基づいて可視化された将来の混雑想定（ボトルネック）を自動検知し、滞留が発生する交差点を迂回してスムーズに安全圏へと導きます。</p>
           </div>
         </div>
 
         <div class="route-detail-card" style="border-left: 3px solid var(--purple) !important;">
           <span class="route-card-icon">🟣</span>
           <div>
-            <h4 class="route-card-title">急勾配の坂道を自動で避ける勾配配慮ルート</h4>
-            <p class="route-card-desc">標高数値地図から高齢者・要介助者の歩行を阻む急坂を自動検出。HUDにルートの最大勾配情報を提示し、歩行特性（速度）に応じた現実的な所要時間を算出します。</p>
+            <h4 class="route-card-title">最大勾配を抑えた♿ バリアフリー・平坦ルート</h4>
+            <p class="route-card-desc">国土地理院の標高データ（数値地図）を基に、高齢者、妊婦、車いすの方、児童の避難のボトルネックとなる急坂・上り坂を自動で検出して回避。安全で平坦な経路を優先選択します。</p>
           </div>
         </div>
       </div>
@@ -1345,7 +1389,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
         <p class="feat-number">09</p>
         <div class="feat-icon-text">🏷️</div>
         <h3 class="feat-name">直感的なサイドラベル表示</h3>
-        <p class="feat-body">マップ右側のアクションボタンに多言語テキストラベルを常時表示。アイコンだけの曖昧さを完全に排除し、極限状態での迷いや誤操作を防ぎます。</p>
+        <p class="feat-body">マップ右側のアクションボタンに多言語テキストラベルを常時表示。30言語の自動ローカライズ機能と完全連動し、極限状態でのアイコンによる機能の曖昧さを完全に排除し、誤操作を防ぎます。</p>
       </div>
       <div class="feat-item reveal">
         <p class="feat-number">10</p>
