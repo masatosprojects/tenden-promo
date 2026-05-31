@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENDEN - アクセスページ</title>
+  <meta name="description" content="TENDENアプリ・研究ポータル・プロモーションサイトへのQRコードアクセスページ">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0d10;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --primary: #007aff;
+      --accent: #30d158;
+      --purple: #bf5af2;
+      --text: #f5f5f7;
+      --muted: #8e8e93;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px 64px;
+      gap: 48px;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 50% -10%, rgba(0,122,255,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 90% 80%, rgba(191,90,242,0.12) 0%, transparent 70%);
+    }
+
+    header {
+      text-align: center;
+      max-width: 520px;
+    }
+
+    .logo-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #007aff, #bf5af2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 36px rgba(0,122,255,0.3);
+    }
+
+    .logo-wrap svg {
+      width: 38px;
+      height: 38px;
+      fill: #fff;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #8e8e93 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .card-app::before  { background: radial-gradient(circle at 50% 0%, rgba(0,122,255,0.12) 0%, transparent 70%); }
+    .card-promo::before { background: radial-gradient(circle at 50% 0%, rgba(48,209,88,0.12) 0%, transparent 70%); }
+    .card-research::before { background: radial-gradient(circle at 50% 0%, rgba(191,90,242,0.12) 0%, transparent 70%); }
+
+    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+    .card:hover::before { opacity: 1; }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .badge-app     { background: rgba(0,122,255,0.15);   color: var(--primary); }
+    .badge-promo   { background: rgba(48,209,88,0.15);   color: var(--accent); }
+    .badge-research{ background: rgba(191,90,242,0.15);  color: var(--purple); }
+
+    .card-info {
+      text-align: center;
+    }
+
+    .card-info h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .qr-wrap {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .qr-wrap img {
+      display: block;
+      width: 180px;
+      height: 180px;
+      border-radius: 6px;
+    }
+
+    .url-chip {
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-family: monospace;
+      text-align: center;
+      word-break: break-all;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    /* Subtle pulse animation on QR */
+    @keyframes qrPulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+      50% { box-shadow: 0 6px 28px rgba(0,122,255,0.25); }
+    }
+    .card-app .qr-wrap { animation: qrPulse 3s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-wrap">
+      <!-- TENDEN wave icon -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 60 Q25 40 40 55 Q55 70 70 50 Q85 30 95 45" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M10 75 Q25 55 40 70 Q55 85 70 65 Q85 45 95 60" stroke="rgba(255,255,255,0.5)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <circle cx="50" cy="28" r="10" fill="#fff" opacity="0.9"/>
+        <path d="M44 28 L50 22 L56 28" fill="#007aff"/>
+      </svg>
+    </div>
+    <h1>TENDEN</h1>
+    <p class="subtitle">スマートフォンのカメラでQRコードをスキャンして<br>各サイトへアクセスできます。</p>
+  </header>
+
+  <div class="cards">
+
+    <!-- 1. App -->
+    <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" class="card card-app">
+      <span class="card-badge badge-app">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>
+        アプリ本体
+      </span>
+      <div class="card-info">
+        <h2>🗺️ TENDEN 避難シミュレーター</h2>
+        <p>津波リスク判定・リアルタイム避難ルート生成・混雑予測モデル搭載の避難支援PWAアプリ。</p>
+      </div>
+      <div class="qr-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https://masatosprojects.github.io/tenden-app/"
+          alt="TENDEN アプリ QRコード"
+          loading="lazy"
+        >
+      </div>
+      <span class="url-chip">masatosprojects.github.io/tenden-app/</span>
+    </a>
+
+    <!-- 2. Promo site -->
+    <a href="https://masatosprojects.github.io/tenden-promo/" target="_blank" rel="noopener" class="card card-promo">
+      <span class="card-badge badge-promo">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        プロモサイト
+      </span>
+      <div class="card-info">
+        <h2>📢 TENDEN 公式サイト</h2>
+        <p>アプリの機能紹介・開発背景・使い方ガイドをまとめたプロモーションサイト。</p>
+      </div>
+      <div class="qr-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https://masatosprojects.github.io/tenden-promo/"
+          alt="TENDEN プロモサイト QRコード"
+          loading="lazy"
+        >
+      </div>
+      <span class="url-chip">masatosprojects.github.io/tenden-promo/</span>
+    </a>
+
+    <!-- 3. Research portal -->
+    <a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" class="card card-research">
+      <span class="card-badge badge-research">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6L23 9 12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+        研究ポータル
+      </span>
+      <div class="card-info">
+        <h2>🔬 鎌倉シミュレーション研究</h2>
+        <p>高校生研究者による津波避難シミュレーション研究の論文・図表・データを公開しているポータル。</p>
+      </div>
+      <div class="qr-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https://masatosprojects.github.io/kamakura-sim/"
+          alt="研究ポータル QRコード"
+          loading="lazy"
+        >
+      </div>
+      <span class="url-chip">masatosprojects.github.io/kamakura-sim/</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2026 TENDEN Project — 高校生の研究者である開発者による減災プロジェクト</p>
+  </footer>
+</body>
+</html>
