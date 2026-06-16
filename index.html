@@ -1463,7 +1463,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">05</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">オフライン動作設計</h3>
- <p class="feat-body">地図の基本タイルや避難所データベースをローカルにキャッシュ。災害によってモバイル回線が寸断された環境でも基本機能が維持されます。</p>
+ <p class="feat-body">地図の基本タイルや避難所データベースをローカルにキャッシュ。災害によってモバイル回線が寸断された環境でも基本機能が維持されます。<br><strong>平時に一度アクセスしておく</strong>ことでオフラインキャッシュが完成し、実際の災害時でも回線が混雑・寸断された状況でアプリを動作させることができます。</p>
  </div>
  <div class="feat-item reveal rd5">
  <p class="feat-number">06</p>
@@ -1505,7 +1505,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">12</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">ローカルプライバシー処理</h3>
- <p class="feat-body">位置情報などのプライベートデータは端末内のみで処理し、外部サーバーへの送信や保存は一切行わないため、高いプライバシーが担保されます。</p>
+ <p class="feat-body">位置情報は、標高取得（国土地理院API）・避難ルート計算（OSRM）・ハザード判定（国土地理院タイル）のためにそれぞれの公開サービスへ送信されますが、ユーザーを特定する情報の保存や第三者提供は行いません。安否共有（Web Share API）も、ユーザーが明示的に操作した場合のみ送信されます。</p>
  </div>
  </div>
  </div>
