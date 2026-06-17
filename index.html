@@ -1129,7 +1129,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </h1>
 
  <p class="hero-body">
- 鎌倉沿岸部の大規模な人流避難シミュレーション研究に基づき設計された、自律型の津波避難支援アプリケーション。地理感覚のない観光客や外国語話者が災害時に直面する避難の遅れを解消するため、状況に応じた3つの代替経路を提示し、迅速かつ的確な主体避難をサポートします。
+ 鎌倉沿岸部の大規模な人流避難シミュレーション研究に基づき設計された、自律型の津波避難支援アプリケーション。地理感覚のない観光客や外国語話者が災害時に直面する避難の遅れを解消するため、強化学習AIが高台への最適な避難経路を提案し（要配慮者向けの配慮ルートも併せて提示）、迅速かつ的確な主体避難をサポートします。
  </p>
 
  <div class="hero-actions">
@@ -1157,8 +1157,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="hero-stat-label">外国人観光客や国内旅行者など<br>ブラウザから即座に起動可能</div>
  </div>
  <div class="hero-stat">
- <div class="hero-stat-num">3ルート提示</div>
- <div class="hero-stat-label">混雑回避・バリアフリー・最短を<br>状況に応じて選択可能</div>
+ <div class="hero-stat-num">AIルート提案</div>
+ <div class="hero-stat-label">強化学習モデルが高台への最適経路を提案<br>要配慮者向けの配慮ルートも</div>
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num">30言語対応</div>
@@ -1222,15 +1222,11 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
  <div class="demo-route-stats" id="promo-route-stats" style="display:none;">
  <div class="route-stat-item" style="border-left: 4px solid #34c759;">
- <div class="route-stat-label"><span class="route-indicator" style="background-color: #34c759;"></span>最短避難ルート (Route A)</div>
+ <div class="route-stat-label"><span class="route-indicator" style="background-color: #34c759;"></span>AIモデル推奨ルート (強化学習)</div>
  <div class="route-stat-val">1,007m / 約14分</div>
  </div>
- <div class="route-stat-item" style="border-left: 4px solid #007aff;">
- <div class="route-stat-label"><span class="route-indicator" style="background-color: #007aff;"></span>道路混雑回避ルート (Route B - デフォルト)</div>
- <div class="route-stat-val">1,013m / 約15分</div>
- </div>
  <div class="route-stat-item" style="border-left: 4px solid #5e5ce6;">
- <div class="route-stat-label"><span class="route-indicator" style="background-color: #5e5ce6;"></span>バリアフリー・平坦ルート (Route C)</div>
+ <div class="route-stat-label"><span class="route-indicator" style="background-color: #5e5ce6;"></span>要配慮者ルート (緩やか)</div>
  <div class="route-stat-val">1,417m / 約20分</div>
  </div>
  </div>
@@ -1279,7 +1275,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  「てんでんこ」とは、避難者が他者の行動に同調しすぎず、それぞれが自ら迅速に安全な場所を目指すことで、地域全体の避難成功率を高めるという防災の知見です。
  </p>
  <p>
- TENDENはこの思想をシステム設計に落とし込んでいます。避難者全員をひとつの特定ルートに一律に誘導するのではなく、個人の状況や歩行特性に応じた「3つの代替経路」を提示することで、各自の主体的な意思決定と自律的な避難行動を支援します。
+ TENDENはこの思想をシステム設計に落とし込んでいます。避難者全員をひとつの特定ルートに一律に誘導するのではなく、強化学習AIが提案する最適経路に加えて要配慮者向けの配慮ルートも提示することで、各自の主体的な意思決定と自律的な避難行動を支援します。
  </p>
  </div>
  </div>
@@ -1373,7 +1369,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="wrap">
  <p class="section-label reveal">Route Architecture</p>
  <span class="section-title-en reveal rd1">Three analytical routes</span>
- <h2 class="section-title reveal rd2">歩行者特性や周辺状況を反映した3つのサポート経路</h2>
+ <h2 class="section-title reveal rd2">強化学習AIが提案する最適避難経路と、要配慮者への配慮ルート</h2>
  <p class="section-desc reveal rd3">
  TENDENは、道路形状に完全にフィットした明瞭なルートラインで表示され、視界が悪い状況や夜間における見やすさを重視しています。
  </p>
@@ -1381,21 +1377,14 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="routes-demo-grid">
  <div class="routes-visual reveal rd2">
  <div class="route-track green">
- <span class="route-track-label">● 最短避難ルート</span>
- <div class="route-line-sim">
- <div class="route-line-pulse"></div>
- <div class="route-line-flow"></div>
- </div>
- </div>
- <div class="route-track blue">
- <span class="route-track-label">● 道路混雑回避ルート（デフォルト）</span>
+ <span class="route-track-label">● AIモデル推奨ルート</span>
  <div class="route-line-sim">
  <div class="route-line-pulse"></div>
  <div class="route-line-flow"></div>
  </div>
  </div>
  <div class="route-track purple">
- <span class="route-track-label">● バリアフリー・平坦ルート</span>
+ <span class="route-track-label">● 要配慮者ルート（緩やか）</span>
  <div class="route-line-sim">
  <div class="route-line-pulse"></div>
  <div class="route-line-flow"></div>
@@ -1407,23 +1396,15 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="route-detail-card" style="border-left: 3px solid var(--success) !important;">
  <span class="route-card-icon">●</span>
  <div>
- <h4 class="route-card-title">最短避難ルート (最短距離)</h4>
- <p class="route-card-desc">混雑や道路の勾配を考慮せず、現在地から最も近い避難目標地点（第一目標）までを最短距離で結び、迅速な初期避難行動をサポートします。</p>
- </div>
- </div>
-
- <div class="route-detail-card" style="border-left: 3px solid var(--primary) !important;">
- <span class="route-card-icon">●</span>
- <div>
- <h4 class="route-card-title">道路混雑回避ルート (混雑想定を考慮)</h4>
- <p class="route-card-desc">大規模人流避難シミュレーションに基づいて特定された混雑発生予測地点（ボトルネック）を検知。滞留が起きやすい交差点を事前に迂回し、よりスムーズに安全圏へと導きます。</p>
+ <h4 class="route-card-title">AIモデル推奨ルート (強化学習)</h4>
+ <p class="route-card-desc">大規模人流避難シミュレーション上で学習した強化学習モデルが、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断し、最適な避難経路を提案します（モデル地区のシミュレーションで避難成功率約99%・最短経路を上回ることを確認）。</p>
  </div>
  </div>
 
  <div class="route-detail-card" style="border-left: 3px solid var(--purple) !important;">
  <span class="route-card-icon">●</span>
  <div>
- <h4 class="route-card-title"> バリアフリー・平坦ルート (坂道配慮)</h4>
+ <h4 class="route-card-title">要配慮者ルート (坂道配慮・緩やか)</h4>
  <p class="route-card-desc">国土地理院の標高データを基に、高齢者、妊婦、車いすの方、児童の避難の妨げとなる急な上り坂を自動で検出して回避。安全で平坦な経路を優先案内します。</p>
  </div>
  </div>
@@ -1443,8 +1424,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="feat-item reveal">
  <p class="feat-number">01</p>
  <div class="feat-icon-text"></div>
- <h3 class="feat-name">3ルート同時提示</h3>
- <p class="feat-body">最短・混雑回避・バリアフリーの3つのルートを同時に表示。避難者が状況や自身の特性に合わせて自律的に意思決定を行えるようサポートします。</p>
+ <h3 class="feat-name">AIモデル推奨ルート</h3>
+ <p class="feat-body">強化学習モデル（鎌倉モデル地区のシミュレーションで避難成功率約99%・最短経路を上回る）が、最短・混雑回避・高台到達を統合的に判断して最適な避難経路を提案。要配慮者向けの緩やかな配慮ルートも併せて提示します。</p>
  </div>
  <div class="feat-item reveal rd1">
  <p class="feat-number">02</p>
@@ -1628,7 +1609,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="rf-insight">
  <p class="rf-insight-label">システム設計の思想</p>
  <p class="rf-insight-text">
- TENDENが「3つの異なる推奨ルートを提示する理由」はここにあります。<br>
+ TENDENが「AIの推奨ルートに加えて要配慮者向けの配慮ルートも提示する理由」はここにあります。<br>
  一律の指示を強制せず、「避難経路の選択権」を避難者自身に委ねて分散を促すことが、結果として全体の生存性を最大化します。
  </p>
  </div>
@@ -2089,7 +2070,7 @@ function startPromoDemo() {
  stepNumber.textContent = '②';
  stepNumber.style.background = 'rgba(0,113,227,0.1)';
  stepNumber.style.color = 'var(--primary)';
- stepText.innerHTML = '「3つの推奨避難ルートの提示」最短避難ルート・道路混雑回避ルート・バリアフリー対応ルートの3つの選択肢を同時に自動生成して提示します。';
+ stepText.innerHTML = '「AIモデル推奨ルートの提示」強化学習モデルが高台への最適な避難経路を自動生成。あわせて要配慮者向けの緩やかな配慮ルートも提示します。';
  document.getElementById('promo-route-stats').style.display = 'flex';
 
  // Draw Route A (Green - Shortest)
