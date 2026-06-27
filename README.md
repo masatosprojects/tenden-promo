@@ -6,22 +6,24 @@
 
 ## このリポジトリについて
 
-TENDENは、鎌倉沿岸（由比ヶ浜・材木座・七里ガ浜）を対象としたマルチエージェント津波避難シミュレーション研究の知見に基づいて開発された、土地勘のない来訪者向けの津波避難ナビWebアプリ（PWA）です。
+TENDENは、鎌倉沿岸（由比ヶ浜・材木座・七里ガ浜）をモデル地区としたマルチエージェント津波避難シミュレーション研究の知見に基づく、土地勘のない来訪者向け津波避難ナビ Web アプリ（PWA）です。
 
-このサイトでは、
+**最新版: v7.0**（2026-06-27）
 
-- TENDENの特徴・できることの紹介
-- アプリ本体（https://masatosprojects.github.io/tenden-app/ ）へのアクセス案内（`access.html`）
+## ページ構成
 
-を提供しています。
+- `index.html` — トップページ（アプリ紹介・機能説明）
+- `version-history.html` — **開発履歴（v0.1〜v7.0・全70版）** — git 228コミット対応表
+- `access.html` — QRコード付きアクセス案内（アプリ / プロモ / 研究 / 開発履歴）
+- `hud-logo.png` — ロゴ画像
 
 ## 関連リンク
 
-- アプリ本体: https://masatosprojects.github.io/tenden-app/ （リポジトリ: [tenden-app](https://github.com/masatosprojects/tenden-app)）
-- 研究プロジェクト紹介サイト: https://masatosprojects.github.io/kamakura-sim/ （リポジトリ: [kamakura-sim](https://github.com/masatosprojects/kamakura-sim)）
+- アプリ本体: https://masatosprojects.github.io/tenden-app/
+- 研究プロジェクト: https://masatosprojects.github.io/kamakura-sim/
 
-## 構成
+## 2026-06-27 更新内容（サイト監査反映）
 
-- `index.html` — トップページ（アプリ紹介）
-- `access.html` — TENDENへのアクセス案内ページ
-- `hud-logo.png` — ロゴ画像
+- 試行回数・TENDEN 仕様の整合（研究側: 242試行、TENDEN: 30言語・2ルート・オフライン opt-in）
+- 開発履歴ページ `version-history.html` を新設
+- プロモ `index.html` のルート説明・デモ・PWA表記を v7.0 に合わせて更新

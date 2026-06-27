@@ -12,7 +12,7 @@
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
  <meta http-equiv="Pragma" content="no-cache">
  <meta http-equiv="Expires" content="0">
- <meta name="version" content="light-v1-20260530">
+ <meta name="version" content="v7.0-20260627">
 
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1108,6 +1108,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <a href="#solution" id="nav-solution">避難経路の分散効果</a>
  <a href="#features" id="nav-features">サポート機能仕様</a>
  <a href="#research" id="nav-research">共同検証データ</a>
+ <a href="version-history.html" id="nav-history">開発履歴 v7.0</a>
  <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="nav-github">GitHub</a>
  </div>
  <a class="nav-cta btn" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" id="nav-cta-btn">
@@ -1153,8 +1154,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="hero-stat-label">シミュレーション人口モデル<br>(242試行の平均設定値)</div>
  </div>
  <div class="hero-stat">
- <div class="hero-stat-num highlight">全国沿岸対応</div>
- <div class="hero-stat-label">外国人観光客や国内旅行者など<br>ブラウザから即座に起動可能</div>
+ <div class="hero-stat-num highlight">鎌倉フル機能</div>
+ <div class="hero-stat-label">全国の沿岸でも地図・ハザード表示。<br>AI・混雑・避難所データは鎌倉モデル地区</div>
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num">AIルート提案</div>
@@ -1341,13 +1342,13 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="solution-inner">
  <div class="solution-text reveal rd2">
  <p>
- TENDENは、最短ルートに加えて、「シミュレーションに基づく混雑想定を回避する迂回ルート」、および「道路の勾配特性を考慮したバリアフリールート」を動的に同時提示します。
+ TENDENは、強化学習AIが提案する「AIスマート避難ルート」と、勾配を考慮した「要配慮者ルート（緩やか）」の<strong>2本</strong>を提示します（v5.0以降、旧3ルート表示から集約）。AIルートは最短・混雑回避・高台接近を統合最適化し、端末ごとに経路を自律分散させます。
  </p>
  <p>
- 日本全国の多種多様な沿岸エリアに対応させるため、本アプリは「広域ハザード自動算定アルゴリズム」を新設計。GPSの位置情報を基に、周囲約10km四方の地形・標高および自治体避難所データを動的照合し、通信制約下でもその場で避難候補エリア（第一目標）を算出します。
+ 全国の沿岸でも地図と津波ハザードの参照が可能です。一方、シミュレーション学習済みのAI方策・混難統計・公式避難所連携などの中核機能は、<strong>鎌倉モデル地区（由比ヶ浜・材木座・七里ガ浜）</strong>でフルに動作します。GPSに基づき周辺約10kmの地形・標高を照合し、避難候補エリア（第一目標）を算出します。
  </p>
  <p>
- PWA仕様のためスマートフォンのブラウザさえあれば即時起動。スリープ防止（Wake Lock）や、ジャイロ連動による方向指標など、標準Webテクノロジーのみで自律的な避難動作の継続をサポートします。
+ PWA仕様のためブラウザから即時起動。オフライン緊急モードは<strong>アプリ設定からオプトイン</strong>（v4.0〜。開発中は上部バナーのとおりデフォルト無効）。Wake Lock・ジャイロ連動コンパスなど標準Web APIで避難動作を支援します。
  </p>
  </div>
 
@@ -1368,7 +1369,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 <section class="routes-demo" id="routes-demo">
  <div class="wrap">
  <p class="section-label reveal">Route Architecture</p>
- <span class="section-title-en reveal rd1">Three analytical routes</span>
+ <span class="section-title-en reveal rd1">Two core routes</span>
  <h2 class="section-title reveal rd2">強化学習AIが提案する最適避難経路と、要配慮者への配慮ルート</h2>
  <p class="section-desc reveal rd3">
  TENDENは、道路形状に完全にフィットした明瞭なルートラインで表示され、視界が悪い状況や夜間における見やすさを重視しています。
@@ -1449,7 +1450,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">05</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">オフライン動作設計</h3>
- <p class="feat-body">地図の基本タイルや避難所データベースをローカルにキャッシュ。災害によってモバイル回線が寸断された環境でも基本機能が維持されます。<br><strong>平時に一度アクセスしておく</strong>ことでオフラインキャッシュが完成し、実際の災害時でも回線が混雑・寸断された状況でアプリを動作させることができます。</p>
+ <p class="feat-body">地図タイルや避難所データベースを Service Worker でキャッシュ可能（v4.0以降<strong>設定からオプトイン</strong>）。災害時の回線寸断を想定した設計。<br><strong>平時に一度アクセスし、設定でオフライン緊急モードをON</strong>にすると、キャッシュが整い非常時にも基本機能を維持できます。<em>（開発中はデフォルト無効 — 上部バナー参照）</em></p>
  </div>
  <div class="feat-item reveal rd5">
  <p class="feat-number">06</p>
@@ -1672,6 +1673,27 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
 </section>
 
+<!-- ═══ DEVELOPMENT HISTORY (v7.0) ═══════════════════ -->
+<section class="stack" id="changelog" style="background: var(--white); border-bottom: 1px solid var(--border);">
+ <div class="wrap">
+ <p class="section-label reveal">Development History</p>
+ <h2 class="section-title reveal rd1">v0.1 から v7.0 まで — 全70版</h2>
+ <p class="section-desc reveal rd2">
+ 2026-05-25 の初回リリースから本日まで、git コミット 228 件を時系列でグルーピングした公式開発履歴です。最新版 <strong>v7.0</strong>（2026-06-27）では予習モードの自由パン・実方位コンパス・ルートUI刷新などが含まれます。
+ </p>
+ <div class="reveal rd3" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;align-items:center;">
+ <a class="btn btn-primary" href="version-history.html">開発履歴をすべて見る（70版） →</a>
+ <a class="btn btn-outline" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">v7.0 アプリを開く</a>
+ </div>
+ <div class="reveal rd4" style="margin-top:28px;padding:20px 24px;border-radius:14px;background:var(--bg-light);border:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.7;">
+ <strong style="color:var(--text-dark);">直近3版（抜粋）</strong><br>
+ <span style="color:var(--success);font-weight:600;">v7.0</span>（2026-06-27）— 予習の自由パン/視点リセット/実方位コンパス/歩行者アイコン刷新<br>
+ <span style="font-weight:600;">v6.9</span>（2026-06-27）— ルート選択カードのテンプレ化・所要時間表示改善<br>
+ <span style="font-weight:600;">v6.8</span>（2026-06-27）— ルートラベル整理・FAB非表示・操作集約
+ </div>
+ </div>
+</section>
+
 <!-- ═══ TECHNOLOGY TAGS ═══════════════════════════ -->
 <section class="stack">
  <div class="wrap">
@@ -1729,7 +1751,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  TENDENは災害時におけるオフラインでの信頼性を担保するため、強固な PWA キャッシュ機構を採用しています。もし最新のアップデート内容や3原則ガイド等の機能追加がブラウザに表示されない場合は、アプリ設定パネルの「【警告】システムキャッシュを完全初期化」を実行していただくか、ブラウザのキャッシュクリア（PCでは <code>Ctrl + F5</code> 等のスーパーリロード）をお試しください。
  </p>
  <div class="version-badge">
- <span>Current System Target: sw-v43</span>
+ <span>App v7.0 · SW tenden-v142 · <a href="version-history.html" style="color:inherit;text-decoration:underline;">全70版の履歴</a></span>
  </div>
  </div>
 
@@ -1747,6 +1769,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  地図: CartoDB & 国土地理院｜想定: 国土地理院ハザードマップポータルサイト（津波浸水想定データ）
  </p>
  <div class="footer-links">
+ <a href="version-history.html" id="footer-history-link">Changelog v7.0</a>
  <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" id="footer-app-link">App</a>
  <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="footer-github-link">GitHub</a>
  <a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" id="footer-paper-link">Paper</a>
@@ -2070,10 +2093,10 @@ function startPromoDemo() {
  stepNumber.textContent = '②';
  stepNumber.style.background = 'rgba(0,113,227,0.1)';
  stepNumber.style.color = 'var(--primary)';
- stepText.innerHTML = '「AIモデル推奨ルートの提示」強化学習モデルが高台への最適な避難経路を自動生成。あわせて要配慮者向けの緩やかな配慮ルートも提示します。';
+ stepText.innerHTML = '「AIモデル推奨ルートの提示」強化学習モデルが高台への最適経路を生成。あわせて要配慮者向けの緩やかな配慮ルート（2本）も提示します。';
  document.getElementById('promo-route-stats').style.display = 'flex';
 
- // Draw Route A (Green - Shortest)
+ // Draw Route A (Green - AI)
  promoRouteLines.A = L.polyline(promoRoutes.A, {
  color: '#34c759',
  weight: 5,
@@ -2082,16 +2105,7 @@ function startPromoDemo() {
  lineJoin: 'round'
  }).addTo(promoMap);
 
- // Draw Route B (Blue - Crowd avoidance)
- promoRouteLines.B = L.polyline(promoRoutes.B, {
- color: '#0071e3',
- weight: 5,
- opacity: 0.9,
- lineCap: 'round',
- lineJoin: 'round'
- }).addTo(promoMap);
-
- // Draw Route C (Purple - Gentle slope)
+ // Draw Route C (Purple - Accessible)
  promoRouteLines.C = L.polyline(promoRoutes.C, {
  color: '#af52de',
  weight: 5,
@@ -2100,8 +2114,8 @@ function startPromoDemo() {
  lineJoin: 'round'
  }).addTo(promoMap);
 
- // Fit map to contain all routes beautifully
- const bounds = L.latLngBounds([...promoRoutes.A, ...promoRoutes.B, ...promoRoutes.C]);
+ // Fit map to contain both routes
+ const bounds = L.latLngBounds([...promoRoutes.A, ...promoRoutes.C]);
  promoMap.fitBounds(bounds, { padding: [50, 50], animate: true, duration: 1 });
 
  }, 3000);
@@ -2111,13 +2125,13 @@ function startPromoDemo() {
  stepNumber.textContent = '③';
  stepNumber.style.background = 'rgba(52,199,89,0.1)';
  stepNumber.style.color = 'var(--success)';
- stepText.innerHTML = '「避難開始と経路の自律的分散」特定の最短ルートへの集中を防ぎ、状況に合わせてルートを自律的に分散選択させることで道路の滞留を防ぎます。';
+ stepText.innerHTML = '「避難開始と経路の自律的分散」AI推奨ルートと要配慮者ルートの2系統に、端末ごとの微細な分散を加え、特定経路への集中を防ぎます。';
 
- const dotsCount = 15;
- const colors = { A: '#34c759', B: '#0071e3', C: '#af52de' };
+ const dotsCount = 12;
+ const colors = { A: '#34c759', C: '#af52de' };
  
- // Spawn dots
- for (let rId of ['A', 'B', 'C']) {
+ // Spawn dots (AI + Accessible only — matches app v5.0+)
+ for (let rId of ['A', 'C']) {
  for (let i = 0; i < dotsCount; i++) {
  const dotMarker = L.circleMarker(promoRoutes[rId][0], {
  radius: 5,
