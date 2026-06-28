@@ -3,10 +3,10 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>TENDEN — 避難シミュレーション研究に基づく自律型津波避難支援アプリ</title>
- <meta name="description" content="大規模な人流避難シミュレーション研究から得られた知見を実装。日本全国の沿岸エリアに対応し、Web標準技術を活用した自律型津波避難支援アプリケーション（PWA）。">
+ <title>TENDEN — kamakura-sim研究に基づく自律型津波避難支援アプリ</title>
+ <meta name="description" content="鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）の知見を実装。日本全国の沿岸エリアに対応した自律型津波避難支援アプリケーション（PWA）。">
  <meta property="og:title" content="TENDEN — 自律型津波避難支援アプリケーション">
- <meta property="og:description" content="シミュレーション分析が示す「避難経路の自律的な分散効果」を実装。個々の適切な意思決定をサポートするWebアプリ。">
+ <meta property="og:description" content="kamakura-sim（鎌倉沿岸部大規模人流避難シミュレーション）が示す「避難経路の自律的な分散効果」を実装。個々の適切な意思決定をサポートするWebアプリ。">
  <meta property="og:image" content="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif">
  <meta property="og:type" content="website">
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -138,14 +138,50 @@ a { text-decoration: none; color: inherit; }
  position: relative; overflow: hidden;
  justify-content: center;
  background: var(--bg-light);
+ isolation: isolate;
 }
 /* Apple Soft Light Grid */
 .hero::before {
  content: '';
- position: absolute; inset: 0;
+ position: absolute; inset: 0; z-index: 0;
  background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
  background-size: 32px 32px;
  pointer-events: none;
+}
+
+/* Animated mesh glow + particles */
+.hero-bg {
+ position: absolute; inset: 0; z-index: 0;
+ pointer-events: none; overflow: hidden;
+}
+.hero-glow {
+ position: absolute;
+ width: 130%; height: 130%;
+ top: -15%; left: -15%;
+ background:
+  radial-gradient(ellipse 55% 45% at 18% 28%, rgba(0, 113, 227, 0.14), transparent 58%),
+  radial-gradient(ellipse 48% 42% at 88% 55%, rgba(175, 82, 222, 0.07), transparent 52%),
+  radial-gradient(ellipse 38% 32% at 55% 8%, rgba(52, 199, 89, 0.05), transparent 48%);
+ animation: heroMeshShift 16s ease-in-out infinite alternate;
+}
+.hero-particles {
+ position: absolute; inset: -10%;
+ opacity: 0.55;
+ background-image:
+  radial-gradient(circle 2px at 12% 22%, rgba(0, 113, 227, 0.18), transparent),
+  radial-gradient(circle 1.5px at 78% 15%, rgba(0, 113, 227, 0.12), transparent),
+  radial-gradient(circle 2px at 65% 72%, rgba(88, 86, 214, 0.1), transparent),
+  radial-gradient(circle 1px at 35% 68%, rgba(0, 113, 227, 0.14), transparent),
+  radial-gradient(circle 1.5px at 92% 42%, rgba(0, 113, 227, 0.08), transparent);
+ animation: heroParticlesDrift 22s linear infinite;
+}
+@keyframes heroMeshShift {
+ 0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+ 100% { transform: translate(-2.5%, 2%) scale(1.05); opacity: 1; }
+}
+@keyframes heroParticlesDrift {
+ 0% { transform: translate(0, 0); }
+ 100% { transform: translate(-3%, -4%); }
 }
 
 .hero-inner {
@@ -158,29 +194,114 @@ a { text-decoration: none; color: inherit; }
 .hero-kicker {
  display: inline-flex; align-items: center; gap: 8px;
  font-size: 12px; font-weight: 500; color: var(--primary);
- margin-bottom: 16px;
- opacity: 0; animation: fadeUp 0.8s var(--ease) 0.1s forwards;
+ margin-bottom: 14px;
+ position: relative; padding-bottom: 8px;
+ opacity: 0; animation: fadeUp 0.85s var(--ease) 0.08s forwards;
+}
+.hero-kicker-dot {
+ animation: kickerDotPulse 2.4s ease-in-out infinite;
+}
+.hero-kicker::after {
+ content: '';
+ position: absolute; left: 0; bottom: 0;
+ height: 1px; width: min(100%, 260px);
+ background: linear-gradient(90deg, var(--primary), rgba(0, 113, 227, 0.15) 75%, transparent);
+ transform-origin: left center;
+ animation: kickerShimmer 3.2s ease-in-out infinite;
+}
+@keyframes kickerDotPulse {
+ 0%, 100% { opacity: 1; transform: scale(1); }
+ 50% { opacity: 0.55; transform: scale(0.85); }
+}
+@keyframes kickerShimmer {
+ 0%, 100% { opacity: 0.35; transform: scaleX(0.55); }
+ 50% { opacity: 1; transform: scaleX(1); }
+}
+
+.hero-badge {
+ display: inline-flex; align-items: center; align-self: flex-start;
+ font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+ color: var(--primary);
+ background: rgba(0, 113, 227, 0.06);
+ border: 1px solid rgba(0, 113, 227, 0.14);
+ padding: 5px 13px; border-radius: 99px;
+ margin-bottom: 18px;
+ opacity: 0; animation: fadeUp 0.85s var(--ease) 0.16s forwards;
 }
 
 .hero-title {
- font-size: clamp(34px, 5.2vw, 68px);
- font-weight: 700; line-height: 1.12; letter-spacing: -0.03em;
- color: var(--text-dark); margin-bottom: 24px;
- opacity: 0; animation: fadeUp 0.8s var(--ease) 0.25s forwards;
+ font-size: clamp(36px, 5.6vw, 74px);
+ font-weight: 700; line-height: 1.06; letter-spacing: -0.04em;
+ color: var(--text-dark); margin-bottom: 22px;
+ opacity: 0; animation: fadeUp 0.9s var(--ease) 0.22s forwards;
+}
+.hero-title-accent {
+ display: inline-block;
+ background: linear-gradient(120deg, var(--primary) 0%, #0096ff 42%, #5856d6 100%);
+ -webkit-background-clip: text;
+ background-clip: text;
+ -webkit-text-fill-color: transparent;
+ color: transparent;
+ letter-spacing: -0.048em;
+ animation: accentReveal 1s var(--ease) 0.55s both;
+}
+@keyframes accentReveal {
+ from { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(6px); }
+ to { opacity: 1; transform: none; filter: none; }
 }
 .hero-title .en {
- display: block; font-size: 0.6em; color: var(--text-muted); font-weight: 500; margin-top: 6px;
+ display: block; font-size: 0.58em; color: var(--text-muted); font-weight: 500;
+ margin-top: 10px; letter-spacing: -0.01em;
+}
+.hero-sub-rotate {
+ display: inline-block;
+ position: relative;
+ min-width: 12em; height: 1.25em;
+ vertical-align: bottom;
+}
+.hero-sub-rotate span {
+ position: absolute; left: 0; top: 0;
+ white-space: nowrap;
+ opacity: 0;
+}
+.hero-sub-rotate span:first-child { animation: subFade1 9s var(--ease) infinite; }
+.hero-sub-rotate span:last-child { animation: subFade2 9s var(--ease) infinite; }
+@keyframes subFade1 {
+ 0%, 42% { opacity: 1; transform: translateY(0); }
+ 48%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes subFade2 {
+ 0%, 42% { opacity: 0; transform: translateY(6px); }
+ 48%, 92% { opacity: 1; transform: translateY(0); }
+ 100% { opacity: 0; transform: translateY(-6px); }
 }
 
 .hero-body {
- max-width: 620px; font-size: 16px; color: var(--text-muted); line-height: 1.7;
+ max-width: 560px; font-size: 16px; color: var(--text-muted); line-height: 1.65;
  margin-bottom: 32px;
- opacity: 0; animation: fadeUp 0.8s var(--ease) 0.4s forwards;
+ opacity: 0; animation: fadeUp 0.85s var(--ease) 0.38s forwards;
 }
 
 .hero-actions {
  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
- opacity: 0; animation: fadeUp 0.8s var(--ease) 0.5s forwards;
+ opacity: 0; animation: fadeUp 0.85s var(--ease) 0.48s forwards;
+}
+.hero-actions .btn-primary {
+ box-shadow: 0 4px 16px rgba(0, 113, 227, 0.22);
+ animation: btnPulse 3s ease-in-out 1.4s infinite;
+}
+@keyframes btnPulse {
+ 0%, 100% { box-shadow: 0 4px 16px rgba(0, 113, 227, 0.22); }
+ 50% { box-shadow: 0 6px 28px rgba(0, 113, 227, 0.32), 0 0 0 5px rgba(0, 113, 227, 0.07); }
+}
+.hero-demo-arrow {
+ display: inline-block;
+ margin-left: 2px;
+ animation: arrowBounce 1.6s ease-in-out infinite;
+}
+@keyframes arrowBounce {
+ 0%, 100% { transform: translateY(0); opacity: 0.85; }
+ 50% { transform: translateY(5px); opacity: 1; }
 }
 
 .btn-primary {
@@ -202,14 +323,32 @@ a { text-decoration: none; color: inherit; }
 }
 
 .hero-logo-float {
- position: absolute; right: 12%; top: 46%; transform: translateY(-50%);
+ position: absolute; right: 12%; top: 46%;
  width: min(150px, 14vw); opacity: 0.25; pointer-events: none;
  filter: grayscale(1) contrast(1.1);
- animation: floatPulse 6s ease-in-out infinite;
+ transform: translateY(-50%);
+ animation: floatPulse 6s ease-in-out infinite, logoDrift 14s ease-in-out infinite;
+ z-index: 1;
 }
 @keyframes floatPulse {
- 0%, 100% { transform: translateY(-50%) translateY(0); opacity: 0.22; }
- 50% { transform: translateY(-50%) translateY(-12px); opacity: 0.28; }
+ 0%, 100% { transform: translateY(-50%) translateY(0) scale(1); opacity: 0.22; }
+ 50% { transform: translateY(-50%) translateY(-14px) scale(1.03); opacity: 0.3; }
+}
+@keyframes logoDrift {
+ 0%, 100% { right: 12%; }
+ 50% { right: 10.5%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+ .hero-glow, .hero-particles, .hero-logo-float,
+ .hero-kicker-dot, .hero-kicker::after, .hero-title-accent,
+ .hero-sub-rotate span, .hero-actions .btn-primary, .hero-demo-arrow {
+  animation: none !important;
+ }
+ .hero-actions .btn-primary { box-shadow: none; }
+ .hero-title-accent { filter: none; opacity: 1; }
+ .hero-sub-rotate span:first-child { opacity: 1; position: static; }
+ .hero-sub-rotate span:last-child { display: none; }
 }
 
 /* Stats panel */
@@ -239,10 +378,27 @@ a { text-decoration: none; color: inherit; }
 .hero-stat-label {
  font-size: 11px; color: var(--text-muted); line-height: 1.4; font-weight: 400;
 }
+.hero-stat-label a, .sim-ref {
+ color: var(--primary); text-decoration: none; font-weight: 500;
+}
+.hero-stat-label a:hover, .sim-ref:hover { text-decoration: underline; }
+.survival-source {
+ font-size: 10px; color: var(--text-muted); margin-top: 12px; line-height: 1.45;
+}
 
 @media (max-width: 900px) { .hero-logo-float { display: none; } }
 @media (max-width: 768px) {
  .hero-inner { padding: 48px 20px 32px; }
+ .hero-title { font-size: clamp(32px, 8.5vw, 44px); letter-spacing: -0.035em; }
+ .hero-title-accent { letter-spacing: -0.04em; }
+ .hero-sub-rotate { min-width: 0; width: auto; height: auto; max-width: none; }
+ .hero-sub-rotate span { position: static; white-space: nowrap; opacity: 1; animation: none !important; }
+ .hero-sub-rotate span:last-child { display: none; }
+ .hero-particles { opacity: 0.35; }
+ .hero-glow { opacity: 0.75; }
+ .hero-body { font-size: 15px; max-width: none; }
+ .hero-actions { gap: 12px; }
+ .hero-actions .btn { flex: 1 1 auto; min-width: 140px; justify-content: center; }
  .hero-bottom-bar { flex-wrap: wrap; }
  .hero-stat { flex: 1 0 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 16px 20px; }
  .hero-stat:nth-child(odd) { border-right: 1px solid var(--border); }
@@ -321,9 +477,9 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 }
 .tendenco-text { }
 .tendenco-quote {
- font-size: clamp(16px, 1.8vw, 22px);
- font-weight: 500; line-height: 1.55;
- color: var(--text-dark); margin-bottom: 20px;
+ font-size: clamp(18px, 2.4vw, 26px);
+ font-weight: 500; line-height: 1.5; letter-spacing: -0.01em;
+ color: var(--text-dark); margin-bottom: 24px;
 }
 .tendenco-body {
  font-size: 14px; color: var(--text-muted); line-height: 1.75;
@@ -413,6 +569,16 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  gap: 60px; align-items: center; margin-top: 48px;
 }
 .solution-text p { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 16px; }
+.solution-text ul.solution-points {
+ list-style: none; padding: 0; margin: 0 0 16px;
+}
+.solution-text ul.solution-points li {
+ font-size: 14px; color: var(--text-muted); line-height: 1.75;
+ padding-left: 1.1em; position: relative; margin-bottom: 6px;
+}
+.solution-text ul.solution-points li::before {
+ content: '·'; position: absolute; left: 0; color: var(--primary); font-weight: 700;
+}
 .solution-text strong { color: var(--text-dark); font-weight: 500; }
 
 .solution-callout {
@@ -763,6 +929,47 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
 @media (max-width: 768px) { .cta-section { padding: 80px 0; } }
 
+/* PWA 開発中告知バナー */
+.pwa-dev-banner {
+ margin-top: 52px;
+ background: linear-gradient(180deg, #fff8ed 0%, #ffeed6 100%);
+ border-bottom: 1px solid rgba(255, 149, 0, 0.22);
+ padding: 14px 20px;
+}
+.pwa-dev-banner-inner {
+ max-width: 900px;
+ margin: 0 auto;
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+}
+.pwa-dev-banner-icon {
+ flex-shrink: 0;
+ font-size: 18px;
+ line-height: 1.4;
+ margin-top: 1px;
+}
+.pwa-dev-banner-text { min-width: 0; }
+.pwa-dev-banner-main {
+ font-size: 13.5px;
+ font-weight: 600;
+ color: #7a4a00;
+ line-height: 1.55;
+ letter-spacing: 0.01em;
+}
+.pwa-dev-banner-sub {
+ margin-top: 5px;
+ font-size: 12px;
+ font-weight: 400;
+ color: #9a6210;
+ line-height: 1.6;
+}
+@media (max-width: 768px) {
+ .pwa-dev-banner { padding: 12px 16px; }
+ .pwa-dev-banner-main { font-size: 12.5px; }
+ .pwa-dev-banner-sub { font-size: 11.5px; }
+}
+
 /* Cache Bypass Banner */
 .cache-banner {
  margin-top: 32px; padding: 20px 24px; border-radius: 12px;
@@ -839,14 +1046,18 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 }
 .promo-map-container {
  width: 100%;
- flex: 1;
- height: auto;
+ flex: 1 1 auto;
+ min-height: 0;
+ height: 100%;
  z-index: 1;
 }
 .demo-map-badge {
  position: absolute;
- top: 60px;
- left: 20px;
+ top: 16px;
+ left: 16px;
+ right: 16px;
+ width: auto;
+ max-width: calc(100% - 32px);
  z-index: 1000;
  background: rgba(255, 255, 255, 0.9);
  backdrop-filter: saturate(180%) blur(16px);
@@ -864,44 +1075,73 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 .promo-sim-banner {
- position: static;
+ position: absolute;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ z-index: 1001;
  background: rgba(255, 59, 48, 0.94);
  color: #ffffff;
- padding: 10px 16px;
- font-size: 11.5px;
+ padding: 8px 12px;
+ font-size: 11px;
  font-weight: 700;
  text-align: center;
- border-bottom: 1px solid var(--border);
- line-height: 1.4;
+ line-height: 1.35;
  display: flex;
  justify-content: center;
  align-items: center;
- gap: 8px;
+ gap: 6px;
  flex-wrap: wrap;
  pointer-events: none;
 }
 .promo-sim-banner .banner-en {
- display: inline-block;
+ display: inline;
  font-size: 9px;
- font-weight: 400;
- opacity: 0.9;
- margin-top: 0;
- margin-left: 8px;
- border-left: 1px solid rgba(255,255,255,0.3);
- padding-left: 8px;
- letter-spacing: 0.02em;
+ font-weight: 500;
+ opacity: 0.92;
+ margin-left: 6px;
+ border-left: 1px solid rgba(255,255,255,0.35);
+ padding-left: 6px;
+ letter-spacing: 0.01em;
 }
 @media (max-width: 768px) {
+ .interactive-demo { padding: 64px 0; }
+ .demo-map-wrap {
+ height: clamp(280px, 62vw, 380px) !important;
+ }
+ .demo-map-badge {
+ top: 10px;
+ left: 10px;
+ right: 10px;
+ max-width: calc(100% - 20px);
+ padding: 6px 10px;
+ font-size: 10px;
+ gap: 6px;
+ }
  .promo-sim-banner {
- flex-direction: column;
- gap: 2px;
- padding: 8px 12px;
+ padding: 7px 10px;
+ font-size: 10px;
+ line-height: 1.3;
  }
  .promo-sim-banner .banner-en {
  display: block;
+ width: 100%;
  border-left: none;
  padding-left: 0;
  margin-left: 0;
+ font-size: 8.5px;
+ opacity: 0.9;
+ }
+ .demo-map-wrap .leaflet-control-scale {
+ margin-bottom: 52px !important;
+ margin-left: 6px !important;
+ }
+ .demo-map-wrap .leaflet-control-attribution {
+ font-size: 8px !important;
+ max-width: 48%;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
  }
 }
 .badge-dot-pulse {
@@ -1031,8 +1271,24 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 }
 .demo-timeline-labels span {
  transition: color 0.3s var(--ease);
+ line-height: 1.4;
+ text-align: center;
+ flex: 1;
+ min-width: 0;
 }
- line-height: 1.6;
+.demo-actions {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ margin-top: 20px;
+}
+.demo-actions .btn {
+ width: 100%;
+ padding: 13px 16px;
+ font-size: 14px;
+ line-height: 1.45;
+ white-space: normal;
+ text-align: center;
 }
 .demo-route-stats {
  display: flex;
@@ -1075,14 +1331,56 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 }
 
 @media (max-width: 768px) {
- .demo-map-wrap {
- height: 320px !important;
- }
  .demo-control-wrap {
- padding: 16px !important;
+ padding: 14px !important;
+ border-radius: 18px;
+ justify-content: flex-start;
+ }
+ .demo-scenario-info {
+ padding: 14px 16px;
+ margin-bottom: 14px;
+ border-radius: 16px;
+ }
+ .demo-scen-step {
+ gap: 10px;
+ align-items: center;
+ }
+ .scen-num {
+ width: 28px;
+ height: 28px;
+ font-size: 13px;
+ }
+ .scen-text {
+ font-size: 13px;
+ line-height: 1.55;
+ }
+ .demo-timeline-container {
+ margin-top: 14px;
+ padding-top: 12px;
  }
  .demo-timeline-labels {
- font-size: 9px !important;
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 8px 10px;
+ font-size: 10px !important;
+ letter-spacing: 0;
+ }
+ .demo-timeline-labels span {
+ flex: unset;
+ }
+ .demo-actions {
+ margin-top: 14px;
+ gap: 8px;
+ }
+ .demo-actions .btn {
+ padding: 12px 14px;
+ font-size: 13.5px;
+ }
+ .promo-lang-note {
+ margin-top: 16px;
+ padding-top: 14px;
+ font-size: 11px;
+ line-height: 1.65;
  }
  .card:hover {
  transform: none !important;
@@ -1093,8 +1391,14 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 <body>
 
 <!-- ⚠️ 開発中告知バナー -->
-<div style="background:#ff9f0a;color:#000;font-size:0.82rem;font-weight:600;text-align:center;padding:9px 16px;line-height:1.5;">
-  🚧 現在、オフラインキャッシュ機能（PWA）は開発中につき一時停止中です。インターネット接続が必要です。現段階では平時の避難ルート確認・防災準備にご利用ください。PWA機能の再有効化後、非常時のオフライン使用が可能になります。
+<div class="pwa-dev-banner" role="status" aria-live="polite">
+ <div class="pwa-dev-banner-inner">
+  <span class="pwa-dev-banner-icon" aria-hidden="true">🚧</span>
+  <div class="pwa-dev-banner-text">
+   <p class="pwa-dev-banner-main">オフラインキャッシュ（PWA）は開発中のため一時停止中です。ご利用にはインターネット接続が必要です。</p>
+   <p class="pwa-dev-banner-sub">現段階では平時の避難ルート確認・防災準備にご利用ください。PWA機能の再有効化後、非常時のオフライン使用が可能になります。</p>
+  </div>
+ </div>
 </div>
 
 <!-- ═══ NAV ═══════════════════════════════════════ -->
@@ -1118,19 +1422,27 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
 <!-- ═══ HERO ══════════════════════════════════════ -->
 <section class="hero">
+ <div class="hero-bg" aria-hidden="true">
+ <div class="hero-glow"></div>
+ <div class="hero-particles"></div>
+ </div>
+
  <div class="hero-inner wrap">
  <p class="hero-kicker">
- <span>●</span>
+ <span class="hero-kicker-dot">●</span>
  日本全国の沿岸観光地を訪れるすべての人へ
  </p>
 
+ <span class="hero-badge">kamakura-sim 由来 · 62,299人モデル</span>
+
  <h1 class="hero-title">
- その土地を知らなくても、<br>迷わず逃げ出せる。
- <span class="en">TENDEN — Tsunami Evacuation Navigator</span>
+ その土地を知らなくても、<br>
+ <span class="hero-title-accent">迷わず逃げ出せる。</span>
+ <span class="en">TENDEN — <span class="hero-sub-rotate"><span>Tsunami Evacuation Navigator</span><span>自律型津波避難支援アプリ</span></span></span>
  </h1>
 
  <p class="hero-body">
- 鎌倉沿岸部の大規模な人流避難シミュレーション研究に基づき設計された、自律型の津波避難支援アプリケーション。地理感覚のない観光客や外国語話者が災害時に直面する避難の遅れを解消するため、強化学習AIが高台への最適な避難経路を提案し（要配慮者向けの配慮ルートも併せて提示）、迅速かつ的確な主体避難をサポートします。
+ <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>の知見に基づく自律型アプリ。強化学習AIが高台への最適経路を提案し、観光客・外国語話者の迅速な主体避難をサポートします。
  </p>
 
  <div class="hero-actions">
@@ -1138,7 +1450,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  アプリを使用する
  </a>
  <a class="btn btn-outline" href="#interactive-demo" id="hero-demo-btn">
- デモを見る ↓
+ デモを見る<span class="hero-demo-arrow" aria-hidden="true">↓</span>
  </a>
  </div>
  </div>
@@ -1151,7 +1463,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="hero-bottom-bar">
  <div class="hero-stat">
  <div class="hero-stat-num">62,299人</div>
- <div class="hero-stat-label">シミュレーション人口モデル<br>(242試行の平均設定値)</div>
+ <div class="hero-stat-label"><a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">kamakura-sim</a> 人口モデル<br>（242試行・25シナリオ）</div>
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num highlight">鎌倉フル機能</div>
@@ -1181,13 +1493,13 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <!-- Left: Map -->
  <div class="demo-map-wrap">
  <div id="promo-map" class="promo-map-container"></div>
+ <div class="demo-map-badge">
+ <span class="badge-dot-pulse"></span>
+ kamakura-sim — 鎌倉・由比ヶ浜モデル
+ </div>
  <div class="promo-sim-banner">
  これは訓練用の避難シミュレーション画面です。実際の災害ではありません。
  <span class="banner-en">This is a training simulation. NOT a real disaster.</span>
- </div>
- <div class="demo-map-badge">
- <span class="badge-dot-pulse"></span>
- 鎌倉市 由比ヶ浜 — シミュレーションデータ
  </div>
  </div>
 
@@ -1232,7 +1544,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
  </div>
 
- <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+ <div class="demo-actions">
  <button class="btn btn-primary" id="promo-demo-btn" onclick="startPromoDemo()">
  体験開始 — 津波避難シナリオ
  </button>
@@ -1276,7 +1588,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  「てんでんこ」とは、避難者が他者の行動に同調しすぎず、それぞれが自ら迅速に安全な場所を目指すことで、地域全体の避難成功率を高めるという防災の知見です。
  </p>
  <p>
- TENDENはこの思想をシステム設計に落とし込んでいます。避難者全員をひとつの特定ルートに一律に誘導するのではなく、強化学習AIが提案する最適経路を、端末ごとに独立して確率的に少しずつ分散させます（サーバーとの通信なしでも各自の経路が自然に分かれます）。これにより特定の道への集中を防ぎつつ、各自の迅速な避難を支援します。要配慮者向けの配慮ルートも併せて提示します。
+ TENDENはこの思想を設計に反映しています。一律誘導ではなく、強化学習AIが端末ごとに経路を分散（通信なしで自然に分かれる）。道の集中を防ぎ迅速避難を支援し、要配慮者向けルートも提示します。
  </p>
  </div>
  </div>
@@ -1295,10 +1607,10 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="problem-text-col reveal rd2">
  <div class="problem-gap-badge">
  <div class="problem-gap-num count-up" data-target="53.5" data-suffix="%">0</div>
- <div class="problem-gap-label">シミュレーションで観測された、地域住民と一般来訪者（観光客）の避難完了率の差</div>
+ <div class="problem-gap-label">kamakura-simで観測された、地域住民と一般来訪者（観光客）の避難完了率の差</div>
  </div>
  <p>
- 地理感覚がなく、避難場所や経路に関する情報を持たない観光客などの一般来訪者は、災害発生時に避難行動を開始するまでに時間を要する傾向があります。また、主要な道路や周知されたルートに依存しやすいため、避難時の混雑に巻き込まれやすいことがシミュレーション分析から実証されています。
+ 地理感覚がなく、避難場所や経路に関する情報を持たない観光客などの一般来訪者は、災害発生時に避難行動を開始するまでに時間を要する傾向があります。また、主要な道路や周知されたルートに依存しやすいため、避難時の混雑に巻き込まれやすいことが、<a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">kamakura-sim</a>の分析から実証されています。
  </p>
  <p>
  さらに、全員が同一の最短ルートに集中した場合、避難所周辺の道路や主要な交差点などのボトルネックで大規模な滞留が発生します。特定の経路への過度な集中は、かえって避難完了までの時間を長引かせ、地域全体の避難効率を低下させることが明らかになっています。
@@ -1306,7 +1618,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
 
  <div class="survival-chart reveal rd3">
- <p class="survival-title">人流シミュレーションにおける各属性の避難完了率</p>
+ <p class="survival-title">kamakura-sim：各属性の避難完了率</p>
  <div class="survival-row">
  <span class="survival-agent">地域住民</span>
  <div class="survival-bar-bg"><div class="survival-bar" data-w="85.1"></div></div>
@@ -1327,6 +1639,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="survival-bar-bg"><div class="survival-bar danger" data-w="31.6"></div></div>
  <span class="survival-val danger">31.6%</span>
  </div>
+ <p class="survival-source">出典：<a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a> — 鎌倉モデル地区（由比ヶ浜・材木座・七里ガ浜）</p>
  </div>
  </div>
  </div>
@@ -1342,23 +1655,20 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="solution-inner">
  <div class="solution-text reveal rd2">
  <p>
- TENDENは、強化学習AIが提案する「AIスマート避難ルート」と、勾配を考慮した「要配慮者ルート（緩やか）」の<strong>2本</strong>を提示します（v5.0以降、旧3ルート表示から集約）。AIルートは最短・混雑回避・高台接近を統合最適化し、端末ごとに経路を自律分散させます。
+ <strong>2本のルート</strong> — 強化学習AIのスマート避難（最短・混雑回避・高台）と、勾配配慮の要配慮者ルート。端末ごとに経路を自律分散し、特定道路への一極集中を防ぎます。
  </p>
- <p>
- 全国の沿岸でも地図と津波ハザードの参照が可能です。一方、シミュレーション学習済みのAI方策・混難統計・公式避難所連携などの中核機能は、<strong>鎌倉モデル地区（由比ヶ浜・材木座・七里ガ浜）</strong>でフルに動作します。GPSに基づき周辺約10kmの地形・標高を照合し、避難候補エリア（第一目標）を算出します。
- </p>
- <p>
- PWA仕様のためブラウザから即時起動。オフライン緊急モードは<strong>アプリ設定からオプトイン</strong>（v4.0〜。開発中は上部バナーのとおりデフォルト無効）。Wake Lock・ジャイロ連動コンパスなど標準Web APIで避難動作を支援します。
- </p>
+ <ul class="solution-points">
+ <li><strong>全国沿岸</strong> — 地図・津波ハザード参照</li>
+ <li><strong>鎌倉モデル地区</strong> — kamakura-sim 学習済みAI・混難統計・避難所連携がフル動作（由比ヶ浜・材木座・七里ガ浜）</li>
+ </ul>
  </div>
 
  <div class="solution-callout reveal rd3">
  <p class="solution-callout-en">Design Paradigm</p>
  <p class="solution-callout-body">
- 避難経路は、<br>
- 避難者が「状況に応じて判断する」。<br><br>
- 避難者に一律の指示を強制せず、<br>
- 安全な選択肢を提示する支援方針。
+ 一律誘導ではなく、<br>
+ 避難者が<em>状況に応じて判断</em>できる<br>
+ 安全な選択肢を提示する。
  </p>
  </div>
  </div>
@@ -1398,7 +1708,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="route-card-icon">●</span>
  <div>
  <h4 class="route-card-title">AIモデル推奨ルート (強化学習)</h4>
- <p class="route-card-desc">大規模人流避難シミュレーション上で学習した強化学習モデルが、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断し、最適な避難経路を提案します。さらにこの経路を端末ごとに確率的に少しずつ分散させ、特定の道への集中を自動的に防ぎます（内閣府の避難開始時間に較正したモデル地区のシミュレーションで、即時避難時の避難成功率約93%を確認）。</p>
+ <p class="route-card-desc">kamakura-sim（鎌倉沿岸部大規模人流避難シミュレーション）上で学習した強化学習モデルが、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断し、最適な避難経路を提案します。さらにこの経路を端末ごとに確率的に少しずつ分散させ、特定の道への集中を自動的に防ぎます（内閣府較正・鎌倉モデル地区242試行で、即時避難時の成功率約93%）。</p>
  </div>
  </div>
 
@@ -1426,7 +1736,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">01</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">AIモデル推奨ルート</h3>
- <p class="feat-body">強化学習モデル（内閣府の避難開始時間に較正したモデル地区のシミュレーションで、即時避難時の避難成功率約93%）が、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断して最適な避難経路を提案。さらに端末ごとに経路を確率的に分散させ、群衆の一極集中を防ぎます。要配慮者向けの配慮ルートも併せて提示します。</p>
+ <p class="feat-body">kamakura-simで学習した強化学習モデル（鎌倉モデル地区・内閣府較正242試行、即時避難時成功率約93%）が、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断して最適な避難経路を提案。さらに端末ごとに経路を確率的に分散させ、群衆の一極集中を防ぎます。要配慮者向けの配慮ルートも併せて提示します。</p>
  </div>
  <div class="feat-item reveal rd1">
  <p class="feat-number">02</p>
@@ -1589,7 +1899,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="section-title-en reveal rd1">Evacuation Simulation Data</span>
  <h2 class="section-title reveal rd2">避難情報の共有方法に関する検証</h2>
  <p class="section-desc reveal rd3">
- 鎌倉市沿岸の地理的特性を反映した大規模シミュレーション分析が示す、避難効率と情報共有の関係。
+ <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>が示す、避難効率と情報共有の関係（62,299人・25シナリオ・242試行）。
  </p>
 
  <div class="research-finding reveal rd2">
@@ -1597,14 +1907,14 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="rf-tag">一律に特定の経路を選択した場合</p>
  <div class="rf-num down">滞留の発生</div>
  <p class="rf-body">
- 全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。「地域全体の避難完了率が低下する」ことがシミュレーション分析から明らかになっています。
+ 全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。「地域全体の避難完了率が低下する」ことが、kamakura-simの分析から明らかになっています。
  </p>
  </div>
  <div class="rf-card">
  <p class="rf-tag">各自が自律して経路を分散選択した場合</p>
  <div class="rf-num up">スムーズな避難</div>
  <p class="rf-body">
- 避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。「エリア全体の避難効率と安全性が向上する」という避難ダイナミクスが実証されています。
+ 避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。「エリア全体の避難効率と安全性が向上する」という避難ダイナミクスが、kamakura-simで実証されています。
  </p>
  </div>
  <div class="rf-insight">
@@ -1618,8 +1928,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
  <div class="research-paper-cta reveal">
  <p>
- 「詳細な共同検証データについて」<br>
- 62,299人・25シナリオ・計242試行の完全なシミュレーションに基づく分析データは、研究論文において公開しています。
+ 「kamakura-sim 共同検証データについて」<br>
+ 鎌倉沿岸部・大規模人流避難シミュレーション（62,299人・25シナリオ・242試行）の分析データは、研究サイトで公開しています。
  </p>
  <a class="btn-paper" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" id="research-paper-btn">
  学術論文を確認 →
@@ -1932,6 +2242,11 @@ let promoAnimDotsTimer = null;
 let pulseInterval = null;
 let promoDemoRunning = false;
 
+function refreshPromoMapSize() {
+ if (!promoMap) return;
+ promoMap.invalidateSize({ animate: false });
+}
+
 function initPromoMap() {
  if (promoMap) return;
  // Center near Yuigahama Beach
@@ -1953,7 +2268,38 @@ function initPromoMap() {
  }).addTo(promoMap);
 
  L.control.scale({ position: 'bottomleft', imperial: false }).addTo(promoMap);
+ requestAnimationFrame(() => requestAnimationFrame(refreshPromoMapSize));
 }
+
+function schedulePromoMapInit() {
+ const demoSection = document.getElementById('interactive-demo');
+ if (!demoSection) return;
+
+ const boot = () => {
+ initPromoMap();
+ refreshPromoMapSize();
+ };
+
+ if ('IntersectionObserver' in window) {
+ const observer = new IntersectionObserver((entries, obs) => {
+ if (entries.some(entry => entry.isIntersecting)) {
+ boot();
+ obs.disconnect();
+ }
+ }, { rootMargin: '120px 0px', threshold: 0.01 });
+ observer.observe(demoSection);
+ } else {
+ setTimeout(boot, 800);
+ }
+}
+
+window.addEventListener('resize', () => {
+ clearTimeout(window.__promoMapResizeTimer);
+ window.__promoMapResizeTimer = setTimeout(refreshPromoMapSize, 150);
+});
+window.addEventListener('orientationchange', () => {
+ setTimeout(refreshPromoMapSize, 350);
+});
 
 let promoProgressInterval = null;
 
@@ -1989,6 +2335,7 @@ function startPromoDemo() {
  document.getElementById('promo-route-stats').style.display = 'none';
 
  initPromoMap();
+ refreshPromoMapSize();
  resetPromoDemoState();
 
  const stepNumber = document.getElementById('promo-step-number');
@@ -2244,8 +2591,8 @@ function resetPromoDemo() {
  }
 }
 
-// Initialize on load
-setTimeout(initPromoMap, 800);
+// Initialize when demo section enters viewport
+schedulePromoMapInit();
 </script>
 
 <style>
