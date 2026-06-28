@@ -7,7 +7,7 @@
  <meta name="description" content="鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）の知見を実装。日本全国の沿岸エリアに対応した自律型津波避難支援アプリケーション（PWA）。">
  <meta property="og:title" content="TENDEN — 自律型津波避難支援アプリケーション">
  <meta property="og:description" content="kamakura-sim（鎌倉沿岸部大規模人流避難シミュレーション）が示す「避難経路の自律的な分散効果」を実装。個々の適切な意思決定をサポートするWebアプリ。">
- <meta property="og:image" content="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif">
+ <meta property="og:image" content="https://masatosprojects.github.io/tenden-promo/tenden-nav-logo.gif">
  <meta property="og:type" content="website">
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
  <meta http-equiv="Pragma" content="no-cache">
@@ -105,7 +105,7 @@ a { text-decoration: none; color: inherit; }
  transition: all 0.3s var(--ease);
 }
 .nav-logo { display: flex; align-items: center; gap: 8px; }
-.nav-logo img { width: 22px; height: 22px; object-fit: contain; }
+.nav-logo img { width: 28px; height: 28px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
 .nav-logo-name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text-dark); }
 
 .nav-links { display: flex; align-items: center; gap: 24px; }
@@ -324,8 +324,8 @@ a { text-decoration: none; color: inherit; }
 
 .hero-logo-float {
  position: absolute; right: 12%; top: 46%;
- width: min(150px, 14vw); opacity: 0.25; pointer-events: none;
- filter: grayscale(1) contrast(1.1);
+ width: min(120px, 12vw); height: min(120px, 12vw); opacity: 0.18; pointer-events: none;
+ object-fit: contain; border-radius: 16px;
  transform: translateY(-50%);
  animation: floatPulse 6s ease-in-out infinite, logoDrift 14s ease-in-out infinite;
  z-index: 1;
@@ -897,8 +897,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  padding: 120px 0; background: var(--bg-light); text-align: center; border-bottom: none;
 }
 .cta-logo {
- width: 60px; height: 60px; object-fit: contain;
- margin: 0 auto 24px; filter: grayscale(1) opacity(0.8);
+ width: 56px; height: 56px; object-fit: contain; border-radius: 12px;
+ margin: 0 auto 24px;
 }
 .cta-title {
  font-size: clamp(28px, 4.8vw, 56px);
@@ -1001,7 +1001,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  background: var(--white);
 }
 .footer-brand { display: flex; align-items: center; gap: 8px; }
-.footer-brand img { width: 18px; height: 18px; object-fit: contain; }
+.footer-brand img { width: 24px; height: 24px; object-fit: contain; border-radius: 5px; flex-shrink: 0; }
 .footer-brand-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
 .footer-copy { font-size: 11.5px; color: var(--text-muted); line-height: 1.6; }
 .footer-links { display: flex; gap: 20px; }
@@ -1404,7 +1404,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 <!-- ═══ NAV ═══════════════════════════════════════ -->
 <nav class="nav" id="main-nav">
  <a class="nav-logo" href="#" id="nav-logo-link">
- <img src="./hud-logo.png" alt="TENDEN Logo">
+ <img src="./tenden-nav-logo.gif" alt="TENDEN">
  <span class="nav-logo-name">TENDEN</span>
  </a>
  <div class="nav-links">
@@ -1456,7 +1456,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
 
  <img class="hero-logo-float"
- src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif"
+ src="./tenden-nav-logo.gif"
  alt="" aria-hidden="true">
 
  <!-- Stats: 研究規模と仕様 -->
@@ -2036,8 +2036,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 <section class="cta-section">
  <div class="wrap">
  <img class="cta-logo reveal"
- src="https://masatosprojects.github.io/tenden-app/assets/icons/TENDEN.gif"
- alt="TENDEN Logo">
+ src="./tenden-nav-logo.gif"
+ alt="TENDEN">
  <h2 class="cta-title reveal rd1">学術と技術を、避難行動の支援へ。</h2>
  <p class="cta-sub reveal rd2">
  インストール不要、ブラウザ環境があれば速やかに機能します。<br>
@@ -2071,7 +2071,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 <!-- ═══ FOOTER ════════════════════════════════════ -->
 <footer class="footer">
  <div class="footer-brand">
- <img src="./hud-logo.png" alt="TENDEN Logo">
+ <img src="./tenden-nav-logo.gif" alt="TENDEN">
  <span class="footer-brand-name">TENDEN Project</span>
  </div>
  <p class="footer-copy">

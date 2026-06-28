@@ -15,7 +15,7 @@ TENDENは、鎌倉沿岸（由比ヶ浜・材木座・七里ガ浜）をモデ�
 - `index.html` — トップページ（アプリ紹介・機能説明）
 - `version-history.html` — **開発履歴（v0.1〜v7.0・全70版）** — git 228コミット対応表
 - `access.html` — QRコード付きアクセス案内（アプリ / プロモ / 研究 / 開発履歴）
-- `hud-logo.png` — ロゴ画像
+- `tenden-nav-logo.gif` — ロゴ画像（ナビ・フッター・CTA 等）
 
 ## 関連リンク
 

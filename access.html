@@ -44,21 +44,22 @@
     }
 
     .logo-wrap {
-      width: 72px;
-      height: 72px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #007aff, #bf5af2);
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 20px;
-      box-shadow: 0 12px 36px rgba(0,122,255,0.3);
+      box-shadow: 0 8px 24px rgba(255,149,0,0.25);
     }
 
-    .logo-wrap svg {
-      width: 38px;
-      height: 38px;
-      fill: #fff;
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     h1 {
@@ -198,13 +199,7 @@
 <body>
   <header>
     <div class="logo-wrap">
-      <!-- TENDEN wave icon -->
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 60 Q25 40 40 55 Q55 70 70 50 Q85 30 95 45" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <path d="M10 75 Q25 55 40 70 Q55 85 70 65 Q85 45 95 60" stroke="rgba(255,255,255,0.5)" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <circle cx="50" cy="28" r="10" fill="#fff" opacity="0.9"/>
-        <path d="M44 28 L50 22 L56 28" fill="#007aff"/>
-      </svg>
+      <img src="./tenden-nav-logo.gif" alt="TENDEN">
     </div>
     <h1>TENDEN</h1>
     <p class="subtitle">スマートフォンのカメラでQRコードをスキャンして<br>各サイトへアクセスできます。</p>
