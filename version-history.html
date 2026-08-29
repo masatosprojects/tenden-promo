@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TENDEN 開発履歴 — v0.1 〜 v7.0（全70版）</title>
-  <meta name="description" content="TENDEN避難支援アプリの開発履歴。2026-05-25〜2026-06-27、gitコミット228件を時系列で対応づけた全70バージョン。">
+  <title>TENDEN 開発履歴 — v0.1 〜 v7.12</title>
+  <meta name="description" content="TENDEN避難支援アプリの開発履歴。v0.1〜v7.0の版対応表を保存し、v7.12までの開発節目を追記。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -75,6 +75,14 @@
       display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 99px;
       background: rgba(52,199,89,0.15); color: #248a3d; font-size: 10px; font-weight: 700;
     }
+    .milestones { display: grid; gap: 12px; margin: 0 0 28px; }
+    .milestone { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+    .milestone-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+    .milestone-date { color: var(--primary); font-size: 12px; font-weight: 700; }
+    .milestone-title { font-size: 15px; font-weight: 700; }
+    .milestone p { color: var(--muted); font-size: 13px; }
+    .archive-heading { font-size: 20px; margin: 34px 0 8px; }
+    .archive-desc { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
     footer {
       margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);
       font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 16px;
@@ -95,23 +103,33 @@
   </nav>
 
   <div class="wrap">
-    <p class="hero-kicker">Development Changelog · Updated 2026-06-27</p>
-    <h1>TENDEN バージョン対応表<br><span style="font-size:0.55em;color:var(--muted);font-weight:500;">v0.1 〜 v7.0 · 全70版</span></h1>
+    <p class="hero-kicker">Development Changelog · Updated 2026-08-29</p>
+    <h1>TENDEN 開発履歴<br><span style="font-size:0.55em;color:var(--muted);font-weight:500;">v0.1 〜 v7.12 · 過去の記録を保存</span></h1>
     <p class="hero-desc">
-      開発開始（2026-05-25）から本日（2026-06-27）までの git コミット <strong>228件</strong> を漏れなく時系列でグルーピングし、最新版を <strong>v7.0</strong> として対応づけた公式開発履歴です。
-      研究ポータル・プロモサイトの TENDEN 仕様表記も、この表の最新版（v7.0）に合わせて更新しています。
+      2026-05-25の開発開始から現在までの履歴です。v0.1〜v7.0の70版・228コミット対応表は当時の記録のまま保存し、以後は実際のコミット日単位の節目として追記しています。現在のアプリ表示は <strong>v7.12</strong>、リポジトリは <strong>259コミット</strong>です。
     </p>
 
     <div class="stats">
-      <div class="stat"><div class="stat-num latest">v7.0</div><div class="stat-lbl">最新版（2026-06-27）</div></div>
-      <div class="stat"><div class="stat-num">70</div><div class="stat-lbl">公開バージョン数</div></div>
-      <div class="stat"><div class="stat-num">228</div><div class="stat-lbl">git コミット（期間内）</div></div>
-      <div class="stat"><div class="stat-num">34日</div><div class="stat-lbl">v0.1 → v7.0</div></div>
+      <div class="stat"><div class="stat-num latest">v7.12</div><div class="stat-lbl">現在のアプリ表示（2026-08-29）</div></div>
+      <div class="stat"><div class="stat-num">259</div><div class="stat-lbl">現在のgitコミット総数</div></div>
+      <div class="stat"><div class="stat-num">70</div><div class="stat-lbl">保存済み旧版（v0.1〜v7.0）</div></div>
+      <div class="stat"><div class="stat-num">96日</div><div class="stat-lbl">開発開始から現在まで</div></div>
     </div>
 
     <div class="notice">
-      📌 <strong>v5.0以降の主要方針：</strong> 「3ルート同時提示」から <strong>AIスマート避難ルート + 要配慮者ルートの2本</strong> へ集約。v4.0で PWA オフラインは<strong>設定からのオプトイン</strong>に変更（開発中はデフォルト無効の告知あり）。
+      <strong>読み方：</strong> 下の旧版表は削除・上書きせず、当時どのように説明していたかを残しています。たとえばv5.9の「強化学習ベースの要配慮者ルート」は歴史上の実装で、現在は検証失敗を受けて多源ダイクストラ法へ置き換えられています。
     </div>
+
+    <div class="milestones" aria-label="v7.0以後の開発節目">
+      <article class="milestone"><div class="milestone-head"><span class="milestone-date">2026-06-28</span><span class="milestone-title">v7.1 リリース</span></div><p>設定とバージョン表示を一元化し、情報共有の誤タップ・ゴーストクリックを修正。</p></article>
+      <article class="milestone"><div class="milestone-head"><span class="milestone-date">2026-08-18</span><span class="milestone-title">30言語UIとRTL表示の再整備</span></div><p>30言語の表示項目をそろえ、右から左へ読む言語の画面方向に対応。意味品質の母語話者検証は今後の課題。</p></article>
+      <article class="milestone"><div class="milestone-head"><span class="milestone-date">2026-08-24〜25</span><span class="milestone-title">起動不能の修正と利用規約ゲート</span></div><p>スプラッシュやイベント配線、キャッシュ更新、監視処理による操作不能を修正。版管理付き利用規約・プライバシーポリシーを追加。</p></article>
+      <article class="milestone"><div class="milestone-head"><span class="milestone-date">2026-08-28</span><span class="milestone-title">モバイル操作と表示の安定化</span></div><p>下部ナビゲーション、タッチ領域、レスポンシブダイアログ、横画面、ガイドと地図操作の重なり、PWA更新を修正。</p></article>
+      <article class="milestone"><div class="milestone-head"><span class="milestone-date">2026-08-29</span><span class="milestone-title">v7.12 現在版</span></div><p>APIキー不要の国土地理院淡色地図へ変更。HUDとガイド吹き出しを小画面向けに改善し、体験導線を一本化。地図ライブラリ読込失敗時もオンボーディングを継続可能にした。</p></article>
+    </div>
+
+    <h2 class="archive-heading">保存アーカイブ：v0.1〜v7.0</h2>
+    <p class="archive-desc">2026-06-27時点で作成した70版・228コミットの対応表です。現在の仕様説明ではなく、開発の変遷をたどるための一次記録として保存しています。</p>
 
     <div class="table-wrap">
       <div class="table-scroll">
@@ -203,13 +221,12 @@
     ["v6.7","2026-06-22","コンパスを北固定に・カウントダウン同期とGPS表示崩れを修正・体験イントロ大幅短縮+ピン設置ガイド"],
     ["v6.8","2026-06-27","ルートラベルのはみ出しと分岐アイコン重複を修正・目的地表記を整理・ボタン構成を刷新(FAB非表示・操作集約)"],
     ["v6.9","2026-06-27","ルート選択カードをテンプレ化しマップ視認性を改善・所要時間表示を右端固定で拡大"],
-    ["v7.0","2026-06-27","重複避難所ラベル削除＋選択トースト一本化・予習に自由パン/視点を戻す/実方位コンパス/混雑表示維持/歩行者アイコン刷新・コンパスの意味整理（最新版）"]
+    ["v7.0","2026-06-27","重複避難所ラベル削除＋選択トースト一本化・予習に自由パン/視点を戻す/実方位コンパス/混雑表示維持/歩行者アイコン刷新・コンパスの意味整理（当時の最新版）"]
   ];
   const tbody = document.getElementById('changelog-body');
   ROWS.forEach(([ver, date, note], i) => {
     const tr = document.createElement('tr');
-    if (i === ROWS.length - 1) tr.className = 'latest';
-    tr.innerHTML = `<td class="ver">${ver}${i === ROWS.length - 1 ? '<span class="badge-latest">LATEST</span>' : ''}</td><td class="date">${date}</td><td>${note}</td>`;
+    tr.innerHTML = `<td class="ver">${ver}</td><td class="date">${date}</td><td>${note}</td>`;
     tbody.appendChild(tr);
   });
   </script>
