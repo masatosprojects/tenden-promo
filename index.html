@@ -12,7 +12,7 @@
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
  <meta http-equiv="Pragma" content="no-cache">
  <meta http-equiv="Expires" content="0">
- <meta name="version" content="v7.0-20260627">
+ <meta name="version" content="v7.12-20260829">
 
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1395,8 +1395,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="pwa-dev-banner-inner">
   <span class="pwa-dev-banner-icon" aria-hidden="true">🚧</span>
   <div class="pwa-dev-banner-text">
-   <p class="pwa-dev-banner-main">オフラインキャッシュ（PWA）は開発中のため一時停止中です。ご利用にはインターネット接続が必要です。</p>
-   <p class="pwa-dev-banner-sub">現段階では平時の避難ルート確認・防災準備にご利用ください。PWA機能の再有効化後、非常時のオフライン使用が可能になります。</p>
+   <p class="pwa-dev-banner-main">TENDENは実証前の公開プロトタイプです。実際の避難では自治体・気象庁等の最新情報と現地状況を優先してください。</p>
+   <p class="pwa-dev-banner-sub">オフライン機能は設定から有効化できますが完全オフラインではありません。OSRM・標高・地震津波情報・未取得の地図は通信が必要です。</p>
   </div>
  </div>
 </div>
@@ -1412,7 +1412,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <a href="#solution" id="nav-solution">避難経路の分散効果</a>
  <a href="#features" id="nav-features">サポート機能仕様</a>
  <a href="#research" id="nav-research">共同検証データ</a>
- <a href="version-history.html" id="nav-history">開発履歴 v7.0</a>
+ <a href="version-history.html" id="nav-history">開発履歴 v7.12</a>
  <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="nav-github">GitHub</a>
  </div>
  <a class="nav-cta btn" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" id="nav-cta-btn">
@@ -1433,7 +1433,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  日本全国の沿岸観光地を訪れるすべての人へ
  </p>
 
- <span class="hero-badge">kamakura-sim 由来 · 62,299人モデル</span>
+ <span class="hero-badge">公開実験版 v7.12 · 鎌倉モデル地区</span>
 
  <h1 class="hero-title">
  その土地を知らなくても、<br>
@@ -1442,7 +1442,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </h1>
 
  <p class="hero-body">
- <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>の知見に基づく自律型アプリ。強化学習AIが高台への最適経路を提案し、観光客・外国語話者の迅速な主体避難をサポートします。
+ <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>の研究を、土地勘のない来訪者が端末上で比較できる避難経路へ変換したWebアプリです。一般向けの強化学習ルートと、勾配・道幅を考慮する要配慮者ルートを並べ、最終判断は利用者に委ねます。
  </p>
 
  <div class="hero-actions">
@@ -1462,8 +1462,8 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <!-- Stats: 研究規模と仕様 -->
  <div class="hero-bottom-bar">
  <div class="hero-stat">
- <div class="hero-stat-num">62,299人</div>
- <div class="hero-stat-label"><a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">kamakura-sim</a> 人口モデル<br>（242試行・25シナリオ）</div>
+ <div class="hero-stat-num">70,265人</div>
+ <div class="hero-stat-label"><a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">kamakura-sim</a> 最終人口設定<br>（4属性・推計を含む）</div>
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num highlight">鎌倉フル機能</div>
@@ -1471,12 +1471,43 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num">AIルート提案</div>
- <div class="hero-stat-label">強化学習モデルが高台への最適経路を提案<br>要配慮者向けの配慮ルートも</div>
+ <div class="hero-stat-label">強化学習の基準方策と多源ダイクストラ<br>2案を比較し、利用者が選択</div>
  </div>
  <div class="hero-stat">
  <div class="hero-stat-num">30言語対応</div>
  <div class="hero-stat-label">多言語音声ガイダンス<br>(Web Speech APIを活用)</div>
  </div>
+ </div>
+</section>
+
+<!-- ═══ CURRENT FACT SHEET ══════════════════════════ -->
+<section class="stack" id="current-facts" style="background:var(--white);border-bottom:1px solid var(--border);">
+ <div class="wrap">
+  <p class="section-label reveal">Current Research Snapshot</p>
+  <h2 class="section-title reveal rd1">現在のTENDENと、研究データの読み方</h2>
+  <p class="section-desc reveal rd2">2026年8月29日時点。提出資料で確認できる範囲を基準に、アプリの現在地と過去の検証世代を分けて記録しています。</p>
+  <div class="feat-grid" style="margin-top:32px;">
+   <div class="feat-item reveal">
+    <p class="feat-number">01</p><h3 class="feat-name">現在のアプリ</h3>
+    <p class="feat-body">30言語・697表示項目、2つの経路候補、54避難先、BASE条件3試行平均の60秒刻み混雑データを接続した実験的Webアプリです。フル機能は鎌倉モデル地区に限定されます。</p>
+   </div>
+   <div class="feat-item reveal rd1">
+    <p class="feat-number">02</p><h3 class="feat-name">2つの経路計算</h3>
+    <p class="feat-body">一般向けは400エピソード学習した線形Q学習の基準方策を参照し、要配慮者向けは勾配・道幅をコスト化した多源ダイクストラ法を使用します。要配慮者経路に強化学習は採用していません。</p>
+   </div>
+   <div class="feat-item reveal rd2">
+    <p class="feat-number">03</p><h3 class="feat-name">三つの研究世代</h3>
+    <p class="feat-body">70,265人は最終の人口設定、62,299人・25条件・242試行は先行する感度分析、19,978人はTENDEN行動規則の検証です。異なる母集団の数値を同一結果として合算していません。</p>
+   </div>
+   <div class="feat-item reveal rd3">
+    <p class="feat-number">04</p><h3 class="feat-name">検証範囲と限界</h3>
+    <p class="feat-body">混雑表示はリアルタイム観測ではなく事前計算です。経路の現地安全性、通信断を含む完全オフライン、P2P警報から画面遷移までの本番相当E2E、母語話者による30言語の意味検証は未完了です。</p>
+   </div>
+  </div>
+  <div class="reveal rd4" style="margin-top:28px;padding:20px 24px;border-radius:14px;background:var(--bg-light);border:1px solid var(--border);font-size:14px;color:var(--text-muted);line-height:1.8;">
+   <strong style="color:var(--text-dark);">安全上の位置づけ</strong><br>
+   本アプリは避難判断を代行せず、安全を保証しません。候補の比較表示であり、道路閉塞・工事・現地の混雑・津波の状況を確認した案内ではありません。取得失敗時の簡易線表示も、道路通行を確認した経路ではなく参考表示です。
+  </div>
  </div>
 </section>
 
@@ -1588,7 +1619,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  「てんでんこ」とは、避難者が他者の行動に同調しすぎず、それぞれが自ら迅速に安全な場所を目指すことで、地域全体の避難成功率を高めるという防災の知見です。
  </p>
  <p>
- TENDENはこの思想を設計に反映しています。一律誘導ではなく、強化学習AIが端末ごとに経路を分散（通信なしで自然に分かれる）。道の集中を防ぎ迅速避難を支援し、要配慮者向けルートも提示します。
+ TENDENは「各自が主体的に動く」という側面に着想を得ています。ただし伝承そのものと同一ではありません。端末ごとの疑似乱数で候補を分散し、一般向けの強化学習ルートと要配慮者向けルートを比較表示します。
  </p>
  </div>
  </div>
@@ -1610,15 +1641,15 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="problem-gap-label">kamakura-simで観測された、地域住民と一般来訪者（観光客）の避難完了率の差</div>
  </div>
  <p>
- 地理感覚がなく、避難場所や経路に関する情報を持たない観光客などの一般来訪者は、災害発生時に避難行動を開始するまでに時間を要する傾向があります。また、主要な道路や周知されたルートに依存しやすいため、避難時の混雑に巻き込まれやすいことが、<a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">kamakura-sim</a>の分析から実証されています。
+ 地理感覚や避難経路情報の少ない一般来訪者は、モデル上、避難開始や経路選択で不利になる傾向がありました。これは人を対象にした実地効果検証ではなく、設定した行動規則の下で得られたシミュレーション結果です。
  </p>
  <p>
- さらに、全員が同一の最短ルートに集中した場合、避難所周辺の道路や主要な交差点などのボトルネックで大規模な滞留が発生します。特定の経路への過度な集中は、かえって避難完了までの時間を長引かせ、地域全体の避難効率を低下させることが明らかになっています。
+ また、特定経路に多数が集中する条件では、狭い道路や交差点に滞留が生じました。経路分散はこの集中を緩和する設計仮説ですが、導入率に応じて混雑が常に単調に減るとは2回の検証では確認できていません。
  </p>
  </div>
 
  <div class="survival-chart reveal rd3">
- <p class="survival-title">kamakura-sim：各属性の避難完了率</p>
+ <p class="survival-title">kamakura-sim：先行研究世代の属性別結果（アーカイブ）</p>
  <div class="survival-row">
  <span class="survival-agent">地域住民</span>
  <div class="survival-bar-bg"><div class="survival-bar" data-w="85.1"></div></div>
@@ -1655,7 +1686,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="solution-inner">
  <div class="solution-text reveal rd2">
  <p>
- <strong>2本のルート</strong> — 強化学習AIのスマート避難（最短・混雑回避・高台）と、勾配配慮の要配慮者ルート。端末ごとに経路を自律分散し、特定道路への一極集中を防ぎます。
+ <strong>2本のルート</strong> — 一般向けの強化学習ルートと、勾配・道幅に配慮した要配慮者ルートを同じ画面で比較します。初期状態で一方を自動選択せず、利用者が選びます。
  </p>
  <ul class="solution-points">
  <li><strong>全国沿岸</strong> — 地図・津波ハザード参照</li>
@@ -1682,7 +1713,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="section-title-en reveal rd1">Two core routes</span>
  <h2 class="section-title reveal rd2">強化学習AIが提案する最適避難経路と、要配慮者への配慮ルート</h2>
  <p class="section-desc reveal rd3">
- TENDENは、道路形状に完全にフィットした明瞭なルートラインで表示され、視界が悪い状況や夜間における見やすさを重視しています。
+ TENDENは道路網データに沿う経路候補を明瞭なラインで表示します。ただし、取得失敗時の簡易線表示は道路通行を確認した案内ではありません。
  </p>
 
  <div class="routes-demo-grid">
@@ -1708,7 +1739,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="route-card-icon">●</span>
  <div>
  <h4 class="route-card-title">AIモデル推奨ルート (強化学習)</h4>
- <p class="route-card-desc">kamakura-sim（鎌倉沿岸部大規模人流避難シミュレーション）上で学習した強化学習モデルが、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断し、最適な避難経路を提案します。さらにこの経路を端末ごとに確率的に少しずつ分散させ、特定の道への集中を自動的に防ぎます（内閣府較正・鎌倉モデル地区242試行で、即時避難時の成功率約93%）。</p>
+ <p class="route-card-desc">kamakura-simの道路網上で7特徴量を用い、400エピソード学習した線形Q学習の基準方策を参照します。BASE条件3試行平均の混雑推移に応じて限定的に候補を差し替え、端末ごとの疑似乱数で分散します。現地での安全・到達を保証するものではありません。</p>
  </div>
  </div>
 
@@ -1716,7 +1747,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="route-card-icon">●</span>
  <div>
  <h4 class="route-card-title">要配慮者ルート (坂道配慮・緩やか)</h4>
- <p class="route-card-desc">国土地理院の標高データを基に、高齢者、妊婦、車いすの方、児童の避難の妨げとなる急な上り坂を自動で検出して回避。安全で平坦な経路を優先案内します。</p>
+ <p class="route-card-desc">勾配と道幅をコストに組み込んだ多源ダイクストラ法で、複数の安全地点から逆向きに方策を計算します。強化学習案は急坂回避に失敗したため採用せず、説明可能な決定論的手法へ置き換えた経緯があります。</p>
  </div>
  </div>
  </div>
@@ -1736,7 +1767,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">01</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">AIモデル推奨ルート</h3>
- <p class="feat-body">kamakura-simで学習した強化学習モデル（鎌倉モデル地区・内閣府較正242試行、即時避難時成功率約93%）が、安全な高台への接近・混雑回避・急坂や行き止まりの回避を統合的に判断して最適な避難経路を提案。さらに端末ごとに経路を確率的に分散させ、群衆の一極集中を防ぎます。要配慮者向けの配慮ルートも併せて提示します。</p>
+ <p class="feat-body">400エピソード学習した線形Q学習の基準方策を参照し、一般向け候補を提示します。端末ごとの疑似乱数で経路を分散する設計ですが、実社会での効果・安全性は未検証です。要配慮者向けは別方式の多源ダイクストラ法です。</p>
  </div>
  <div class="feat-item reveal rd1">
  <p class="feat-number">02</p>
@@ -1754,19 +1785,19 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">04</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">ハザードローカル判定</h3>
- <p class="feat-body">GPS座標を基に、周辺のハザードマップ（津波浸水想定）領域をスキャン。通信環境に依存せず、安全な高台の境界線を自動判定します。</p>
+ <p class="feat-body">GPS座標と取得済みの浸水想定データを用いて現在地を判定し、海岸・河川近傍、低地、内陸方向の条件から候補を絞ります。到着時の再検証や現地安全確認は未実装です。</p>
  </div>
  <div class="feat-item reveal rd4">
  <p class="feat-number">05</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">オフライン動作設計</h3>
- <p class="feat-body">地図タイルや避難所データベースを Service Worker でキャッシュ可能（v4.0以降<strong>設定からオプトイン</strong>）。災害時の回線寸断を想定した設計。<br><strong>平時に一度アクセスし、設定でオフライン緊急モードをON</strong>にすると、キャッシュが整い非常時にも基本機能を維持できます。<em>（開発中はデフォルト無効 — 上部バナー参照）</em></p>
+ <p class="feat-body">Service Workerは利用者が設定から有効にするオプトイン方式です。主要ファイルと閲覧済み地図をキャッシュしますが、OSRM・標高API・P2P警報・未取得地図などは通信が必要で、完全オフライン動作は未検証です。</p>
  </div>
  <div class="feat-item reveal rd5">
  <p class="feat-number">06</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">避難所容量の考慮</h3>
- <p class="feat-body">各避難所の収容量と流入予測に基づき、特定の避難所への過度な集中を回避。避難完了率の向上に向けた適正な分散避難を支援します。</p>
+ <p class="feat-body">54施設の避難先データと事前計算した混雑情報を参照します。実際の収容状況や道路閉塞をリアルタイムに監視する機能ではありません。</p>
  </div>
  <div class="feat-item reveal rd6">
  <p class="feat-number">07</p>
@@ -1784,7 +1815,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">09</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">直感的なサイドラベル表示</h3>
- <p class="feat-body">マップ右側のアクションボタンに多言語テキストラベルを常時表示。30言語の自動ローカライズ機能と完全連動し、ボタン機能の誤認や誤操作を防ぎます。</p>
+ <p class="feat-body">マップ上の操作に多言語ラベルを表示し、30言語の辞書と連動します。表示構造は8つの端末・ブラウザ条件で確認しましたが、全機能の組合せ試験と母語話者による意味検証は未完了です。</p>
  </div>
  <div class="feat-item reveal">
  <p class="feat-number">10</p>
@@ -1796,7 +1827,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">11</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">地震警報のリアルタイム監視</h3>
- <p class="feat-body">常時接続のWebSocketにより気象情報や緊急警告をリアルタイム監視。大地震発生時に一切の操作不要で自動的に緊急避難画面へ切り替わります。</p>
+ <p class="feat-body">P2P地震情報のWebSocketへ接続し、切断時は再接続します。最新イベントを選ぶ修正も行っていますが、実際の警報受信から緊急画面遷移までの本番相当E2E試験は未完了です。</p>
  </div>
  <div class="feat-item reveal rd2">
  <p class="feat-number">12</p>
@@ -1822,12 +1853,12 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  国土地理院が配信する広域津波ハザードマップの画像をメモリ上のCanvas領域に読み込み、現在地のGPS座標に対応するピクセルのカラーデータ（RGBA値）を判定。外部サーバーとの往復通信を行わず、浸水想定域への進入を端末ローカルで即座に検知する設計です。
  </p>
  <p>
- この処理により、ネットワークインフラが完全に寸断されたオフライン環境下であっても、避難者が今危険な区域にいるかどうかを遅滞なく判断することが可能です。
+ 取得済みデータが端末に残っている場合はローカル判定に利用できます。ただし、未取得データや外部APIを含む完全な通信断環境での一連の動作は検証していません。
  </p>
  
  <h3> 電波障害を想定したオフライン重心判定</h3>
  <p>
- 通信が途絶した環境でも都道府県レベルのハザードマップデータを正しく参照するため、最寄りの沿岸重心座標からの距離を算出して地図を動的に切り替えるアルゴリズムを導入。オフライン時でも信頼性の高い避難所検索とルート選択をサポートします。
+ 最寄りの沿岸重心座標との距離から対象地域を切り替える設計を導入しています。これは参照先を選ぶ補助処理であり、オフライン時の避難所検索・経路選択の信頼性を保証するものではありません。
  </p>
  </div>
 
@@ -1899,7 +1930,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="section-title-en reveal rd1">Evacuation Simulation Data</span>
  <h2 class="section-title reveal rd2">避難情報の共有方法に関する検証</h2>
  <p class="section-desc reveal rd3">
- <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>が示す、避難効率と情報共有の関係（62,299人・25シナリオ・242試行）。
+ <a class="sim-ref" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener">鎌倉沿岸部・大規模人流避難シミュレーション（kamakura-sim）</a>の先行研究世代（62,299人・25条件・242試行）と、TENDEN行動規則の別検証（19,978人）を区別して参照します。
  </p>
 
  <div class="research-finding reveal rd2">
@@ -1907,21 +1938,21 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="rf-tag">一律に特定の経路を選択した場合</p>
  <div class="rf-num down">滞留の発生</div>
  <p class="rf-body">
- 全員が単一の最短ルートに集中すると、避難所周辺の主要な道路や交差点で大規模な滞留が発生。「地域全体の避難完了率が低下する」ことが、kamakura-simの分析から明らかになっています。
+ モデル内では同じ規則を持つ避難者が特定経路へ集中し、狭い道路や交差点に滞留が生じる条件がありました。現実の群集事故発生率を直接予測する結果ではありません。
  </p>
  </div>
  <div class="rf-card">
  <p class="rf-tag">各自が自律して経路を分散選択した場合</p>
  <div class="rf-num up">スムーズな避難</div>
  <p class="rf-body">
- 避難者が複数の代替ルートに自律的に分散して行動することで、特定道路への集中が緩和。「エリア全体の避難効率と安全性が向上する」という避難ダイナミクスが、kamakura-simで実証されています。
+ 19,978人のモデルで一般来訪者にTENDENの行動規則を適用した割合を0%から100%へ変えると、避難完了率は18.4%から34.9%へ上昇しました。一方、混雑ピークの単調な低下や閾値は2回の実行では確定していません。
  </p>
  </div>
  <div class="rf-insight">
  <p class="rf-insight-label">システム設計の思想</p>
  <p class="rf-insight-text">
  TENDENが分散避難を組み込む理由はここにあります。<br>
- AIの推奨ルートを端末ごとに確率的に分散させ（通信不要・各端末が独立にサンプリング）、一律に同じ道へ誘導しないことが、結果として全体の生存性を最大化します。
+ 端末ごとに独立した疑似乱数で候補を分散し、一律誘導を避けることが設計上の狙いです。ただし、モデル上の「導入率」は現実の利用率や効果を意味せず、実社会で全体の生存性を最大化すると断定できません。
  </p>
  </div>
  </div>
@@ -1929,7 +1960,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="research-paper-cta reveal">
  <p>
  「kamakura-sim 共同検証データについて」<br>
- 鎌倉沿岸部・大規模人流避難シミュレーション（62,299人・25シナリオ・242試行）の分析データは、研究サイトで公開しています。
+ 70,265人の最終人口設定、62,299人・25条件・242試行の感度分析、19,978人のTENDEN行動規則検証を、世代と用途を分けて研究サイトに記録しています。
  </p>
  <a class="btn-paper" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" id="research-paper-btn">
  学術論文を確認 →
@@ -1945,7 +1976,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="section-title-en reveal rd1">30 World Languages Supported</span>
  <h2 class="section-title reveal rd2">言葉の壁を排し、多国籍な避難者を支援する30言語</h2>
  <p class="section-desc reveal rd3">
- TENDENは、沿岸部の観光エリアなどにおける多国籍の避難者が災害時に立ち往生することを防ぐため、高品質なWeb標準音声合成を活用。端末の設定に合わせ、以下の30の世界言語に完全追従した音声ガイダンスを提供します。
+ TENDENは30言語・697表示項目の辞書とWeb標準音声合成を用意しています。右から左へ読む言語の画面方向にも対応していますが、翻訳の意味・防災用語の適切さは母語話者による検証が完了していません。
  </p>
 
  <div class="lang-chips-grid reveal rd4">
@@ -1983,23 +2014,23 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
 </section>
 
-<!-- ═══ DEVELOPMENT HISTORY (v7.0) ═══════════════════ -->
+<!-- ═══ DEVELOPMENT HISTORY ═════════════════════════ -->
 <section class="stack" id="changelog" style="background: var(--white); border-bottom: 1px solid var(--border);">
  <div class="wrap">
  <p class="section-label reveal">Development History</p>
- <h2 class="section-title reveal rd1">v0.1 から v7.0 まで — 全70版</h2>
+ <h2 class="section-title reveal rd1">v0.1 から v7.12 まで — 変更をアーカイブ</h2>
  <p class="section-desc reveal rd2">
- 2026-05-25 の初回リリースから本日まで、git コミット 228 件を時系列でグルーピングした公式開発履歴です。最新版 <strong>v7.0</strong>（2026-06-27）では予習モードの自由パン・実方位コンパス・ルートUI刷新などが含まれます。
+ 2026-05-25からv7.0までの70版・228コミット対応表を当時の記録として保存し、その後の更新を追記しています。現在の表示バージョンは <strong>v7.12</strong>（2026-08-29）、リポジトリ全体は259コミットです。
  </p>
  <div class="reveal rd3" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;align-items:center;">
- <a class="btn btn-primary" href="version-history.html">開発履歴をすべて見る（70版） →</a>
- <a class="btn btn-outline" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">v7.0 アプリを開く</a>
+ <a class="btn btn-primary" href="version-history.html">保存された開発履歴を見る →</a>
+ <a class="btn btn-outline" href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener">v7.12 アプリを開く</a>
  </div>
  <div class="reveal rd4" style="margin-top:28px;padding:20px 24px;border-radius:14px;background:var(--bg-light);border:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.7;">
- <strong style="color:var(--text-dark);">直近3版（抜粋）</strong><br>
- <span style="color:var(--success);font-weight:600;">v7.0</span>（2026-06-27）— 予習の自由パン/視点リセット/実方位コンパス/歩行者アイコン刷新<br>
- <span style="font-weight:600;">v6.9</span>（2026-06-27）— ルート選択カードのテンプレ化・所要時間表示改善<br>
- <span style="font-weight:600;">v6.8</span>（2026-06-27）— ルートラベル整理・FAB非表示・操作集約
+ <strong style="color:var(--text-dark);">直近の開発節目</strong><br>
+ <span style="color:var(--success);font-weight:600;">v7.12</span>（2026-08-29）— 地図読込失敗時のオンボーディング継続・導線整理・HUD/ガイド表示改善<br>
+ <span style="font-weight:600;">2026-08-28</span> — 下部ナビゲーション・タッチ領域・レスポンシブダイアログ・PWA更新の修正<br>
+ <span style="font-weight:600;">2026-08-25</span> — 版管理付き利用規約同意・プライバシーポリシー・30言語UIの整備
  </div>
  </div>
 </section>
@@ -2058,10 +2089,10 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span> 最新の更新内容が表示されない場合</span>
  </div>
  <p class="cache-banner-desc">
- TENDENは災害時におけるオフラインでの信頼性を担保するため、強固な PWA キャッシュ機構を採用しています。もし最新のアップデート内容や3原則ガイド等の機能追加がブラウザに表示されない場合は、アプリ設定パネルの「【警告】システムキャッシュを完全初期化」を実行していただくか、ブラウザのキャッシュクリア（PCでは <code>Ctrl + F5</code> 等のスーパーリロード）をお試しください。
+ TENDENは利用者が有効化するPWAキャッシュを採用しています。古いキャッシュで更新が表示されない場合は、アプリ設定の「システムキャッシュを完全初期化」またはブラウザの再読み込みをお試しください。PWAキャッシュは完全オフラインや災害時の動作を保証しません。
  </p>
  <div class="version-badge">
- <span>App v7.0 · SW tenden-v142 · <a href="version-history.html" style="color:inherit;text-decoration:underline;">全70版の履歴</a></span>
+ <span>App v7.12 · SW tenden-v177 · <a href="version-history.html" style="color:inherit;text-decoration:underline;">過去版を含む履歴</a></span>
  </div>
  </div>
 
@@ -2076,10 +2107,10 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  </div>
  <p class="footer-copy">
  © 2026 TENDEN Project (人流・避難行動支援学術検証パッケージ)<br>
- 地図: CartoDB & 国土地理院｜想定: 国土地理院ハザードマップポータルサイト（津波浸水想定データ）
+ 地図: 国土地理院淡色地図｜想定: 国土地理院ハザードマップポータルサイト（津波浸水想定データ）
  </p>
  <div class="footer-links">
- <a href="version-history.html" id="footer-history-link">Changelog v7.0</a>
+ <a href="version-history.html" id="footer-history-link">Changelog v7.12</a>
  <a href="https://masatosprojects.github.io/tenden-app/" target="_blank" rel="noopener" id="footer-app-link">App</a>
  <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="footer-github-link">GitHub</a>
  <a href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" id="footer-paper-link">Paper</a>
@@ -2534,7 +2565,7 @@ function startPromoDemo() {
  stepNum.textContent = '④';
  stepNum.style.background = 'rgba(52,199,89,0.1)';
  stepNum.style.color = 'var(--success)';
- stepTxt.innerHTML = '「全員の避難完了」自律的な経路の分散により、大きな道路混雑や交差点での滞留に巻き込まれることなく、全員が安全に目標の避難所へ到達しました。';
+ stepTxt.innerHTML = '「モデル上の到達予測」選んだ条件で避難の流れを再生しました。これは訓練用の予測表示で、現実の到達や安全を保証するものではありません。';
  }
  }
 
