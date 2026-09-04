@@ -1411,7 +1411,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <a href="#problem" id="nav-problem">シミュレーションの知見</a>
  <a href="#solution" id="nav-solution">避難経路の分散効果</a>
  <a href="#features" id="nav-features">サポート機能仕様</a>
- <a href="#research" id="nav-research">共同検証データ</a>
+ <a href="#research" id="nav-research">モデル内検証データ</a>
  <a href="version-history.html" id="nav-history">開発履歴 v7.12</a>
  <a href="https://github.com/masatosprojects/tenden-app" target="_blank" rel="noopener" id="nav-github">GitHub</a>
  </div>
@@ -1493,7 +1493,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
    </div>
    <div class="feat-item reveal rd1">
     <p class="feat-number">02</p><h3 class="feat-name">2つの経路計算</h3>
-    <p class="feat-body">一般向けは400エピソード学習した線形Q学習の基準方策を参照し、要配慮者向けは勾配・道幅をコスト化した多源ダイクストラ法を使用します。要配慮者経路に強化学習は採用していません。</p>
+    <p class="feat-body">一般向けは公開中の200エピソード版で学習した線形Q学習の基準方策を参照し、要配慮者向けは勾配・道幅をコスト化した多源ダイクストラ法を使用します。要配慮者経路に強化学習は採用していません。</p>
    </div>
    <div class="feat-item reveal rd2">
     <p class="feat-number">03</p><h3 class="feat-name">三つの研究世代</h3>
@@ -1699,7 +1699,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="solution-callout-body">
  一律誘導ではなく、<br>
  避難者が<em>状況に応じて判断</em>できる<br>
- 安全な選択肢を提示する。
+ 比較可能な参考候補を提示する。
  </p>
  </div>
  </div>
@@ -1711,7 +1711,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <div class="wrap">
  <p class="section-label reveal">Route Architecture</p>
  <span class="section-title-en reveal rd1">Two core routes</span>
- <h2 class="section-title reveal rd2">強化学習AIが提案する最適避難経路と、要配慮者への配慮ルート</h2>
+ <h2 class="section-title reveal rd2">事前計算した強化学習方策による参考経路と、要配慮者への配慮ルート</h2>
  <p class="section-desc reveal rd3">
  TENDENは道路網データに沿う経路候補を明瞭なラインで表示します。ただし、取得失敗時の簡易線表示は道路通行を確認した案内ではありません。
  </p>
@@ -1739,7 +1739,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <span class="route-card-icon">●</span>
  <div>
  <h4 class="route-card-title">AIモデル推奨ルート (強化学習)</h4>
- <p class="route-card-desc">kamakura-simの道路網上で7特徴量を用い、400エピソード学習した線形Q学習の基準方策を参照します。BASE条件3試行平均の混雑推移に応じて限定的に候補を差し替え、端末ごとの疑似乱数で分散します。現地での安全・到達を保証するものではありません。</p>
+ <p class="route-card-desc">kamakura-simの道路網上で7特徴量を用い、公開中の200エピソード版で学習した線形Q学習の基準方策を参照します。BASE条件3試行平均の混雑推移に応じて限定的に候補を差し替え、端末ごとの疑似乱数で分散します。現地での安全・到達を保証するものではありません。</p>
  </div>
  </div>
 
@@ -1767,7 +1767,7 @@ section { border-bottom: 1px solid var(--border); position: relative; }
  <p class="feat-number">01</p>
  <div class="feat-icon-text"></div>
  <h3 class="feat-name">AIモデル推奨ルート</h3>
- <p class="feat-body">400エピソード学習した線形Q学習の基準方策を参照し、一般向け候補を提示します。端末ごとの疑似乱数で経路を分散する設計ですが、実社会での効果・安全性は未検証です。要配慮者向けは別方式の多源ダイクストラ法です。</p>
+ <p class="feat-body">公開中の200エピソード版で学習した線形Q学習の基準方策を参照し、一般向け候補を提示します。端末ごとの疑似乱数で経路を分散する設計ですが、実社会での効果・安全性は未検証です。要配慮者向けは別方式の多源ダイクストラ法です。</p>
  </div>
  <div class="feat-item reveal rd1">
  <p class="feat-number">02</p>
@@ -1959,11 +1959,11 @@ section { border-bottom: 1px solid var(--border); position: relative; }
 
  <div class="research-paper-cta reveal">
  <p>
- 「kamakura-sim 共同検証データについて」<br>
+ 「kamakura-sim モデル内検証データについて」<br>
  70,265人の最終人口設定、62,299人・25条件・242試行の感度分析、19,978人のTENDEN行動規則検証を、世代と用途を分けて研究サイトに記録しています。
  </p>
  <a class="btn-paper" href="https://masatosprojects.github.io/kamakura-sim/" target="_blank" rel="noopener" id="research-paper-btn">
- 学術論文を確認 →
+ 研究資料・検証記録を見る →
  </a>
  </div>
  </div>
